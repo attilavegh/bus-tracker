@@ -5,7 +5,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/list"
         android:name="hu.attilavegh.vbkoveto.BusFragment"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".fragment.BusFragment"
-        tools:listitem="@layout/fragment_bus"/>
+        tools:listitem="@layout/fragment_bus"
+        android:layout_marginBottom="60dp"/>

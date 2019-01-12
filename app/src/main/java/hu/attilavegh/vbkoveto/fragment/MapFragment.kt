@@ -17,8 +17,7 @@ import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
 
 
-
-class MapFragment: Fragment(), OnMapReadyCallback {
+class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var mMap: GoogleMap

@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_bus.view.*
 class BusItemRecyclerViewAdapter(
     private val mValues: List<DummyItem>,
     private val mListener: OnListFragmentInteractionListener?
-) : RecyclerView.Adapter<BusItemRecyclerViewAdapter.ViewHolder>() {
+): RecyclerView.Adapter<BusItemRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
 
@@ -48,7 +48,7 @@ class BusItemRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
+        val mIdView: TextView = mView.bus_name
 
         override fun toString(): String {
             return super.toString() + " '" + "test" + "'"
