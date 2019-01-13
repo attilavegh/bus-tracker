@@ -8,6 +8,20 @@
         android:layout_height="match_parent"
         tools:context=".TabbedActivity">
 
+    <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme">
+
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                app:title="@string/app_name"
+                app:titleTextColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:popupTheme="@style/AppTheme"/>
+    </android.support.design.widget.AppBarLayout>
+
     <android.support.design.widget.BottomNavigationView
             android:id="@+id/navigation"
             android:layout_width="0dp"
@@ -19,5 +33,4 @@
             app:menu="@menu/navigation"
             app:itemIconTint="@color/navigation_item"
             app:labelVisibilityMode="unlabeled" app:layout_constraintHorizontal_bias="0.0"/>
-
 </android.support.constraint.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import hu.attilavegh.vbkoveto.dummy.DummyContent
 import hu.attilavegh.vbkoveto.fragment.BusFragment
 import hu.attilavegh.vbkoveto.fragment.MapFragment
@@ -16,22 +17,24 @@ class TabbedActivity: AppCompatActivity(),
     MapFragment.OnFragmentInteractionListener,
     ProfileFragment.OnFragmentInteractionListener {
 
+    private lateinit var toolbar: Toolbar
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.bus_list_item -> {
-                title = getString(R.string.title_buses)
+                toolbar.title = getString(R.string.title_buses)
                 val busFragment = BusFragment.newInstance()
                 openFragment(busFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.map_item -> {
-                title = getString(R.string.title_buses)
+                toolbar.title = getString(R.string.title_buses)
                 val mapsFragment = MapFragment.newInstance()
                 openFragment(mapsFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.profile_item -> {
-                title = getString(R.string.title_profile)
+                toolbar.title = getString(R.string.title_profile)
                 val profileFragment = ProfileFragment.newInstance()
                 openFragment(profileFragment)
                 return@OnNavigationItemSelectedListener true
@@ -43,10 +46,11 @@ class TabbedActivity: AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tabbed)
+        toolbar = findViewById(R.id.toolbar)
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        title = getString(R.string.title_buses)
+        toolbar.title = getString(R.string.title_buses)
         val busFragment = BusFragment.newInstance()
         openFragment(busFragment)
     }
