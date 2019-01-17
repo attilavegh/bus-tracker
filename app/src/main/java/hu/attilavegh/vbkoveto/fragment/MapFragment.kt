@@ -20,7 +20,7 @@ import com.google.android.gms.maps.SupportMapFragment
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var listener: OnFragmentInteractionListener? = null
-    private lateinit var mMap: GoogleMap
+    private lateinit var map: GoogleMap
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_map, container, false)
@@ -55,10 +55,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+        map = googleMap
 
         val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        map.addMarker(MarkerOptions().position(sydney))
+        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 }

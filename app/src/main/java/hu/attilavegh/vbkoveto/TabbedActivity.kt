@@ -6,7 +6,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import hu.attilavegh.vbkoveto.dummy.DummyContent
+import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.fragment.BusFragment
 import hu.attilavegh.vbkoveto.fragment.MapFragment
 import hu.attilavegh.vbkoveto.fragment.ProfileFragment
@@ -56,8 +56,12 @@ class TabbedActivity: AppCompatActivity(),
         openFragment(busFragment)
     }
 
-    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
-        println(item)
+    override fun onListFragmentInteraction(item: Bus) {
+        if (item.isActive) {
+            println(item)
+        } else {
+            println("$item inaktív")
+        }
     }
 
     override fun onFragmentInteraction(uri: Uri) {

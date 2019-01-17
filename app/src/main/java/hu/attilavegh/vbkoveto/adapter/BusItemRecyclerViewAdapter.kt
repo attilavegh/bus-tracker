@@ -11,12 +11,12 @@ import android.widget.TextView
 
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.fragment.BusFragment.OnListFragmentInteractionListener
-import hu.attilavegh.vbkoveto.dummy.DummyContent.DummyItem
+import hu.attilavegh.vbkoveto.model.Bus
 
 import kotlinx.android.synthetic.main.fragment_bus.view.*
 
 class BusItemRecyclerViewAdapter(
-    private val buses: List<DummyItem>,
+    private val buses: List<Bus>,
     private val listener: OnListFragmentInteractionListener?
 ): RecyclerView.Adapter<BusItemRecyclerViewAdapter.ViewHolder>() {
 
@@ -24,7 +24,7 @@ class BusItemRecyclerViewAdapter(
 
     init {
         onClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyItem
+            val item = v.tag as Bus
             listener?.onListFragmentInteraction(item)
         }
     }
@@ -35,18 +35,19 @@ class BusItemRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = buses.elementAt(position)
+        val bus = buses.elementAt(position)
+        val activeStatusText = holder.view.context.getString(R.string.bus_status_message)
 
-        holder.busName.text = item.toString()
-        holder.busStatus.text = "Elindult"
-        holder.busStatusTime.text = "18:00"
+        holder.busName.text = bus.name
+        holder.busStatus.text = if (bus.isActive) activeStatusText else ""
+        holder.busStatusTime.text = bus.departureTime
 
-        if (position == 4) {
+        if (!bus.isActive) {
             setInactiveBusItemStyle(holder)
         }
 
         with(holder.view) {
-            tag = item
+            tag = bus
             setOnClickListener(onClickListener)
         }
     }

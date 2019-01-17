@@ -3,11 +3,12 @@
 
     <string name="title_buses">Járatok</string>
     <string name="title_profile">Profil</string>
+    <string name="bus_status_message">Elindult</string>
 
-    <string name="bus_test">Járat 1</string>
-    <string name="start_test">Elindult</string>
-    <string name="start_time_dash_test">—</string>
-    <string name="start_time_test">8:00</string>
+    <!-- Mock text -->
+    <string name="bus_name_mock">Járat 1</string>
+    <string name="bus_start_time_mock">8:00</string>
 
+    <string name="dash">—</string>
     <string name="fav_button">fav</string>
 </resources>

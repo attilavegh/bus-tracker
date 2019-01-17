@@ -16,7 +16,7 @@
 
 
         <TextView
-                android:text="@string/bus_test"
+                android:text="@string/bus_name_mock"
                 android:layout_width="wrap_content"
                 android:layout_height="45dp" android:id="@+id/bus_name"
                 android:gravity="bottom"
@@ -25,7 +25,7 @@
                 android:layout_row="0" android:layout_column="0" android:layout_columnSpan="3"/>
 
         <TextView
-                android:text="@string/start_test"
+                android:text="@string/bus_status_message"
                 android:layout_height="35dp" android:id="@+id/bus_status"
                 android:textSize="17sp"
                 android:textColor="@color/navbarGray" app:fontFamily="sans-serif-medium"
@@ -34,7 +34,7 @@
                 android:layout_row="1" android:layout_column="0"/>
 
         <TextView
-                android:text="@string/start_time_dash_test"
+                android:text="@string/dash"
                 android:layout_height="35dp" android:id="@+id/bus_status_time_dash"
                 android:textSize="17sp"
                 android:paddingLeft="7dp" android:paddingRight="7dp"
@@ -46,7 +46,7 @@
         />
 
         <TextView
-                android:text="@string/start_time_test"
+                android:text="@string/bus_start_time_mock"
                 android:layout_height="35dp" android:id="@+id/bus_status_time"
                 android:textSize="17sp"
                 android:textColor="@color/navbarGray" app:fontFamily="sans-serif-light"

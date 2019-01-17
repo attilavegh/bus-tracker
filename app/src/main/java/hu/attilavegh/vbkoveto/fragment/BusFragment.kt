@@ -3,7 +3,6 @@ package hu.attilavegh.vbkoveto.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,9 +11,8 @@ import android.view.ViewGroup
 import hu.attilavegh.vbkoveto.adapter.BusItemRecyclerViewAdapter
 import hu.attilavegh.vbkoveto.R
 
-import hu.attilavegh.vbkoveto.dummy.DummyContent
-import hu.attilavegh.vbkoveto.dummy.DummyContent.DummyItem
-
+import hu.attilavegh.vbkoveto.model.Bus
+import hu.attilavegh.vbkoveto.model.MockBusData
 
 class BusFragment: Fragment() {
 
@@ -26,7 +24,7 @@ class BusFragment: Fragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = BusItemRecyclerViewAdapter(DummyContent.ITEMS, listener)
+                adapter = BusItemRecyclerViewAdapter(MockBusData.buses, listener)
             }
         }
 
@@ -49,7 +47,7 @@ class BusFragment: Fragment() {
     }
 
     interface OnListFragmentInteractionListener {
-        fun onListFragmentInteraction(item: DummyItem?)
+        fun onListFragmentInteraction(item: Bus)
     }
 
     companion object {
