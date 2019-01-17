@@ -1,7 +1,6 @@
 package hu.attilavegh.vbkoveto.dummy
 
 import java.util.ArrayList
-import java.util.HashMap
 
 object DummyContent {
 

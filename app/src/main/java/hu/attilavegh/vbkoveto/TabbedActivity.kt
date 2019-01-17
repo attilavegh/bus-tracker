@@ -19,7 +19,7 @@ class TabbedActivity: AppCompatActivity(),
 
     private lateinit var toolbar: Toolbar
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.bus_list_item -> {
                 toolbar.title = getString(R.string.title_buses)
@@ -45,17 +45,19 @@ class TabbedActivity: AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_tabbed)
         toolbar = findViewById(R.id.toolbar)
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
         toolbar.title = getString(R.string.title_buses)
+
+        navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
         val busFragment = BusFragment.newInstance()
         openFragment(busFragment)
     }
 
     override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
+        println(item)
     }
 
     override fun onFragmentInteraction(uri: Uri) {
