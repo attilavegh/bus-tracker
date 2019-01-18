@@ -5,10 +5,14 @@
     <string name="title_profile">Profil</string>
     <string name="bus_status_message">Elindult</string>
 
+    <string name="login_button">Bejelentkezés</string>
+
     <!-- Mock text -->
     <string name="bus_name_mock">Járat 1</string>
     <string name="bus_start_time_mock">8:00</string>
 
     <string name="dash">—</string>
     <string name="fav_button">fav</string>
+    <string name="login_background">login_background</string>
+    <string name="vb_logo">Logo</string>
 </resources>
