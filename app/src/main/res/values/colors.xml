@@ -6,6 +6,7 @@
     <color name="loginStatusBarColor">#000000</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="white_transparent">#99FFFFFF</color>
     <color name="navbarGray">#444444</color>
     <color name="lightGray">#AEAEAE</color>
     <color name="separator">#D0D0D0</color>

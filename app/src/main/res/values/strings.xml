@@ -6,7 +6,20 @@
     <string name="bus_status_message">Elindult</string>
     <string name="bus_status_message_driver_mode">Indulás!</string>
 
+    <string name="inactive_bus_message">A busz még nem indult el.</string>
+    <string name="active_bus_message">A busz már elindult.</string>
+    <string name="no_bus">Nincs megjelenítendő járat</string>
+
     <string name="login_button">Bejelentkezés</string>
+    <string name="notification">Értesítések kezelése</string>
+    <string name="logout">Kilépés</string>
+    <string name="website">Weboldal</string>
+    <string name="contact">Kapcsolat</string>
+
+    <string name="contactTitle">Kapcsolatfelvétel célja</string>
+    <string name="contactBusiness">Ügyintézés</string>
+    <string name="contactFeedback">Visszajelzés</string>
+    <string name="contactNoEmailClient">Nincs email kliens telepítve.</string>
 
     <!-- Mock text -->
     <string name="bus_name_mock">Járat 1</string>
@@ -16,4 +29,8 @@
     <string name="fav_button">fav</string>
     <string name="login_background">login_background</string>
     <string name="vb_logo">Logo</string>
+    <string name="user_name_mock">Sam Smith</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Notification settings</string>
 </resources>

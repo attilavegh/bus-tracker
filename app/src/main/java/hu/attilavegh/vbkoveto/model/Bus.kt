@@ -1,17 +1,28 @@
 package hu.attilavegh.vbkoveto.model
 
-data class Bus(val id: Number, val name: String, var isActive: Boolean, var favorite: Boolean, val departureTime: String = "") {
-    override fun toString(): String = name
-}
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.GeoPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
-object MockBusData {
-    val buses: MutableList<Bus> = ArrayList()
+data class Bus(
+    val id: String = "",
+    val name: String = "",
+    val active: Boolean = false,
+    val location: GeoPoint = GeoPoint(0.0, 0.0),
+    val departureTime: Timestamp = Timestamp.now()
+) {
 
-    init {
-        buses.add(Bus(1, "Járat 1", true, false,"18:00"))
-        buses.add(Bus(2, "Járat 2", true, false,"18:00"))
-        buses.add(Bus(3, "Járat 3", true, false,"18:00"))
-        buses.add(Bus(4, "Járat 4", false, false))
-        buses.add(Bus(5, "Járat 5", false, false))
+    fun getFormattedTimestamp(): String {
+        return formatDepartureTime(departureTime)
+    }
+
+    private fun formatDepartureTime(timestamp: Timestamp): String {
+        return if (timestamp != null) {
+            val simpleDateFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
+            simpleDateFormat.format(timestamp.toDate())
+        } else {
+            ""
+        }
     }
 }

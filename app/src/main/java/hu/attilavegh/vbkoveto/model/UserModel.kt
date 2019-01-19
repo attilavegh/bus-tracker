@@ -1,6 +1,7 @@
 package hu.attilavegh.vbkoveto.model
 
-import android.net.Uri
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-data class UserModel(val email: String, val name: String?, val imgUrl: String?): Serializable
+@Parcelize
+data class UserModel(val email: String, val name: String?, val imgUrl: String?): Parcelable

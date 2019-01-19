@@ -5,44 +5,49 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import hu.attilavegh.vbkoveto.model.Bus
+import hu.attilavegh.vbkoveto.controller.*
 
-import hu.attilavegh.vbkoveto.fragment.BusFragment
-import hu.attilavegh.vbkoveto.fragment.MapFragment
-import hu.attilavegh.vbkoveto.fragment.ProfileFragment
-import hu.attilavegh.vbkoveto.model.UserModel
+import hu.attilavegh.vbkoveto.view.BusFragment
+import hu.attilavegh.vbkoveto.view.MapFragment
+import hu.attilavegh.vbkoveto.view.ProfileFragment
+import hu.attilavegh.vbkoveto.view.NotificationFragment
 
 import kotlinx.android.synthetic.main.activity_tabbed.*
+import hu.attilavegh.vbkoveto.model.*
+import io.reactivex.disposables.Disposable
 
-class TabbedActivity: AppCompatActivity(),
+class TabbedActivity : AppCompatActivity(),
     BusFragment.OnListFragmentInteractionListener,
     MapFragment.OnFragmentInteractionListener,
-    ProfileFragment.OnFragmentInteractionListener {
+    ProfileFragment.OnFragmentInteractionListener,
+    NotificationFragment.OnFragmentInteractionListener {
 
     private lateinit var toolbar: Toolbar
+    private lateinit var firebaseListener: Disposable
 
     lateinit var user: UserModel
-    var isDriverMode: Boolean = false
-    var driverEmail: String = "vattilaaa@gmail.com"
+
+    var mode: ModeController = ModeController()
+    lateinit var driverModeEmail: String
+
+    lateinit var titleController: ActivityTitleController
+    private lateinit var toastController: ToastController
+    private lateinit var fragmentController: FragmentController
+    private lateinit var firebaseController: FirebaseController
+
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.bus_list_item -> {
-                toolbar.title = getString(R.string.title_buses)
-                val busFragment = BusFragment.newInstance()
-                openFragment(busFragment)
+                openFragment(R.string.title_buses, BusFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.map_item -> {
-                toolbar.title = getString(R.string.title_buses)
-                val mapsFragment = MapFragment.newInstance()
-                openFragment(mapsFragment)
+                openFragment(R.string.title_buses, MapFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.profile_item -> {
-                toolbar.title = getString(R.string.title_profile)
-                val profileFragment = ProfileFragment.newInstance()
-                openFragment(profileFragment)
+                openFragment(R.string.title_profile, ProfileFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -54,80 +59,127 @@ class TabbedActivity: AppCompatActivity(),
         setContentView(R.layout.activity_tabbed)
         toolbar = findViewById(R.id.toolbar)
 
-        navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-        navigation.selectedItemId = R.id.bus_list_item
+        initControllers()
+        initData()
 
-        getUser()
+        firebaseListener = firebaseController.getConfig().subscribe(
+            { result -> toastController.create(result.toString()) },
+            { error -> toastController.create(error.toString()) }
+        )
+
         setApplicationMode()
 
-        if (isDriverMode) {
-            createDriverModeLayout()
-        }
+        navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        navigation.selectedItemId = R.id.bus_list_item
     }
 
-    override fun onBusSelection(item: Bus) {
-        onBusClick(item)
+    override fun onDestroy() {
+        super.onDestroy()
+        firebaseListener.dispose()
     }
 
-    override fun onFavoriteAdd(item: Bus) {
-        println(item.toString() + " add favorite")
+    override fun onBusSelection(bus: Bus) {
+        onBusClick(bus)
     }
 
-    override fun onFavoriteRemove(item: Bus) {
-        println(item.toString() + " remove favorite")
+    override fun onFavoriteAdd(bus: Bus) {
+        println("$bus add favorite")
     }
 
-    override fun onMapInteraction() {
+    override fun onFavoriteRemove(bus: Bus) {
+        println("$bus remove favorite")
     }
 
-    override fun logout() {
+    override fun onNotificationInteraction() {
+        // TODO: handle notifications
+    }
+
+    override fun finishActivityAfterLogout() {
         finish()
     }
 
     override fun onBackPressed() {
         val busFragmentId: Int = R.id.bus_list_item
+        val isMainFragmentActive = navigation.selectedItemId == busFragmentId
 
-        if (navigation.selectedItemId == busFragmentId) {
+        val hasSubFragment = supportFragmentManager.backStackEntryCount > 0
+
+        if (isMainFragmentActive || hasSubFragment) {
             super.onBackPressed()
+
+            if (hasSubFragment) {
+                titleController.setPrevious()
+            }
         } else {
             navigation.selectedItemId = busFragmentId
+            titleController.set(getString(R.string.title_buses))
         }
     }
 
+    private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
+        titleController.set(getString(titleId))
+        fragmentController.switchTo(fragment, bundle)
+    }
+
+    private fun initControllers() {
+        titleController = ActivityTitleController(toolbar)
+        toastController = ToastController(this, resources)
+        fragmentController = FragmentController(supportFragmentManager)
+        firebaseController = FirebaseController()
+    }
+
+    private fun initData() {
+        getUser()
+        getServerData()
+    }
+
     private fun onBusClick(bus: Bus) {
-        when (isDriverMode) {
-            true -> driveBus(bus)
-            false -> checkBusLocation(bus)
+        when (mode.normal()) {
+            true -> checkBus(bus)
+            false -> driveBus(bus)
+        }
+    }
+
+    private fun checkBus(bus: Bus) {
+        when (bus.active) {
+            true -> initCheckBusView(bus)
+            false -> toastController.create(R.string.inactive_bus_message)
         }
     }
 
     private fun driveBus(bus: Bus) {
-        if (!bus.isActive) {
-            println(bus.toString() + " driverMode")
+        when (!bus.active) {
+            true -> initDriveBusView(bus)
+            false -> toastController.create(R.string.active_bus_message)
         }
     }
 
-    private fun checkBusLocation(bus: Bus) {
-        if (bus.isActive) {
-            println(bus.toString() + " userMode")
-        }
+    private fun initCheckBusView(bus: Bus) {
+        val argument = Bundle()
+        argument.putString("id", bus.id)
+
+        val mapFragment = MapFragment.newInstance()
+        fragmentController.switchTo(mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
+
+        titleController.set(bus.name)
     }
 
-    private fun openFragment(fragment: Fragment) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, fragment)
-        transaction.commit()
+    private fun initDriveBusView(bus: Bus) {
+        println("$bus driverMode")
     }
 
     private fun getUser() {
-        user = intent.getSerializableExtra("user") as UserModel
+        user = intent.getParcelableExtra("user")
+    }
+
+    private fun getServerData() {
+        driverModeEmail = "vattilaaa@gmail.com"
     }
 
     private fun setApplicationMode() {
-        isDriverMode = (user.email == driverEmail)
-    }
-
-    private fun createDriverModeLayout() {
-        navigation.menu.getItem(1).isVisible = false
+        if (user.email == driverModeEmail) {
+            mode.mode = Mode.DRIVER
+            navigation.menu.getItem(1).isVisible = false
+        }
     }
 }

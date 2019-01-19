@@ -1,13 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              tools:context=".fragment.ProfileFragment" android:gravity="center" android:orientation="vertical">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context=".view.ProfileFragment" android:gravity="center"
+                                             android:id="@+id/linearLayout"
+                                             android:layout_marginTop="@dimen/activity_bar_padding"
+                                             android:layout_marginBottom="@dimen/activity_bar_padding"
+                                             android:background="@color/white">
 
 
-    <Button
-            android:text="Kijelentkezés"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/logout_button"/>
-</LinearLayout>
+    <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="180dp" android:layout_height="180dp"
+                    android:id="@+id/profile_picture"
+                    tools:src="@tools:sample/avatars"
+                    android:layout_marginTop="30dp"
+                    android:layout_gravity="center"/>
+
+            <TextView
+                    android:text="@string/user_name_mock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/user_name"
+                    android:textStyle="bold"
+                    android:textColor="@color/navbarGray"
+                    android:textSize="24sp"
+                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center"
+            />
+
+            <LinearLayout
+                    android:id="@+id/settings_notification"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_height="@dimen/row_height"
+                    android:layout_marginTop="30dp">
+
+                <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separator"/>
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/row_content_height">
+
+                    <ImageView
+                            android:src="@drawable/settings_notification"
+                            android:layout_width="@dimen/row_content_height"
+                            android:layout_height="@dimen/row_content_height"
+                            android:layout_weight="0"
+                            android:cropToPadding="false"
+                            android:padding="23dp"/>
+
+                    <TextView android:layout_width="0dp"
+                              android:layout_height="match_parent"
+                              android:layout_weight="1" android:text="@string/notification"
+                              android:gravity="center_vertical"
+                              android:paddingTop="3dp"
+                              android:textSize="22sp" android:textStyle="bold" android:textColor="@color/navbarGray"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/settings_logout"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_height="@dimen/row_height_profile">
+
+                <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separator"/>
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/row_content_height">
+
+                    <ImageView
+                            android:src="@drawable/settings_logout"
+                            android:layout_width="@dimen/row_content_height"
+                            android:layout_height="@dimen/row_content_height"  android:layout_weight="0"
+                            android:cropToPadding="false"
+                            android:padding="23dp"/>
+
+                    <TextView android:layout_width="0dp"
+                              android:layout_height="@dimen/row_content_height"
+                              android:layout_weight="1" android:text="@string/logout"
+                              android:gravity="center_vertical"
+                              android:paddingTop="3dp"
+                              android:textSize="22sp" android:textStyle="bold" android:textColor="@color/navbarGray"/>
+                </LinearLayout>
+
+                <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separator"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/settings_website"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_height="@dimen/row_height_profile"
+                    android:layout_marginTop="30dp">
+
+                <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separator"/>
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/row_content_height">
+
+                    <ImageView
+                            android:src="@drawable/settings_website"
+                            android:layout_width="@dimen/row_content_height"
+                            android:layout_height="@dimen/row_content_height" android:layout_weight="0"
+                            android:cropToPadding="false"
+                            android:padding="23dp"/>
+
+                    <TextView android:layout_width="0dp"
+                              android:layout_height="@dimen/row_content_height"
+                              android:layout_weight="1" android:text="@string/website"
+                              android:gravity="center_vertical"
+                              android:paddingTop="3dp"
+                              android:textSize="22sp" android:textStyle="bold" android:textColor="@color/navbarGray"/>
+                </LinearLayout>
+
+                <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separator"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/settings_contact"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_height="@dimen/row_height_profile"
+                    android:layout_marginBottom="30dp">
+
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/row_content_height">
+
+                    <ImageView
+                            app:srcCompat="@drawable/settings_feedback"
+                            android:layout_width="@dimen/row_content_height"
+                            android:layout_height="@dimen/row_content_height" android:layout_weight="0"
+                            android:cropToPadding="false"
+                            android:padding="23dp"/>
+
+                    <TextView android:layout_width="0dp"
+                              android:layout_height="match_parent"
+                              android:layout_weight="1" android:text="@string/contact"
+                              android:gravity="center_vertical"
+                              android:paddingTop="3dp"
+                              android:textSize="22sp" android:textStyle="bold" android:textColor="@color/navbarGray"/>
+                </LinearLayout>
+
+                <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/separator"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

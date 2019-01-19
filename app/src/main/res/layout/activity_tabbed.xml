@@ -19,14 +19,14 @@
                 app:title="@string/app_name"
                 app:titleTextColor="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="56dp"
                 app:popupTheme="@style/AppTheme"/>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.BottomNavigationView
             android:id="@+id/navigation"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="56dp"
             android:background="@color/navbarGray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

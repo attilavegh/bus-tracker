@@ -8,7 +8,7 @@
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.BusFragment"
-        tools:listitem="@layout/fragment_bus"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="60dp"/>
+        tools:context=".view.BusFragment"
+        tools:listitem="@layout/fragment_bus_active"
+        android:layout_marginTop="@dimen/activity_bar_padding"
+        android:layout_marginBottom="@dimen/activity_bar_padding"/>
