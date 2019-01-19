@@ -1,6 +1,5 @@
 package hu.attilavegh.vbkoveto
 
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -10,6 +9,7 @@ import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.fragment.BusFragment
 import hu.attilavegh.vbkoveto.fragment.MapFragment
 import hu.attilavegh.vbkoveto.fragment.ProfileFragment
+import hu.attilavegh.vbkoveto.model.UserModel
 import kotlinx.android.synthetic.main.activity_tabbed.*
 
 class TabbedActivity: AppCompatActivity(),
@@ -18,6 +18,9 @@ class TabbedActivity: AppCompatActivity(),
     ProfileFragment.OnFragmentInteractionListener {
 
     private lateinit var toolbar: Toolbar
+
+    private lateinit var user: UserModel
+    private var isDriverMode: Boolean = false
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -45,32 +48,74 @@ class TabbedActivity: AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_tabbed)
         toolbar = findViewById(R.id.toolbar)
-        toolbar.title = getString(R.string.title_buses)
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        navigation.selectedItemId = R.id.bus_list_item
 
-        val busFragment = BusFragment.newInstance()
-        openFragment(busFragment)
-    }
+        getUser()
+        setApplicationMode()
 
-    override fun onListFragmentInteraction(item: Bus) {
-        if (item.isActive) {
-            println(item)
-        } else {
-            println("$item inaktív")
+        if (isDriverMode) {
+            createDriverModeLayout()
         }
     }
 
-    override fun onFragmentInteraction(uri: Uri) {
+    override fun onBusListInteraction(item: Bus) {
+        onListItemClick(item)
+    }
+
+    override fun onMapInteraction() {
+    }
+
+    override fun onProfileInteraction(logout: Boolean) {
+        if (logout) {
+            finish()
+        }
+    }
+
+    override fun onBackPressed() {
+        val busFragmentId: Int = R.id.bus_list_item
+
+        if (navigation.selectedItemId == busFragmentId) {
+            super.onBackPressed()
+        } else {
+            navigation.selectedItemId = busFragmentId
+        }
+    }
+
+    private fun onListItemClick(item: Bus) {
+        when (isDriverMode) {
+            true -> {
+                if (item.isActive) {
+                    println(item.toString() + " driverMode")
+                }
+            }
+
+            false -> {
+                if (item.isActive) {
+                    println(item.toString() + " userMode")
+                }
+            }
+        }
     }
 
     private fun openFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
-        transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun getUser() {
+        user = intent.getSerializableExtra("user") as UserModel
+    }
+
+    private fun setApplicationMode() {
+        isDriverMode = (user.email == "test@gmail.com")
+    }
+
+    private fun createDriverModeLayout() {
+        navigation.menu.getItem(1).isVisible = false
     }
 }

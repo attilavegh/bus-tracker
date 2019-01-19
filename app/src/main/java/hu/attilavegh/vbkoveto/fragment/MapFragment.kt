@@ -47,7 +47,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
+        fun onMapInteraction()
     }
 
     companion object {

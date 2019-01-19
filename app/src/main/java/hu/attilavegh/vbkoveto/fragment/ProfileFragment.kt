@@ -1,20 +1,35 @@
 package hu.attilavegh.vbkoveto.fragment
 
 import android.content.Context
-import android.net.Uri
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 import hu.attilavegh.vbkoveto.R
+import hu.attilavegh.vbkoveto.LoginActivity
 
-class ProfileFragment: Fragment() {
+
+
+class ProfileFragment: Fragment(), View.OnClickListener {
+
     private var listener: OnFragmentInteractionListener? = null
+    private lateinit var googleSignInClient: GoogleSignInClient
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
+        createGoogleAuthClient()
+
+        view.findViewById<Button>(R.id.logout_button).setOnClickListener(this)
+
+        return view
     }
 
     override fun onAttach(context: Context) {
@@ -32,11 +47,33 @@ class ProfileFragment: Fragment() {
         listener = null
     }
 
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.logout_button -> logout()
+        }
+    }
+
     interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
+        fun onProfileInteraction(logout: Boolean)
     }
 
     companion object {
         fun newInstance(): ProfileFragment = ProfileFragment()
+    }
+
+    private fun onFragmentInteraction(logout: Boolean) = listener.let { it!!.onProfileInteraction(logout) }
+
+    private fun createGoogleAuthClient() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        googleSignInClient = GoogleSignIn.getClient(context!!, gso)
+    }
+
+    private fun logout() {
+        googleSignInClient.signOut().addOnCompleteListener {
+            val intent = Intent(context, LoginActivity::class.java)
+            this.startActivity(intent)
+
+            onFragmentInteraction(true)
+        }
     }
 }

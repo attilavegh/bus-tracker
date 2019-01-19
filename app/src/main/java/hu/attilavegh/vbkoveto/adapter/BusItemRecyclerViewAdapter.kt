@@ -25,7 +25,7 @@ class BusItemRecyclerViewAdapter(
     init {
         onClickListener = View.OnClickListener { v ->
             val item = v.tag as Bus
-            listener?.onListFragmentInteraction(item)
+            listener?.onBusListInteraction(item)
         }
     }
 

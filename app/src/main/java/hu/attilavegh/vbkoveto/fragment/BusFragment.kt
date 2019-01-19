@@ -47,7 +47,7 @@ class BusFragment: Fragment() {
     }
 
     interface OnListFragmentInteractionListener {
-        fun onListFragmentInteraction(item: Bus)
+        fun onBusListInteraction(item: Bus)
     }
 
     companion object {
