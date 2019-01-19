@@ -58,7 +58,7 @@
 
         <ImageButton
                 android:layout_width="70dp"
-                android:layout_height="35dp" app:srcCompat="@drawable/favorite" android:id="@+id/fav_button"
+                android:layout_height="35dp" app:srcCompat="@drawable/favorite_off" android:id="@+id/fav_button"
                 android:contentDescription="@string/fav_button"
                 android:paddingTop="6dp"
                 android:background="@color/white"

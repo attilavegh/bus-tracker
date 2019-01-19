@@ -6,10 +6,12 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import hu.attilavegh.vbkoveto.model.Bus
+
 import hu.attilavegh.vbkoveto.fragment.BusFragment
 import hu.attilavegh.vbkoveto.fragment.MapFragment
 import hu.attilavegh.vbkoveto.fragment.ProfileFragment
 import hu.attilavegh.vbkoveto.model.UserModel
+
 import kotlinx.android.synthetic.main.activity_tabbed.*
 
 class TabbedActivity: AppCompatActivity(),
@@ -19,8 +21,9 @@ class TabbedActivity: AppCompatActivity(),
 
     private lateinit var toolbar: Toolbar
 
-    private lateinit var user: UserModel
-    private var isDriverMode: Boolean = false
+    lateinit var user: UserModel
+    var isDriverMode: Boolean = false
+    var driverEmail: String = "vattilaaa@gmail.com"
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -62,17 +65,23 @@ class TabbedActivity: AppCompatActivity(),
         }
     }
 
-    override fun onBusListInteraction(item: Bus) {
-        onListItemClick(item)
+    override fun onBusSelection(item: Bus) {
+        onBusClick(item)
+    }
+
+    override fun onFavoriteAdd(item: Bus) {
+        println(item.toString() + " add favorite")
+    }
+
+    override fun onFavoriteRemove(item: Bus) {
+        println(item.toString() + " remove favorite")
     }
 
     override fun onMapInteraction() {
     }
 
-    override fun onProfileInteraction(logout: Boolean) {
-        if (logout) {
-            finish()
-        }
+    override fun logout() {
+        finish()
     }
 
     override fun onBackPressed() {
@@ -85,19 +94,22 @@ class TabbedActivity: AppCompatActivity(),
         }
     }
 
-    private fun onListItemClick(item: Bus) {
+    private fun onBusClick(bus: Bus) {
         when (isDriverMode) {
-            true -> {
-                if (item.isActive) {
-                    println(item.toString() + " driverMode")
-                }
-            }
+            true -> driveBus(bus)
+            false -> checkBusLocation(bus)
+        }
+    }
 
-            false -> {
-                if (item.isActive) {
-                    println(item.toString() + " userMode")
-                }
-            }
+    private fun driveBus(bus: Bus) {
+        if (!bus.isActive) {
+            println(bus.toString() + " driverMode")
+        }
+    }
+
+    private fun checkBusLocation(bus: Bus) {
+        if (bus.isActive) {
+            println(bus.toString() + " userMode")
         }
     }
 
@@ -112,7 +124,7 @@ class TabbedActivity: AppCompatActivity(),
     }
 
     private fun setApplicationMode() {
-        isDriverMode = (user.email == "test@gmail.com")
+        isDriverMode = (user.email == driverEmail)
     }
 
     private fun createDriverModeLayout() {

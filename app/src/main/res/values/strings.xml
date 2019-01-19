@@ -4,6 +4,7 @@
     <string name="title_buses">Járatok</string>
     <string name="title_profile">Profil</string>
     <string name="bus_status_message">Elindult</string>
+    <string name="bus_status_message_driver_mode">Indulás!</string>
 
     <string name="login_button">Bejelentkezés</string>
 

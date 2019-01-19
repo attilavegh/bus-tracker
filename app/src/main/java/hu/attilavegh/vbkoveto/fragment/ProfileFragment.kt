@@ -22,12 +22,11 @@ class ProfileFragment: Fragment(), View.OnClickListener {
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var googleSignInClient: GoogleSignInClient
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
-        createGoogleAuthClient()
-
         view.findViewById<Button>(R.id.logout_button).setOnClickListener(this)
+
+        createGoogleAuthClient()
 
         return view
     }
@@ -54,14 +53,14 @@ class ProfileFragment: Fragment(), View.OnClickListener {
     }
 
     interface OnFragmentInteractionListener {
-        fun onProfileInteraction(logout: Boolean)
+        fun logout()
     }
 
     companion object {
         fun newInstance(): ProfileFragment = ProfileFragment()
     }
 
-    private fun onFragmentInteraction(logout: Boolean) = listener.let { it!!.onProfileInteraction(logout) }
+    private fun initLogout() = listener.let { it!!.logout() }
 
     private fun createGoogleAuthClient() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
@@ -73,7 +72,7 @@ class ProfileFragment: Fragment(), View.OnClickListener {
             val intent = Intent(context, LoginActivity::class.java)
             this.startActivity(intent)
 
-            onFragmentInteraction(true)
+            initLogout()
         }
     }
 }

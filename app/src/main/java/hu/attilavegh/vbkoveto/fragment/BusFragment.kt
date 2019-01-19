@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import hu.attilavegh.vbkoveto.adapter.BusItemRecyclerViewAdapter
 import hu.attilavegh.vbkoveto.R
+import hu.attilavegh.vbkoveto.TabbedActivity
 
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.model.MockBusData
@@ -17,14 +18,17 @@ import hu.attilavegh.vbkoveto.model.MockBusData
 class BusFragment: Fragment() {
 
     private var listener: OnListFragmentInteractionListener? = null
+    private lateinit var parentActivity: TabbedActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_bus_list, container, false)
 
+        parentActivity = activity as TabbedActivity
+
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = BusItemRecyclerViewAdapter(MockBusData.buses, listener)
+                adapter = BusItemRecyclerViewAdapter(MockBusData.buses, listener, parentActivity.isDriverMode)
             }
         }
 
@@ -47,7 +51,9 @@ class BusFragment: Fragment() {
     }
 
     interface OnListFragmentInteractionListener {
-        fun onBusListInteraction(item: Bus)
+        fun onBusSelection(item: Bus)
+        fun onFavoriteAdd(item: Bus)
+        fun onFavoriteRemove(item: Bus)
     }
 
     companion object {

@@ -1,7 +1,6 @@
 package hu.attilavegh.vbkoveto.fragment
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -17,7 +16,7 @@ import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
 
 
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment: Fragment(), OnMapReadyCallback {
 
     private var listener: OnFragmentInteractionListener? = null
     private lateinit var map: GoogleMap
