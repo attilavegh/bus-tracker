@@ -27,7 +27,6 @@ class LoginActivity: AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_login)
         findViewById<Button>(R.id.login_button).setOnClickListener(this)
 
-
         checkPlayServices()
 
         createGoogleAuthClient()
@@ -84,7 +83,7 @@ class LoginActivity: AppCompatActivity(), View.OnClickListener {
     }
 
     private fun loadApp(account: GoogleSignInAccount) {
-        val intent = Intent(this, TabbedActivity::class.java)
+        val intent = Intent(this, UserActivity::class.java)
         intent.putExtra("user", UserModel(account.email!!, account.displayName, account.photoUrl.toString()))
 
         this.startActivity(intent)

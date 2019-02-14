@@ -14,27 +14,30 @@ const val LOG_TAG_CONFIG = "firebase_getConfig"
 const val LOG_TAG_BUS_LIST = "firebase_getBusList"
 
 class FirebaseController {
-    private val source = Source.SERVER
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     fun getConfig(): Observable<RemoteConfig> {
         return Observable.create { emitter ->
 
             database.collection("config").document("data")
-                .get(source)
-                .addOnSuccessListener { config ->
-                    if (config != null) {
-                        emitter.onNext(config.toObject(RemoteConfig::class.java)!!)
-                    } else {
-                        Log.d(LOG_TAG_CONFIG, "No such document")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d(LOG_TAG_CONFIG, "failed with ", exception)
+                .addSnapshotListener(EventListener<DocumentSnapshot> { config, error ->
+                    if (error != null) {
+                        Log.w(LOG_TAG_CONFIG, "Listen failed.", error)
 
-                    emitter.onError(exception)
-                    return@addOnFailureListener
-                }
+                        emitter.onError(error)
+                        return@EventListener
+                    }
+
+                    if (config != null && config.exists()) {
+                        emitter.onNext(config.toObject(RemoteConfig::class.java)!!)
+                    }
+                })
+        }
+    }
+
+    fun updateBus(): Observable<Bus>{
+        return Observable.create { emitter ->
+
         }
     }
 
@@ -57,8 +60,8 @@ class FirebaseController {
                         }
                     }
 
-                    sortBuses(buses)
-                    emitter.onNext(buses)
+                    val sortedBuses = sortBuses(buses)
+                    emitter.onNext(sortedBuses)
                 })
         }
     }
@@ -82,8 +85,8 @@ class FirebaseController {
         }
     }
 
-    private fun sortBuses(buses: List<Bus>) {
-        when (true) {
+    private fun sortBuses(buses: List<Bus>): List<Bus> {
+        return when (true) {
             true -> buses.sortedWith(compareBy { !it.active })
             false -> buses.sortedWith(compareBy { it.active })
         }

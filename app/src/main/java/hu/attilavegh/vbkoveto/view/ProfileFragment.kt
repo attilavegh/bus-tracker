@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso
 
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.LoginActivity
-import hu.attilavegh.vbkoveto.TabbedActivity
+import hu.attilavegh.vbkoveto.UserActivity
 import hu.attilavegh.vbkoveto.model.UserModel
 import hu.attilavegh.vbkoveto.model.FragmentTagName
 
@@ -23,8 +23,11 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 import android.net.Uri
 import android.support.v7.app.AlertDialog
 import hu.attilavegh.vbkoveto.controller.ActivityTitleController
+import hu.attilavegh.vbkoveto.controller.FirebaseController
 import hu.attilavegh.vbkoveto.controller.FragmentController
 import hu.attilavegh.vbkoveto.controller.ToastController
+import hu.attilavegh.vbkoveto.model.RemoteConfig
+import io.reactivex.disposables.Disposable
 
 
 class ProfileFragment: Fragment(),
@@ -35,7 +38,13 @@ class ProfileFragment: Fragment(),
 
     private lateinit var user: UserModel
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var firebaseListener: Disposable
 
+    private var websiteUrl: String = ""
+    private var businessEmail: String = ""
+    private var feedbackEmail: String = ""
+
+    private var firebaseController: FirebaseController = FirebaseController()
     private lateinit var titleController: ActivityTitleController
     private lateinit var toastController: ToastController
     private lateinit var fragmentController: FragmentController
@@ -50,6 +59,11 @@ class ProfileFragment: Fragment(),
         createGoogleAuthClient()
         fillProfileInfo(view)
         createSettingsItemListeners(view)
+
+        firebaseListener = firebaseController.getConfig().subscribe(
+            { result -> saveConfig(result) },
+            { error -> toastController.create(error.toString()) }
+        )
 
         return view
     }
@@ -66,6 +80,7 @@ class ProfileFragment: Fragment(),
 
     override fun onDetach() {
         super.onDetach()
+        firebaseListener.dispose()
         listener = null
     }
 
@@ -91,6 +106,12 @@ class ProfileFragment: Fragment(),
         }
     }
 
+    private fun saveConfig(config: RemoteConfig) {
+        websiteUrl = config.website
+        businessEmail = config.businessEmail
+        feedbackEmail = config.feedbackEmail
+    }
+
     override fun onNotificationInteraction() {}
 
     private fun onNotificationClick() {
@@ -108,8 +129,10 @@ class ProfileFragment: Fragment(),
     }
 
     private fun onWebsiteClick() {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.veghbusz.hu"))
-        startActivity(browserIntent)
+        if (websiteUrl != "") {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl))
+            startActivity(browserIntent)
+        }
     }
 
     private fun onContactClick() {
@@ -132,7 +155,7 @@ class ProfileFragment: Fragment(),
     }
 
     private fun getParentContent() {
-        val parentActivity = activity as TabbedActivity
+        val parentActivity = activity as UserActivity
 
         user = parentActivity.user
         titleController = parentActivity.titleController
@@ -144,7 +167,11 @@ class ProfileFragment: Fragment(),
     }
 
     private fun setProfilePicture(view: View) {
-        Picasso.with(context).load(user.imgUrl).fit().into(view.profile_picture)
+        if (user.imgUrl == null || user.imgUrl == "") {
+            Picasso.with(context).load(user.imgUrl).fit().into(view.profile_picture)
+        } else {
+            Picasso.with(context).load(R.drawable.default_profile_picture).fit().into(view.profile_picture)
+        }
     }
 
     private fun setName(view: View) {
@@ -161,18 +188,20 @@ class ProfileFragment: Fragment(),
         builder.setTitle(R.string.contactTitle)
         builder.setItems(topics) { _, topic ->
             when (topic) {
-                0 -> openEmailClient("test", topics[topic])
-                1 -> openEmailClient("test2", topics[topic])
+                0 -> openEmailClient(arrayOf(businessEmail), topics[topic])
+                1 -> openEmailClient(arrayOf(feedbackEmail, businessEmail), topics[topic])
             }
         }
 
-        builder.show()
+        if (businessEmail != "" && feedbackEmail != "") {
+            builder.show()
+        }
     }
 
-    private fun openEmailClient(recipient: String, subject: String) {
+    private fun openEmailClient(recipient: Array<String>, subject: String) {
         val emailIntent = Intent(Intent.ACTION_SEND)
         emailIntent.type = "message/rfc822"
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(recipient))
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, recipient)
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
 
         try {

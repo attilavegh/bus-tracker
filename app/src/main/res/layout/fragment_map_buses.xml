@@ -4,7 +4,7 @@
           xmlns:map="http://schemas.android.com/apk/res-auto"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:id="@+id/map"
+          android:id="@+id/map_buses"
           android:layout_marginTop="@dimen/activity_bar_padding" android:layout_marginBottom="@dimen/activity_bar_padding"
-          tools:context=".view.MapFragment"
+          tools:context=".view.MapBusesFragment"
           android:name="com.google.android.gms.maps.SupportMapFragment"/>

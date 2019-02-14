@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import hu.attilavegh.vbkoveto.presenter.BusItemRecyclerViewAdapter
 import hu.attilavegh.vbkoveto.R
-import hu.attilavegh.vbkoveto.TabbedActivity
+import hu.attilavegh.vbkoveto.UserActivity
 import hu.attilavegh.vbkoveto.controller.FirebaseController
 
 import hu.attilavegh.vbkoveto.model.Bus
@@ -21,14 +21,14 @@ class BusFragment: Fragment() {
     private var listener: OnListFragmentInteractionListener? = null
     private lateinit var firebaseListener: Disposable
 
-    private lateinit var parentActivity: TabbedActivity
+    private lateinit var parentActivity: UserActivity
 
     private val firebaseController = FirebaseController()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_bus_list, container, false)
 
-        parentActivity = activity as TabbedActivity
+        parentActivity = activity as UserActivity
 
         with(view as RecyclerView) {
             layoutManager = LinearLayoutManager(context)

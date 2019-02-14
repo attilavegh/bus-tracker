@@ -7,18 +7,15 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import hu.attilavegh.vbkoveto.controller.*
 
-import hu.attilavegh.vbkoveto.view.BusFragment
-import hu.attilavegh.vbkoveto.view.MapFragment
-import hu.attilavegh.vbkoveto.view.ProfileFragment
-import hu.attilavegh.vbkoveto.view.NotificationFragment
-
-import kotlinx.android.synthetic.main.activity_tabbed.*
 import hu.attilavegh.vbkoveto.model.*
+import hu.attilavegh.vbkoveto.view.*
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_user.*
 
-class TabbedActivity : AppCompatActivity(),
+class UserActivity : AppCompatActivity(),
     BusFragment.OnListFragmentInteractionListener,
-    MapFragment.OnFragmentInteractionListener,
+    MapBusFragment.OnFragmentInteractionListener,
+    MapBusesFragment.OnFragmentInteractionListener,
     ProfileFragment.OnFragmentInteractionListener,
     NotificationFragment.OnFragmentInteractionListener {
 
@@ -27,8 +24,8 @@ class TabbedActivity : AppCompatActivity(),
 
     lateinit var user: UserModel
 
-    var mode: ModeController = ModeController()
-    lateinit var driverModeEmail: String
+    private var mode: ModeController = ModeController()
+    private lateinit var driverModeEmail: String
 
     lateinit var titleController: ActivityTitleController
     private lateinit var toastController: ToastController
@@ -43,7 +40,7 @@ class TabbedActivity : AppCompatActivity(),
                 return@OnNavigationItemSelectedListener true
             }
             R.id.map_item -> {
-                openFragment(R.string.title_buses, MapFragment.newInstance())
+                openFragment(R.string.title_buses, MapBusesFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.profile_item -> {
@@ -56,14 +53,14 @@ class TabbedActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tabbed)
+        setContentView(R.layout.activity_user)
         toolbar = findViewById(R.id.toolbar)
 
         initControllers()
         initData()
 
         firebaseListener = firebaseController.getConfig().subscribe(
-            { result -> toastController.create(result.toString()) },
+            { result -> saveConfig(result) },
             { error -> toastController.create(error.toString()) }
         )
 
@@ -116,6 +113,10 @@ class TabbedActivity : AppCompatActivity(),
         }
     }
 
+    private fun saveConfig(config: RemoteConfig) {
+        driverModeEmail = config.driverModeEmail
+    }
+
     private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
         titleController.set(getString(titleId))
         fragmentController.switchTo(fragment, bundle)
@@ -158,7 +159,7 @@ class TabbedActivity : AppCompatActivity(),
         val argument = Bundle()
         argument.putString("id", bus.id)
 
-        val mapFragment = MapFragment.newInstance()
+        val mapFragment = MapBusFragment.newInstance()
         fragmentController.switchTo(mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
 
         titleController.set(bus.name)
