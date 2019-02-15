@@ -24,13 +24,12 @@ class UserActivity : AppCompatActivity(),
 
     lateinit var user: UserModel
 
-    private var mode: ModeController = ModeController()
     private lateinit var driverModeEmail: String
 
     lateinit var titleController: ActivityTitleController
+    private var firebaseController: FirebaseController = FirebaseController()
     private lateinit var toastController: ToastController
     private lateinit var fragmentController: FragmentController
-    private lateinit var firebaseController: FirebaseController
 
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -55,16 +54,15 @@ class UserActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
         toolbar = findViewById(R.id.toolbar)
+        user = intent.getParcelableExtra("user")
 
         initControllers()
-        initData()
 
-        firebaseListener = firebaseController.getConfig().subscribe(
-            { result -> saveConfig(result) },
+        firebaseListener = firebaseController.getDriverConfig().subscribe(
+            { result -> setApplicationMode(result) },
             { error -> toastController.create(error.toString()) }
         )
 
-        setApplicationMode()
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.bus_list_item
@@ -113,9 +111,6 @@ class UserActivity : AppCompatActivity(),
         }
     }
 
-    private fun saveConfig(config: RemoteConfig) {
-        driverModeEmail = config.driverModeEmail
-    }
 
     private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
         titleController.set(getString(titleId))
@@ -126,18 +121,13 @@ class UserActivity : AppCompatActivity(),
         titleController = ActivityTitleController(toolbar)
         toastController = ToastController(this, resources)
         fragmentController = FragmentController(supportFragmentManager)
-        firebaseController = FirebaseController()
     }
 
-    private fun initData() {
-        getUser()
-        getServerData()
-    }
 
     private fun onBusClick(bus: Bus) {
-        when (mode.normal()) {
-            true -> checkBus(bus)
-            false -> driveBus(bus)
+        when (user.isDriver) {
+            true -> driveBus(bus)
+            false -> checkBus(bus)
         }
     }
 
@@ -169,17 +159,11 @@ class UserActivity : AppCompatActivity(),
         println("$bus driverMode")
     }
 
-    private fun getUser() {
-        user = intent.getParcelableExtra("user")
-    }
+    private fun setApplicationMode(result: DriverConfig) {
+        driverModeEmail = result.email
+        user.isDriver = driverModeEmail == user.email
 
-    private fun getServerData() {
-        driverModeEmail = "vattilaaa@gmail.com"
-    }
-
-    private fun setApplicationMode() {
-        if (user.email == driverModeEmail) {
-            mode.mode = Mode.DRIVER
+        if (user.isDriver) {
             navigation.menu.getItem(1).isVisible = false
         }
     }

@@ -13,11 +13,13 @@ import android.content.Intent
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ApiException
+import hu.attilavegh.vbkoveto.controller.FirebaseController
 import hu.attilavegh.vbkoveto.model.UserModel
+import io.reactivex.disposables.Disposable
 
 private const val PLAY_SERVICES_RESOLUTION_REQUEST = 9000
 
-class LoginActivity: AppCompatActivity(), View.OnClickListener {
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
@@ -84,7 +86,7 @@ class LoginActivity: AppCompatActivity(), View.OnClickListener {
 
     private fun loadApp(account: GoogleSignInAccount) {
         val intent = Intent(this, UserActivity::class.java)
-        intent.putExtra("user", UserModel(account.email!!, account.displayName, account.photoUrl.toString()))
+        intent.putExtra("user", UserModel(account.email!!, false, account.displayName, account.photoUrl.toString()))
 
         this.startActivity(intent)
         finish()
@@ -94,7 +96,6 @@ class LoginActivity: AppCompatActivity(), View.OnClickListener {
         val googleAPI = GoogleApiAvailability.getInstance()
         val result = googleAPI.isGooglePlayServicesAvailable(this)
 
-        println(result)
         if (result != ConnectionResult.SUCCESS) {
             if (googleAPI.isUserResolvableError(result)) {
                 googleAPI.getErrorDialog(this, result, PLAY_SERVICES_RESOLUTION_REQUEST).show()

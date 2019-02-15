@@ -1,41 +1,64 @@
 package hu.attilavegh.vbkoveto.controller
 
 import android.util.Log
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import hu.attilavegh.vbkoveto.model.Bus
-import hu.attilavegh.vbkoveto.model.RemoteConfig
+import hu.attilavegh.vbkoveto.model.ContactConfig
+import hu.attilavegh.vbkoveto.model.DriverConfig
 import io.reactivex.Observable
-import java.text.SimpleDateFormat
 import java.util.*
 
-const val LOG_TAG_CONFIG = "firebase_getConfig"
+const val LOG_TAG_DRIVER_CONFIG = "firebase_driverConfig"
+const val LOG_TAG_CONTACT_CONFIG = "firebase_contactConfig"
 const val LOG_TAG_BUS_LIST = "firebase_getBusList"
 
 class FirebaseController {
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun getConfig(): Observable<RemoteConfig> {
+    fun getContactConfig(): Observable<ContactConfig> {
         return Observable.create { emitter ->
 
-            database.collection("config").document("data")
-                .addSnapshotListener(EventListener<DocumentSnapshot> { config, error ->
-                    if (error != null) {
-                        Log.w(LOG_TAG_CONFIG, "Listen failed.", error)
-
-                        emitter.onError(error)
-                        return@EventListener
+            database.collection("config").document("contactConfig").get()
+                .addOnSuccessListener { config ->
+                    if (config != null) {
+                        emitter.onNext(config.toObject(ContactConfig::class.java)!!)
+                    } else {
+                        Log.d(LOG_TAG_CONTACT_CONFIG, "No such document")
                     }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(LOG_TAG_CONTACT_CONFIG, "failed with ", exception)
 
-                    if (config != null && config.exists()) {
-                        emitter.onNext(config.toObject(RemoteConfig::class.java)!!)
-                    }
-                })
+                    emitter.onError(exception)
+                    return@addOnFailureListener
+                }
         }
     }
 
-    fun updateBus(): Observable<Bus>{
+
+
+    fun getDriverConfig(): Observable<DriverConfig> {
+        return Observable.create { emitter ->
+
+            database.collection("config").document("driverConfig").get()
+                .addOnSuccessListener { config ->
+                    if (config != null) {
+                        emitter.onNext(config.toObject(DriverConfig::class.java)!!)
+                    } else {
+                        Log.d(LOG_TAG_DRIVER_CONFIG, "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(LOG_TAG_DRIVER_CONFIG, "failed with ", exception)
+
+                    emitter.onError(exception)
+                    return@addOnFailureListener
+                }
+        }
+    }
+
+    fun updateBus(): Observable<Bus> {
         return Observable.create { emitter ->
 
         }

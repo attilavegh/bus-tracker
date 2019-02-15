@@ -30,7 +30,4 @@
     <string name="login_background">login_background</string>
     <string name="vb_logo">Logo</string>
     <string name="user_name_mock">Sam Smith</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Notification settings</string>
 </resources>
