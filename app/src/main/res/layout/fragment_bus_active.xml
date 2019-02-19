@@ -61,7 +61,7 @@
                 android:layout_height="@dimen/row_subtitle_height" app:srcCompat="@drawable/favorite_off" android:id="@+id/fav_button"
                 android:contentDescription="@string/fav_button"
                 android:paddingTop="6dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@color/transparent"
                 android:layout_gravity="fill_vertical | end"
                 android:layout_column="3" android:layout_row="0" android:layout_rowSpan="2"/>
     </GridLayout>

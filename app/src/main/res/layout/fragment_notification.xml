@@ -1,9 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_marginTop="@dimen/activity_bar_padding" android:layout_marginBottom="@dimen/activity_bar_padding"
-             tools:context=".view.NotificationFragment">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             android:layout_marginTop="@dimen/activity_bar_padding"
+                                             android:layout_marginBottom="@dimen/activity_bar_padding"
+                                             android:background="@color/white"
+                                             tools:context=".view.NotificationFragment">
+    <ScrollView android:layout_width="0dp"
+                android:layout_height="0dp" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintVertical_bias="0.0"
+                android:overScrollMode="always">
 
-</FrameLayout>
+        <LinearLayout
+                android:id="@+id/settings_notification"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_padding">
+
+            <View android:layout_width="fill_parent"
+                  android:layout_height="1dp"
+                  android:background="@color/separator"/>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/row_content_height"
+                    android:paddingLeft="@dimen/list_padding" android:paddingStart="@dimen/list_padding"
+                    tools:ignore="RtlSymmetry">
+
+                <ImageView
+                        app:srcCompat="@drawable/favorite_on"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/row_content_height"
+                        android:scaleType="center" android:contentDescription="@string/notification_settings_fav_icon"/>
+
+                <TextView android:layout_width="0dp"
+                          android:layout_height="match_parent"
+                          android:layout_weight="1" android:text="@string/notification_buses"
+                          android:gravity="center_vertical"
+                          android:paddingLeft="@dimen/list_padding" android:paddingStart="@dimen/list_padding"
+                          android:textSize="20sp" android:textStyle="bold" android:textColor="@color/navbarGray"
+                          tools:ignore="RtlSymmetry"/>
+
+                <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/fav_switch"
+                        android:layout_width="wrap_content"
+                        android:paddingStart="@dimen/list_padding" android:paddingLeft="@dimen/list_padding"
+                        android:paddingEnd="@dimen/list_padding" android:paddingRight="@dimen/list_padding"
+                        android:scaleX="1.3"
+                        android:scaleY="1.3"
+                        android:background="@color/transparent"
+                        android:theme="@style/Switch"
+                        android:layout_height="match_parent"/>
+            </LinearLayout>
+
+            <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/separator"/>
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:text="@string/notification_subtitle"
+                      android:paddingTop="@dimen/list_title_separator"
+                      android:paddingLeft="@dimen/list_padding" android:paddingStart="@dimen/list_padding"
+                      android:paddingRight="@dimen/list_padding" android:paddingEnd="@dimen/list_padding"
+                      android:textSize="16sp" android:textColor="@color/subtitleGray"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

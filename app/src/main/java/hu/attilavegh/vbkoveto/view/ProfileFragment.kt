@@ -162,10 +162,10 @@ class ProfileFragment : Fragment(),
     }
 
     private fun setProfilePicture(view: View) {
-        if (user.imgUrl == null || user.imgUrl == "") {
-            Picasso.with(context).load(user.imgUrl).fit().into(view.profile_picture)
-        } else {
+        if (user.imgUrl == "null") {
             Picasso.with(context).load(R.drawable.default_profile_picture).fit().into(view.profile_picture)
+        } else {
+            Picasso.with(context).load(user.imgUrl).fit().into(view.profile_picture)
         }
     }
 

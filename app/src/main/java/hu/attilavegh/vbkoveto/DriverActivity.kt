@@ -19,9 +19,7 @@ class DriverActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_driver)
         setSupportActionBar(toolbar)
-    }
 
-    private fun initControllers() {
         titleController = ActivityTitleUtils(toolbar)
         toastController = ToastUtils(this, resources)
         fragmentController = FragmentUtils(supportFragmentManager)

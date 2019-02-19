@@ -8,7 +8,6 @@ import hu.attilavegh.vbkoveto.model.UserModel
 import com.google.gson.Gson
 import hu.attilavegh.vbkoveto.model.DriverConfig
 
-
 const val AUTH_SHARED_PREFERENCES_FILE_NAME = "hu.attilavegh.vbkoveto.controller.auth"
 const val USER_PREFERENCES_NAME = "user"
 

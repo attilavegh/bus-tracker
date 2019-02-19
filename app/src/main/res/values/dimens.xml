@@ -6,6 +6,7 @@
     <dimen name="text_margin">16dp</dimen>
 
     <dimen name="list_padding">16dp</dimen>
+    <dimen name="list_title_separator">10dp</dimen>
     <dimen name="row_height">71dp</dimen>
     <dimen name="row_height_profile">72dp</dimen>
     <dimen name="row_content_height">70dp</dimen>

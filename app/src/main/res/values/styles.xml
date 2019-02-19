@@ -11,4 +11,9 @@
     <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/loginStatusBarColor</item>
     </style>
+
+    <style name="Switch" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorSwitchThumbNormal">@color/navbarGray</item>
+    </style>
 </resources>

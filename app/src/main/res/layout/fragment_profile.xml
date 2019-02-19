@@ -5,7 +5,7 @@
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
                                              tools:context=".view.ProfileFragment" android:gravity="center"
-                                             android:id="@+id/linearLayout"
+                                             android:id="@+id/profile_container"
                                              android:layout_marginTop="@dimen/activity_bar_padding"
                                              android:layout_marginBottom="@dimen/activity_bar_padding"
                                              android:background="@color/white">
@@ -16,7 +16,8 @@
             android:layout_height="0dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintVertical_bias="0.0"
+            android:overScrollMode="always">
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:orientation="vertical">
@@ -96,7 +97,7 @@
                     <ImageView
                             android:src="@drawable/settings_logout"
                             android:layout_width="@dimen/row_content_height"
-                            android:layout_height="@dimen/row_content_height"  android:layout_weight="0"
+                            android:layout_height="@dimen/row_content_height" android:layout_weight="0"
                             android:cropToPadding="false"
                             android:padding="23dp"/>
 

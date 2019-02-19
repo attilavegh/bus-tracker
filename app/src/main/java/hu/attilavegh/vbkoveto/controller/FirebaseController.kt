@@ -12,6 +12,7 @@ import java.util.*
 const val LOG_TAG_DRIVER_CONFIG = "firebase_driverConfig"
 const val LOG_TAG_CONTACT_CONFIG = "firebase_contactConfig"
 const val LOG_TAG_BUS_LIST = "firebase_getBusList"
+const val LOG_TAG_BUS_LOCATION_ERROR = "firebase_updateLocation"
 
 class FirebaseController {
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -36,8 +37,6 @@ class FirebaseController {
         }
     }
 
-
-
     fun getDriverConfig(): Observable<DriverConfig> {
         return Observable.create { emitter ->
 
@@ -58,9 +57,14 @@ class FirebaseController {
         }
     }
 
-    fun updateBus(): Observable<Bus> {
+    fun updateBusLocation(bus: Bus, location: GeoPoint): Observable<Bus> {
         return Observable.create { emitter ->
-
+            database.collection("buses").document(bus.id)
+                .update("location", location)
+                .addOnFailureListener { e ->
+                    Log.d(LOG_TAG_BUS_LOCATION_ERROR, "failed with ", e)
+                    emitter.onError(e)
+                }
         }
     }
 
