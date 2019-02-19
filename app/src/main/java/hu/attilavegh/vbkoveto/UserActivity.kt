@@ -5,7 +5,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import hu.attilavegh.vbkoveto.controller.*
+import hu.attilavegh.vbkoveto.utilities.*
 
 import hu.attilavegh.vbkoveto.model.*
 import hu.attilavegh.vbkoveto.view.*
@@ -20,16 +20,12 @@ class UserActivity : AppCompatActivity(),
     NotificationFragment.OnFragmentInteractionListener {
 
     private lateinit var toolbar: Toolbar
-    private lateinit var firebaseListener: Disposable
 
     lateinit var user: UserModel
 
-    private lateinit var driverModeEmail: String
-
-    lateinit var titleController: ActivityTitleController
-    private var firebaseController: FirebaseController = FirebaseController()
-    private lateinit var toastController: ToastController
-    private lateinit var fragmentController: FragmentController
+    lateinit var titleController: ActivityTitleUtils
+    private lateinit var toastController: ToastUtils
+    private lateinit var fragmentController: FragmentUtils
 
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -58,19 +54,8 @@ class UserActivity : AppCompatActivity(),
 
         initControllers()
 
-        firebaseListener = firebaseController.getDriverConfig().subscribe(
-            { result -> setApplicationMode(result) },
-            { error -> toastController.create(error.toString()) }
-        )
-
-
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.bus_list_item
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        firebaseListener.dispose()
     }
 
     override fun onBusSelection(bus: Bus) {
@@ -118,30 +103,19 @@ class UserActivity : AppCompatActivity(),
     }
 
     private fun initControllers() {
-        titleController = ActivityTitleController(toolbar)
-        toastController = ToastController(this, resources)
-        fragmentController = FragmentController(supportFragmentManager)
+        titleController = ActivityTitleUtils(toolbar)
+        toastController = ToastUtils(this, resources)
+        fragmentController = FragmentUtils(supportFragmentManager)
     }
 
-
     private fun onBusClick(bus: Bus) {
-        when (user.isDriver) {
-            true -> driveBus(bus)
-            false -> checkBus(bus)
-        }
+        checkBus(bus)
     }
 
     private fun checkBus(bus: Bus) {
         when (bus.active) {
             true -> initCheckBusView(bus)
             false -> toastController.create(R.string.inactive_bus_message)
-        }
-    }
-
-    private fun driveBus(bus: Bus) {
-        when (!bus.active) {
-            true -> initDriveBusView(bus)
-            false -> toastController.create(R.string.active_bus_message)
         }
     }
 
@@ -153,18 +127,5 @@ class UserActivity : AppCompatActivity(),
         fragmentController.switchTo(mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
 
         titleController.set(bus.name)
-    }
-
-    private fun initDriveBusView(bus: Bus) {
-        println("$bus driverMode")
-    }
-
-    private fun setApplicationMode(result: DriverConfig) {
-        driverModeEmail = result.email
-        user.isDriver = driverModeEmail == user.email
-
-        if (user.isDriver) {
-            navigation.menu.getItem(1).isVisible = false
-        }
     }
 }

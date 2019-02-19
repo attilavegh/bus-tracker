@@ -30,4 +30,5 @@
     <string name="login_background">login_background</string>
     <string name="vb_logo">Logo</string>
     <string name="user_name_mock">Sam Smith</string>
+    <string name="title_activity_driver">DriverActivity</string>
 </resources>

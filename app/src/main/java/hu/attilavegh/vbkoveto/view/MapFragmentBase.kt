@@ -6,7 +6,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.controller.FirebaseController
-import hu.attilavegh.vbkoveto.controller.ToastController
+import hu.attilavegh.vbkoveto.utilities.ToastUtils
 import io.reactivex.disposables.Disposable
 
 const val CAMERA_BOUND_PADDING = 300
@@ -15,16 +15,15 @@ const val CAMERA_ZOOM = 13.0f
 open class MapFragmentBase : Fragment(), OnMapReadyCallback {
 
     protected lateinit var firebaseListener: Disposable
-
     protected val firebaseController = FirebaseController()
-    protected lateinit var toastController: ToastController
+
+    protected lateinit var toastUtils: ToastUtils
 
     protected lateinit var map: GoogleMap
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        toastController = ToastController(context, resources)
+        toastUtils = ToastUtils(context, resources)
     }
 
     override fun onDetach() {
@@ -37,6 +36,6 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
     }
 
     protected fun onNoBus() {
-        toastController.create(R.string.no_bus)
+        toastUtils.create(R.string.no_bus)
     }
 }

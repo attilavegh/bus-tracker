@@ -1,11 +1,11 @@
-package hu.attilavegh.vbkoveto.controller
+package hu.attilavegh.vbkoveto.utilities
 
 import android.content.Context
 import android.content.res.Resources
 import android.view.Gravity
 import android.widget.Toast
 
-class ToastController(private val context: Context, private val resources: Resources) {
+class ToastUtils(private val context: Context, private val resources: Resources) {
 
     fun create(messageResource: Int) {
         val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_SHORT)

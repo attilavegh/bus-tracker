@@ -10,16 +10,23 @@ import android.view.View
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import android.content.Intent
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ApiException
+import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.controller.FirebaseController
 import hu.attilavegh.vbkoveto.model.UserModel
+import hu.attilavegh.vbkoveto.utilities.PlayServicesUtils
+import hu.attilavegh.vbkoveto.utilities.ToastUtils
+
 import io.reactivex.disposables.Disposable
 
-private const val PLAY_SERVICES_RESOLUTION_REQUEST = 9000
-
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
+
+    private lateinit var authController: AuthController
+    private val firebaseController = FirebaseController()
+    private lateinit var firebaseListener: Disposable
+
+    private val playServicesUtils = PlayServicesUtils(this)
+    private lateinit var toastUtils: ToastUtils
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
@@ -29,15 +36,30 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_login)
         findViewById<Button>(R.id.login_button).setOnClickListener(this)
 
-        checkPlayServices()
+        authController = AuthController(this)
+        toastUtils = ToastUtils(this, resources)
 
-        createGoogleAuthClient()
-        checkLoggedInAccount()
+        playServicesUtils.checkPlayServices()
+
+        initLogin()
+    }
+
+    private fun initLogin() {
+        if (authController.isLoggedIn()) {
+            val user = authController.getUser()
+            loadApp(user)
+        } else {
+            createGoogleAuthClient()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.login_button -> login()
+            R.id.login_button -> onLogin()
         }
     }
 
@@ -58,7 +80,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    private fun login() {
+    private fun onLogin() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, 204)
     }
@@ -68,7 +90,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             val account: GoogleSignInAccount? = completedTask.getResult(ApiException::class.java)
 
             if (account != null) {
-                loadApp(account)
+                firebaseListener = firebaseController.getDriverConfig().subscribe(
+                    { result ->
+                        run {
+                            val user = authController.login(account, result)
+                            loadApp(user)
+                        }
+                    },
+                    { error -> toastUtils.create(error.toString()) }
+                )
             }
         } catch (e: ApiException) {
             // TODO: error handling
@@ -76,34 +106,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun checkLoggedInAccount() {
-        val account = GoogleSignIn.getLastSignedInAccount(this)
+    private fun loadApp(user: UserModel) {
+        val activityType = if (user.isDriver) DriverActivity::class.java else UserActivity::class.java
 
-        if (account != null) {
-            loadApp(account)
-        }
-    }
-
-    private fun loadApp(account: GoogleSignInAccount) {
-        val intent = Intent(this, UserActivity::class.java)
-        intent.putExtra("user", UserModel(account.email!!, false, account.displayName, account.photoUrl.toString()))
+        val intent = Intent(this, activityType)
+        intent.putExtra("user", UserModel(user.email, user.isDriver, user.name, user.imgUrl))
 
         this.startActivity(intent)
         finish()
-    }
-
-    private fun checkPlayServices(): Boolean {
-        val googleAPI = GoogleApiAvailability.getInstance()
-        val result = googleAPI.isGooglePlayServicesAvailable(this)
-
-        if (result != ConnectionResult.SUCCESS) {
-            if (googleAPI.isUserResolvableError(result)) {
-                googleAPI.getErrorDialog(this, result, PLAY_SERVICES_RESOLUTION_REQUEST).show()
-            }
-
-            return false
-        }
-
-        return true
     }
 }

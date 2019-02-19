@@ -1,8 +1,8 @@
-package hu.attilavegh.vbkoveto.controller
+package hu.attilavegh.vbkoveto.utilities
 
 import android.support.v7.widget.Toolbar
 
-class ActivityTitleController(private val toolbar: Toolbar) {
+class ActivityTitleUtils(private val toolbar: Toolbar) {
 
     private var previous: String = ""
     private var current: String = ""

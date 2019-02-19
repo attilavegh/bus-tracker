@@ -22,12 +22,12 @@ import hu.attilavegh.vbkoveto.model.FragmentTagName
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import android.net.Uri
 import android.support.v7.app.AlertDialog
-import hu.attilavegh.vbkoveto.controller.ActivityTitleController
+import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.utilities.ActivityTitleUtils
 import hu.attilavegh.vbkoveto.controller.FirebaseController
-import hu.attilavegh.vbkoveto.controller.FragmentController
-import hu.attilavegh.vbkoveto.controller.ToastController
+import hu.attilavegh.vbkoveto.utilities.FragmentUtils
+import hu.attilavegh.vbkoveto.utilities.ToastUtils
 import hu.attilavegh.vbkoveto.model.ContactConfig
-import hu.attilavegh.vbkoveto.model.DriverConfig
 import io.reactivex.disposables.Disposable
 
 class ProfileFragment : Fragment(),
@@ -43,15 +43,18 @@ class ProfileFragment : Fragment(),
     private lateinit var contactConfig: ContactConfig
 
     private var firebaseController: FirebaseController = FirebaseController()
-    private lateinit var titleController: ActivityTitleController
-    private lateinit var toastController: ToastController
-    private lateinit var fragmentController: FragmentController
+    private lateinit var authController: AuthController
+
+    private lateinit var titleUtils: ActivityTitleUtils
+    private lateinit var toastUtils: ToastUtils
+    private lateinit var fragmentUtils: FragmentUtils
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
 
-        toastController = ToastController(context!!, resources)
-        fragmentController = FragmentController(activity!!.supportFragmentManager)
+        authController = AuthController(context!!)
+        toastUtils = ToastUtils(context!!, resources)
+        fragmentUtils = FragmentUtils(activity!!.supportFragmentManager)
 
         getParentContent()
         createGoogleAuthClient()
@@ -60,7 +63,7 @@ class ProfileFragment : Fragment(),
 
         firebaseListener = firebaseController.getContactConfig().subscribe(
             { result -> contactConfig = ContactConfig(result.businessEmail, result.feedbackEmail, result.website) },
-            { error -> toastController.create(error.toString()) }
+            { error -> toastUtils.create(error.toString()) }
         )
 
         return view
@@ -107,12 +110,14 @@ class ProfileFragment : Fragment(),
     override fun onNotificationInteraction() {}
 
     private fun onNotificationClick() {
-        fragmentController.switchTo(NotificationFragment.newInstance(), FragmentTagName.NOTIFICATION.name)
-        titleController.set(getString(R.string.notification))
+        fragmentUtils.switchTo(NotificationFragment.newInstance(), FragmentTagName.NOTIFICATION.name)
+        titleUtils.set(getString(R.string.notification))
     }
 
     private fun onLogoutClick() {
         googleSignInClient.signOut().addOnCompleteListener {
+            authController.logout()
+
             val intent = Intent(context, LoginActivity::class.java)
             this.startActivity(intent)
 
@@ -148,7 +153,7 @@ class ProfileFragment : Fragment(),
         val parentActivity = activity as UserActivity
 
         user = parentActivity.user
-        titleController = parentActivity.titleController
+        titleUtils = parentActivity.titleController
     }
 
     private fun fillProfileInfo(view: View) {
@@ -195,7 +200,7 @@ class ProfileFragment : Fragment(),
         try {
             startActivity(Intent.createChooser(emailIntent, subject))
         } catch (ex: android.content.ActivityNotFoundException) {
-            toastController.create(R.string.contactNoEmailClient)
+            toastUtils.create(R.string.contactNoEmailClient)
         }
     }
 }

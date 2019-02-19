@@ -1,4 +1,4 @@
-package hu.attilavegh.vbkoveto.controller
+package hu.attilavegh.vbkoveto.utilities
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager
 
 import hu.attilavegh.vbkoveto.R
 
-class FragmentController(private val fragmentManager: FragmentManager) {
+class FragmentUtils(private val fragmentManager: FragmentManager) {
 
     fun switchTo(fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
         fragment.arguments = bundle

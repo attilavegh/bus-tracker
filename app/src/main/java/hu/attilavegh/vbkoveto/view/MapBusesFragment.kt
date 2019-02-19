@@ -60,7 +60,7 @@ class MapBusesFragment : MapFragmentBase() {
     private fun getBuses() {
         firebaseListener = firebaseController.getBusList().subscribe(
             { result -> onSuccess(result) },
-            { error -> toastController.create(error.toString()) })
+            { error -> toastUtils.create(error.toString()) })
     }
 
     private fun onSuccess(result: List<Bus>) {
