@@ -1,4 +1,4 @@
-package hu.attilavegh.vbkoveto.utilities
+package hu.attilavegh.vbkoveto.utility
 
 import android.support.v7.widget.Toolbar
 

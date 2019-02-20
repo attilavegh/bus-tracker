@@ -37,7 +37,7 @@
                         app:srcCompat="@drawable/favorite_on"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/row_content_height"
-                        android:scaleType="center" android:contentDescription="@string/notification_settings_fav_icon"/>
+                        android:contentDescription="@string/notification_settings_fav_icon"/>
 
                 <TextView android:layout_width="0dp"
                           android:layout_height="match_parent"

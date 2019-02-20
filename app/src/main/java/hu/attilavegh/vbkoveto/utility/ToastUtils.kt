@@ -1,4 +1,4 @@
-package hu.attilavegh.vbkoveto.utilities
+package hu.attilavegh.vbkoveto.utility
 
 import android.content.Context
 import android.content.res.Resources

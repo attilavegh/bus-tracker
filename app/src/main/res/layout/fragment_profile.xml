@@ -19,7 +19,8 @@
             app:layout_constraintVertical_bias="0.0"
             android:overScrollMode="always">
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
                       android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -57,21 +58,19 @@
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
+                        android:paddingStart="@dimen/list_padding" android:paddingLeft="@dimen/list_padding"
                         android:layout_height="@dimen/row_content_height">
 
                     <ImageView
                             android:src="@drawable/settings_notification"
-                            android:layout_width="@dimen/row_content_height"
-                            android:layout_height="@dimen/row_content_height"
-                            android:layout_weight="0"
-                            android:cropToPadding="false"
-                            android:padding="23dp"/>
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/row_content_height"/>
 
                     <TextView android:layout_width="0dp"
                               android:layout_height="match_parent"
                               android:layout_weight="1" android:text="@string/notification"
                               android:gravity="center_vertical"
-                              android:paddingTop="3dp"
+                              android:paddingLeft="@dimen/list_padding" android:paddingStart="@dimen/list_padding" tools:ignore="RtlSymmetry"
                               android:textSize="22sp" android:textStyle="bold" android:textColor="@color/navbarGray"/>
                 </LinearLayout>
 
@@ -92,20 +91,19 @@
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
+                        android:paddingStart="@dimen/list_padding" android:paddingLeft="@dimen/list_padding"
                         android:layout_height="@dimen/row_content_height">
 
                     <ImageView
                             android:src="@drawable/settings_logout"
-                            android:layout_width="@dimen/row_content_height"
-                            android:layout_height="@dimen/row_content_height" android:layout_weight="0"
-                            android:cropToPadding="false"
-                            android:padding="23dp"/>
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/row_content_height"/>
 
                     <TextView android:layout_width="0dp"
                               android:layout_height="@dimen/row_content_height"
                               android:layout_weight="1" android:text="@string/logout"
                               android:gravity="center_vertical"
-                              android:paddingTop="3dp"
+                              android:paddingLeft="@dimen/list_padding" android:paddingStart="@dimen/list_padding" tools:ignore="RtlSymmetry"
                               android:textSize="22sp" android:textStyle="bold" android:textColor="@color/navbarGray"/>
                 </LinearLayout>
 
@@ -131,20 +129,19 @@
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
+                        android:paddingStart="@dimen/list_padding" android:paddingLeft="@dimen/list_padding"
                         android:layout_height="@dimen/row_content_height">
 
                     <ImageView
                             android:src="@drawable/settings_website"
-                            android:layout_width="@dimen/row_content_height"
-                            android:layout_height="@dimen/row_content_height" android:layout_weight="0"
-                            android:cropToPadding="false"
-                            android:padding="23dp"/>
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/row_content_height"/>
 
                     <TextView android:layout_width="0dp"
                               android:layout_height="@dimen/row_content_height"
                               android:layout_weight="1" android:text="@string/website"
                               android:gravity="center_vertical"
-                              android:paddingTop="3dp"
+                              android:paddingLeft="@dimen/list_padding" android:paddingStart="@dimen/list_padding" tools:ignore="RtlSymmetry"
                               android:textSize="22sp" android:textStyle="bold" android:textColor="@color/navbarGray"/>
                 </LinearLayout>
 
@@ -165,20 +162,19 @@
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/row_content_height">
+                        android:layout_height="@dimen/row_content_height"
+                        android:paddingStart="@dimen/list_padding" android:paddingLeft="@dimen/list_padding">
 
                     <ImageView
                             app:srcCompat="@drawable/settings_feedback"
-                            android:layout_width="@dimen/row_content_height"
-                            android:layout_height="@dimen/row_content_height" android:layout_weight="0"
-                            android:cropToPadding="false"
-                            android:padding="23dp"/>
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/row_content_height"/>
 
                     <TextView android:layout_width="0dp"
                               android:layout_height="match_parent"
                               android:layout_weight="1" android:text="@string/contact"
                               android:gravity="center_vertical"
-                              android:paddingTop="3dp"
+                              android:paddingLeft="@dimen/list_padding" android:paddingStart="@dimen/list_padding" tools:ignore="RtlSymmetry"
                               android:textSize="22sp" android:textStyle="bold" android:textColor="@color/navbarGray"/>
                 </LinearLayout>
 

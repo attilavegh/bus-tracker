@@ -3,9 +3,9 @@ package hu.attilavegh.vbkoveto
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import hu.attilavegh.vbkoveto.model.Bus
-import hu.attilavegh.vbkoveto.utilities.ActivityTitleUtils
-import hu.attilavegh.vbkoveto.utilities.FragmentUtils
-import hu.attilavegh.vbkoveto.utilities.ToastUtils
+import hu.attilavegh.vbkoveto.utility.ActivityTitleUtils
+import hu.attilavegh.vbkoveto.utility.FragmentUtils
+import hu.attilavegh.vbkoveto.utility.ToastUtils
 
 import kotlinx.android.synthetic.main.activity_driver.*
 

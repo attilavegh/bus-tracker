@@ -1,4 +1,4 @@
-package hu.attilavegh.vbkoveto.utilities
+package hu.attilavegh.vbkoveto.utility
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

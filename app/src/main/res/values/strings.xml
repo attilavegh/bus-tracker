@@ -15,10 +15,12 @@
     <string name="notification_title">Jelzések</string>
     <string name="notification_subtitle">Értesítés küldése a kedvenc járatok indulásakor.</string>
     <string name="notification_buses">Kedvenc járatok</string>
+    <string name="notification_text">Nézze meg a járat jelenlegi helyzetét.</string>
     <string name="notification_disabled">Engedélyezze az értesítések használatát.</string>
     <string name="logout">Kilépés</string>
     <string name="website">Weboldal</string>
     <string name="contact">Kapcsolat</string>
+    <string name="notification_channel">departure_notification</string>
 
     <string name="contactTitle">Kapcsolatfelvétel célja</string>
     <string name="contactBusiness">Ügyintézés</string>

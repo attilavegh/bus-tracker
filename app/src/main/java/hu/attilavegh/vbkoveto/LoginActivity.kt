@@ -12,12 +12,15 @@ import com.google.android.gms.tasks.Task
 import android.content.Intent
 import com.google.android.gms.common.api.ApiException
 import hu.attilavegh.vbkoveto.controller.AuthController
-import hu.attilavegh.vbkoveto.controller.FirebaseController
+import hu.attilavegh.vbkoveto.service.FirebaseController
 import hu.attilavegh.vbkoveto.model.UserModel
-import hu.attilavegh.vbkoveto.utilities.PlayServicesUtils
-import hu.attilavegh.vbkoveto.utilities.ToastUtils
+import hu.attilavegh.vbkoveto.utility.PlayServicesUtils
+import hu.attilavegh.vbkoveto.utility.ToastUtils
 
 import io.reactivex.disposables.Disposable
+import android.app.NotificationManager
+import android.app.NotificationChannel
+import android.os.Build
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -36,6 +39,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_login)
         findViewById<Button>(R.id.login_button).setOnClickListener(this)
 
+        createNotificationChannel()
+
         authController = AuthController(this)
         toastUtils = ToastUtils(this, resources)
 
@@ -51,10 +56,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         } else {
             createGoogleAuthClient()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onClick(view: View) {
@@ -114,5 +115,17 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         this.startActivity(intent)
         finish()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val id = getString(R.string.notification_channel)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+
+            val channel = NotificationChannel(id, id, importance)
+
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

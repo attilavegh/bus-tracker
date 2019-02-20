@@ -1,9 +1,10 @@
-package hu.attilavegh.vbkoveto.controller
+package hu.attilavegh.vbkoveto.service
 
 import android.content.Context
 import android.util.Log
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.model.ContactConfig
 import hu.attilavegh.vbkoveto.model.DriverConfig

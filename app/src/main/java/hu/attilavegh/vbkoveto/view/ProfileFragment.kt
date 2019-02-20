@@ -23,10 +23,10 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 import android.net.Uri
 import android.support.v7.app.AlertDialog
 import hu.attilavegh.vbkoveto.controller.AuthController
-import hu.attilavegh.vbkoveto.utilities.ActivityTitleUtils
-import hu.attilavegh.vbkoveto.controller.FirebaseController
-import hu.attilavegh.vbkoveto.utilities.FragmentUtils
-import hu.attilavegh.vbkoveto.utilities.ToastUtils
+import hu.attilavegh.vbkoveto.utility.ActivityTitleUtils
+import hu.attilavegh.vbkoveto.service.FirebaseController
+import hu.attilavegh.vbkoveto.utility.FragmentUtils
+import hu.attilavegh.vbkoveto.utility.ToastUtils
 import hu.attilavegh.vbkoveto.model.ContactConfig
 import io.reactivex.disposables.Disposable
 
@@ -42,7 +42,8 @@ class ProfileFragment : Fragment(),
 
     private lateinit var contactConfig: ContactConfig
 
-    private var firebaseController: FirebaseController = FirebaseController()
+    private var firebaseController: FirebaseController =
+        FirebaseController()
     private lateinit var authController: AuthController
 
     private lateinit var titleUtils: ActivityTitleUtils

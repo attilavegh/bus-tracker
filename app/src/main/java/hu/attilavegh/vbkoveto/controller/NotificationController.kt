@@ -1,6 +1,7 @@
 package hu.attilavegh.vbkoveto.controller
 
 import android.content.Context
+import com.google.firebase.messaging.FirebaseMessaging
 import hu.attilavegh.vbkoveto.model.Bus
 
 const val NOTIFICATION_SHARED_PREFERENCES_FILE_NAME = "hu.attilavegh.vbkoveto.controller.notification"
@@ -11,6 +12,8 @@ class NotificationController(context: Context) {
     private var notificationSharedPreferences = context.getSharedPreferences(NOTIFICATION_SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
 
     fun enable() {
+        FirebaseMessaging.getInstance().subscribeToTopic("departure")
+
         val preferencesEditor = notificationSharedPreferences.edit()
 
         preferencesEditor.putString(NOTIFICATION_ACTIVE, "")
@@ -18,6 +21,8 @@ class NotificationController(context: Context) {
     }
 
     fun disable() {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("departure")
+
         val preferencesEditor = notificationSharedPreferences.edit()
 
         preferencesEditor.clear()

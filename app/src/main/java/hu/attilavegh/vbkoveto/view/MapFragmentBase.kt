@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import hu.attilavegh.vbkoveto.R
-import hu.attilavegh.vbkoveto.controller.FirebaseController
-import hu.attilavegh.vbkoveto.utilities.ToastUtils
+import hu.attilavegh.vbkoveto.service.FirebaseController
+import hu.attilavegh.vbkoveto.utility.ToastUtils
 import io.reactivex.disposables.Disposable
 
 const val CAMERA_BOUND_PADDING = 300

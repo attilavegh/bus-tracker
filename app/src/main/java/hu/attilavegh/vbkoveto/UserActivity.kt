@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.widget.ImageButton
 import hu.attilavegh.vbkoveto.controller.NotificationController
-import hu.attilavegh.vbkoveto.utilities.*
+import hu.attilavegh.vbkoveto.utility.*
 
 import hu.attilavegh.vbkoveto.model.*
 import hu.attilavegh.vbkoveto.view.*

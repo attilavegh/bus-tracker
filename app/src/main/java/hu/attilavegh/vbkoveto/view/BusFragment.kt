@@ -12,7 +12,7 @@ import android.widget.ImageButton
 import hu.attilavegh.vbkoveto.presenter.BusItemRecyclerViewAdapter
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.UserActivity
-import hu.attilavegh.vbkoveto.controller.FirebaseController
+import hu.attilavegh.vbkoveto.service.FirebaseController
 
 import hu.attilavegh.vbkoveto.model.Bus
 import io.reactivex.disposables.Disposable
