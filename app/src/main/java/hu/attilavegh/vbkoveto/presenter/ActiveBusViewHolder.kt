@@ -21,6 +21,7 @@ class ActiveBusViewHolder(
                 busStatus.text = if (bus.active) activeStatusText else ""
                 busStatusTime.text = bus.getFormattedTimestamp()
 
+                setFavoriteStatus(bus)
                 tagControls(bus)
             }
         }

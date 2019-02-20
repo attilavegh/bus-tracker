@@ -58,7 +58,7 @@ class MapBusesFragment : MapFragmentBase() {
     }
 
     private fun getBuses() {
-        firebaseListener = firebaseController.getBusList().subscribe(
+        firebaseListener = firebaseController.getBusList(context!!).subscribe(
             { result -> onSuccess(result) },
             { error -> toastUtils.create(error.toString()) })
     }

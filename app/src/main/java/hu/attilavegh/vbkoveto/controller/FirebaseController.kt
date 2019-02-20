@@ -1,5 +1,6 @@
 package hu.attilavegh.vbkoveto.controller
 
+import android.content.Context
 import android.util.Log
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
@@ -68,9 +69,10 @@ class FirebaseController {
         }
     }
 
-    fun getBusList(): Observable<List<Bus>> {
-        return Observable.create { emitter ->
+    fun getBusList(context: Context): Observable<List<Bus>> {
+        val notificationController = NotificationController(context)
 
+        return Observable.create { emitter ->
             database.collection("buses")
                 .addSnapshotListener(EventListener<QuerySnapshot> { busList, error ->
                     if (error != null) {
@@ -88,6 +90,7 @@ class FirebaseController {
                     }
 
                     val sortedBuses = sortBuses(buses)
+                    setNotificationStatus(sortedBuses, notificationController)
                     emitter.onNext(sortedBuses)
                 })
         }
@@ -117,5 +120,9 @@ class FirebaseController {
             true -> buses.sortedWith(compareBy { !it.active })
             false -> buses.sortedWith(compareBy { it.active })
         }
+    }
+
+    private fun setNotificationStatus(buses: List<Bus>, controller: NotificationController) {
+        buses.forEach { bus -> bus.favorite = controller.hasBus(bus) }
     }
 }

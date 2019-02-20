@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import hu.attilavegh.vbkoveto.presenter.BusItemRecyclerViewAdapter
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.UserActivity
@@ -35,7 +36,7 @@ class BusFragment: Fragment() {
             adapter = BusItemRecyclerViewAdapter(listener)
         }
 
-        firebaseListener = firebaseController.getBusList().subscribe {
+        firebaseListener = firebaseController.getBusList(context!!).subscribe {
             (view.adapter as BusItemRecyclerViewAdapter).buses = it
         }
 
@@ -59,9 +60,9 @@ class BusFragment: Fragment() {
     }
 
     interface OnListFragmentInteractionListener {
-        fun onBusSelection(item: Bus)
-        fun onFavoriteAdd(item: Bus)
-        fun onFavoriteRemove(item: Bus)
+        fun onBusSelection(bus: Bus)
+        fun onFavoriteAdd(bus: Bus, button: ImageButton)
+        fun onFavoriteRemove(bus: Bus, button: ImageButton)
     }
 
     companion object {

@@ -65,17 +65,19 @@ class BusItemRecyclerViewAdapter(
 
 
     private fun addFavouriteListener(bus: Bus, button: ImageButton) {
-        addFavorite(bus, button)
+        if (bus.favorite) {
+            removeFavorite(bus, button)
+        } else {
+            addFavorite(bus, button)
+        }
     }
 
     private fun removeFavorite(bus: Bus, button: ImageButton) {
-        listener?.onFavoriteRemove(bus)
-        button.setImageResource(R.drawable.favorite_off)
+        listener?.onFavoriteRemove(bus, button)
     }
 
     private fun addFavorite(bus: Bus, button: ImageButton) {
-        listener?.onFavoriteAdd(bus)
-        button.setImageResource(R.drawable.favorite_on)
+        listener?.onFavoriteAdd(bus, button)
     }
 
     private fun setActionListener(view: View, bus: Bus, listener: View.OnClickListener) {

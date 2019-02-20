@@ -15,6 +15,7 @@
     <string name="notification_title">Jelzések</string>
     <string name="notification_subtitle">Értesítés küldése a kedvenc járatok indulásakor.</string>
     <string name="notification_buses">Kedvenc járatok</string>
+    <string name="notification_disabled">Engedélyezze az értesítések használatát.</string>
     <string name="logout">Kilépés</string>
     <string name="website">Weboldal</string>
     <string name="contact">Kapcsolat</string>

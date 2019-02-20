@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.model.Bus
 import android.widget.TextView
+import hu.attilavegh.vbkoveto.controller.NotificationController
 import kotlinx.android.synthetic.main.fragment_bus_active.view.*
 
 abstract class BusViewHolder(
@@ -22,7 +23,16 @@ abstract class BusViewHolder(
     protected val activeStatusText: String = itemView.context.getString(R.string.bus_status_message)
     
     private val favoriteButton: ImageButton = itemView.fav_button
-    
+    private val notificationController = NotificationController(parent.context)
+
+    protected fun setFavoriteStatus(bus: Bus) {
+        if (notificationController.hasBus(bus)) {
+            favoriteButton.setImageResource(R.drawable.favorite_on)
+        } else {
+            favoriteButton.setImageResource(R.drawable.favorite_off)
+        }
+    }
+
     protected fun tagControls(bus: Bus) {
         with(itemView) { tag = bus }
         with(favoriteButton) { tag = bus }

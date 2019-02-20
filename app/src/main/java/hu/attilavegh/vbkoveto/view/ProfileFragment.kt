@@ -107,8 +107,6 @@ class ProfileFragment : Fragment(),
         }
     }
 
-    override fun onNotificationInteraction() {}
-
     private fun onNotificationClick() {
         fragmentUtils.switchTo(NotificationFragment.newInstance(), FragmentTagName.NOTIFICATION.name)
         titleUtils.set(getString(R.string.notification))
@@ -153,7 +151,7 @@ class ProfileFragment : Fragment(),
         val parentActivity = activity as UserActivity
 
         user = parentActivity.user
-        titleUtils = parentActivity.titleController
+        titleUtils = parentActivity.titleUtils
     }
 
     private fun fillProfileInfo(view: View) {

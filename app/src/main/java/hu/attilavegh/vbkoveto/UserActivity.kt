@@ -5,11 +5,12 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.widget.ImageButton
+import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.utilities.*
 
 import hu.attilavegh.vbkoveto.model.*
 import hu.attilavegh.vbkoveto.view.*
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_user.*
 
 class UserActivity : AppCompatActivity(),
@@ -23,10 +24,11 @@ class UserActivity : AppCompatActivity(),
 
     lateinit var user: UserModel
 
-    lateinit var titleController: ActivityTitleUtils
-    private lateinit var toastController: ToastUtils
-    private lateinit var fragmentController: FragmentUtils
+    lateinit var titleUtils: ActivityTitleUtils
+    private lateinit var toastUtils: ToastUtils
+    private lateinit var fragmentUtils: FragmentUtils
 
+    private lateinit var notificationController: NotificationController
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -52,7 +54,11 @@ class UserActivity : AppCompatActivity(),
         toolbar = findViewById(R.id.toolbar)
         user = intent.getParcelableExtra("user")
 
-        initControllers()
+        titleUtils = ActivityTitleUtils(toolbar)
+        toastUtils = ToastUtils(this, resources)
+        fragmentUtils = FragmentUtils(supportFragmentManager)
+
+        notificationController = NotificationController(this)
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.bus_list_item
@@ -62,16 +68,18 @@ class UserActivity : AppCompatActivity(),
         onBusClick(bus)
     }
 
-    override fun onFavoriteAdd(bus: Bus) {
-        println("$bus add favorite")
+    override fun onFavoriteAdd(bus: Bus, button: ImageButton) {
+        if (notificationController.isEnabled()) {
+            notificationController.add(bus)
+            button.setImageResource(R.drawable.favorite_on)
+        } else {
+            toastUtils.create(R.string.notification_disabled)
+        }
     }
 
-    override fun onFavoriteRemove(bus: Bus) {
-        println("$bus remove favorite")
-    }
-
-    override fun onNotificationInteraction() {
-        // TODO: handle notifications
+    override fun onFavoriteRemove(bus: Bus, button: ImageButton) {
+        notificationController.remove(bus)
+        button.setImageResource(R.drawable.favorite_off)
     }
 
     override fun finishActivityAfterLogout() {
@@ -88,24 +96,18 @@ class UserActivity : AppCompatActivity(),
             super.onBackPressed()
 
             if (hasSubFragment) {
-                titleController.setPrevious()
+                titleUtils.setPrevious()
             }
         } else {
             navigation.selectedItemId = busFragmentId
-            titleController.set(getString(R.string.title_buses))
+            titleUtils.set(getString(R.string.title_buses))
         }
     }
 
 
     private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
-        titleController.set(getString(titleId))
-        fragmentController.switchTo(fragment, bundle)
-    }
-
-    private fun initControllers() {
-        titleController = ActivityTitleUtils(toolbar)
-        toastController = ToastUtils(this, resources)
-        fragmentController = FragmentUtils(supportFragmentManager)
+        titleUtils.set(getString(titleId))
+        fragmentUtils.switchTo(fragment, bundle)
     }
 
     private fun onBusClick(bus: Bus) {
@@ -115,7 +117,7 @@ class UserActivity : AppCompatActivity(),
     private fun checkBus(bus: Bus) {
         when (bus.active) {
             true -> initCheckBusView(bus)
-            false -> toastController.create(R.string.inactive_bus_message)
+            false -> toastUtils.create(R.string.inactive_bus_message)
         }
     }
 
@@ -124,8 +126,8 @@ class UserActivity : AppCompatActivity(),
         argument.putString("id", bus.id)
 
         val mapFragment = MapBusFragment.newInstance()
-        fragmentController.switchTo(mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
+        fragmentUtils.switchTo(mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
 
-        titleController.set(bus.name)
+        titleUtils.set(bus.name)
     }
 }

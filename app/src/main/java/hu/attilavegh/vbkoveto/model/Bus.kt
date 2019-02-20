@@ -9,6 +9,7 @@ data class Bus(
     val id: String = "",
     val name: String = "",
     val active: Boolean = false,
+    var favorite: Boolean = false,
     val location: GeoPoint = GeoPoint(0.0, 0.0),
     val departureTime: Timestamp = Timestamp.now()
 ) {

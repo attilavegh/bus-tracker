@@ -11,7 +11,7 @@ import hu.attilavegh.vbkoveto.model.DriverConfig
 const val AUTH_SHARED_PREFERENCES_FILE_NAME = "hu.attilavegh.vbkoveto.controller.auth"
 const val USER_PREFERENCES_NAME = "user"
 
-class AuthController(val context: Context) {
+class AuthController(private val context: Context) {
 
     private var authSharedPreferences = context.getSharedPreferences(AUTH_SHARED_PREFERENCES_FILE_NAME, MODE_PRIVATE)
     private val gson = Gson()

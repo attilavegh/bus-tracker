@@ -13,6 +13,8 @@ class InactiveBusViewHolder(
             field = value
             value?.let { bus ->
                 busName.text = bus.name
+
+                setFavoriteStatus(bus)
                 tagControls(bus)
             }
         }
