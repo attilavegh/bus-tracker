@@ -26,7 +26,7 @@ abstract class BusViewHolder(
     private val notificationController = NotificationController(parent.context)
 
     protected fun setFavoriteStatus(bus: Bus) {
-        if (notificationController.hasBus(bus)) {
+        if (notificationController.hasBus(bus.id)) {
             favoriteButton.setImageResource(R.drawable.favorite_on)
         } else {
             favoriteButton.setImageResource(R.drawable.favorite_off)

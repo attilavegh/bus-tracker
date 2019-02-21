@@ -19,10 +19,8 @@ exports.onBusDepartureNotification = functions.firestore.document('buses/{busId}
         const payload = {
             data: {
                 busId: context.params.busId,
-                busName: bus ? bus.name : "Busz"
-            },
-            notification: {
-                body: `${bus ? bus.name : "A"} járat már úton van.`,
+                busName: bus ? bus.name : "Busz",
+                title: `${bus ? bus.name : "A"} járat elindult`,
             }
         };
 

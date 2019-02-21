@@ -124,6 +124,6 @@ class FirebaseController {
     }
 
     private fun setNotificationStatus(buses: List<Bus>, controller: NotificationController) {
-        buses.forEach { bus -> bus.favorite = controller.hasBus(bus) }
+        buses.forEach { bus -> bus.favorite = controller.hasBus(bus.id) }
     }
 }

@@ -120,7 +120,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val id = getString(R.string.notification_channel)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
 
             val channel = NotificationChannel(id, id, importance)
 

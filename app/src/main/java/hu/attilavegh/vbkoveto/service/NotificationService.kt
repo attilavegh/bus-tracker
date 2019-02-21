@@ -1,19 +1,23 @@
 package hu.attilavegh.vbkoveto.service
 
-import android.support.v4.app.NotificationCompat
+import android.app.Notification
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import hu.attilavegh.vbkoveto.R
 import android.app.PendingIntent
 import android.content.Intent
-import hu.attilavegh.vbkoveto.UserActivity
+import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import hu.attilavegh.vbkoveto.model.Bus
+import hu.attilavegh.vbkoveto.UserActivity
+import hu.attilavegh.vbkoveto.controller.NotificationController
+import hu.attilavegh.vbkoveto.model.NotificationModel
 
 const val NOTIFICATION_SERVICE_TAG = "FCM Service"
 
 class NotificationService: FirebaseMessagingService() {
+
+    private lateinit var notificationController: NotificationController
 
     override fun onNewToken(token: String?) {
         super.onNewToken(token)
@@ -22,30 +26,38 @@ class NotificationService: FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
-        createNotification(remoteMessage!!)
+        val notification = NotificationModel(remoteMessage!!.data["busId"]!!, remoteMessage.data["busName"]!!, remoteMessage.data["title"]!!)
+        notificationController = NotificationController(this)
 
-        Log.d(NOTIFICATION_SERVICE_TAG, "From: " + remoteMessage.from!!)
-        Log.d(NOTIFICATION_SERVICE_TAG, "Notification Message Body: " + remoteMessage.notification!!.body!!)
+        if (notificationController.hasBus(notification.busId)) {
+            createNotification(notification)
+
+            Log.d(NOTIFICATION_SERVICE_TAG, "Notification from: " + remoteMessage.from!!)
+            Log.d(NOTIFICATION_SERVICE_TAG, "Notification title: " + remoteMessage.data["title"])
+        }
     }
 
-    private fun createNotification(message: RemoteMessage) {
+    private fun createNotification(notification: NotificationModel) {
         val notificationText = getString(R.string.notification_text)
         val notificationBuilder = NotificationCompat.Builder(this, getString(R.string.notification_channel))
-            .setContentTitle(message.notification!!.body)
+            .setDefaults(Notification.DEFAULT_ALL)
+            .setSmallIcon(R.drawable.notification_logo)
+            .setContentTitle(notification.title)
             .setContentText(notificationText)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//            .setStyle()
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 
         val notificationManager = NotificationManagerCompat.from(this)
         notificationManager.notify(0, notificationBuilder.build())
     }
 
-    private fun createIntent(busId: String, busName: String): PendingIntent {
+    private fun createIntent(notification: NotificationModel): PendingIntent {
         val intent = Intent(this, UserActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("notification", true)
-        intent.putExtra("busId", busId)
-        intent.putExtra("busName", busName)
+        intent.putExtra("busId", notification.busId)
+        intent.putExtra("busName", notification.busName)
 
         return PendingIntent.getActivity(this, 0, intent, 0)
     }

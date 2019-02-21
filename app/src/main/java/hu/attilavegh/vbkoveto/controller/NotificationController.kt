@@ -51,7 +51,7 @@ class NotificationController(context: Context) {
         }
     }
 
-    fun hasBus(bus: Bus): Boolean {
-        return notificationSharedPreferences.contains(bus.id)
+    fun hasBus(busId: String): Boolean {
+        return notificationSharedPreferences.contains(busId)
     }
 }
