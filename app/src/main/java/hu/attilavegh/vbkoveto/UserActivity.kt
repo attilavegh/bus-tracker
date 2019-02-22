@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 import android.widget.ImageButton
 import hu.attilavegh.vbkoveto.controller.AuthController
@@ -52,6 +53,8 @@ class UserActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+
         setContentView(R.layout.activity_user)
         toolbar = findViewById(R.id.toolbar)
 

@@ -60,7 +60,7 @@ class MapBusesFragment : MapFragmentBase() {
     private fun getBuses() {
         firebaseListener = firebaseController.getBusList(context!!).subscribe(
             { result -> onSuccess(result) },
-            { error -> toastUtils.create(R.string.busError) })
+            { toastUtils.create(R.string.busError) })
     }
 
     private fun onSuccess(result: List<Bus>) {
@@ -92,7 +92,7 @@ class MapBusesFragment : MapFragmentBase() {
         buses.forEach {
             val position = LatLng(it.location.latitude, it.location.longitude)
             boundsBuilder.include(position)
-            markers.add(map.addMarker(MarkerOptions().position(position)))
+            markers.add(map.addMarker(addCustomMarker().position(position)))
         }
 
         return boundsBuilder.build()

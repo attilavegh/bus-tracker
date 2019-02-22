@@ -98,7 +98,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                             loadApp(user)
                         }
                     },
-                    { error -> toastUtils.create(R.string.loginError) }
+                    { toastUtils.create(R.string.loginError) }
                 )
             }
         } catch (e: ApiException) {

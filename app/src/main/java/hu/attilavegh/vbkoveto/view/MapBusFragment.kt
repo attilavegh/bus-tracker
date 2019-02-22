@@ -14,6 +14,9 @@ import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
 import hu.attilavegh.vbkoveto.model.Bus
+import android.graphics.BitmapFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import hu.attilavegh.vbkoveto.utility.BitmapUtils
 
 class MapBusFragment : MapFragmentBase() {
 
@@ -67,7 +70,7 @@ class MapBusFragment : MapFragmentBase() {
     private fun getBus(id: String) {
         firebaseListener = firebaseController.getBus(id).subscribe(
             { onBusCheck(it) },
-            { error -> toastUtils.create(R.string.busError) }
+            { toastUtils.create(R.string.busError) }
         )
     }
 
@@ -81,8 +84,10 @@ class MapBusFragment : MapFragmentBase() {
     }
 
     private fun positionMarker(bus: Bus) {
+        marker.remove()
+
         val position = LatLng(bus.location.latitude, bus.location.longitude)
-        marker.position = position
+        marker = map.addMarker(addCustomMarker().position(position))
 
         map.moveCamera(
             CameraUpdateFactory.newLatLngZoom(
