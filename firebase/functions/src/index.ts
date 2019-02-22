@@ -3,26 +3,34 @@ import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 
-exports.onBusDepartureNotification = functions.firestore.document('buses/{busId}')
+exports.onBusNotification = functions.firestore.document('buses/{busId}')
     .onUpdate((change, context) => {
         console.log('Bus has been updated');
 
         const bus = change.after ? change.after.data() : null;
         const busBefore = change.before ? change.before.data() : null
         
-        if (bus && busBefore && (!bus.active || bus.active === busBefore.active)) {
+        if (bus && busBefore && bus.active === busBefore.active) {
             return;
         }
         
         console.log(bus);
 
+        const notificationType = (bus && bus.active) ? "departure" : "arrival";
+        const busId = context.params.busId;
+        const notificationId = (bus) ? bus.notificationId.toString() : (new Date().getMilliseconds() % 2147483647).toString();
+        const busName = (bus) ? bus.name : "Busz"
+        const notificationTitle = (bus && bus.active) ? `${bus.name} járat elindult` : "";
+
         const payload = {
             data: {
-                busId: context.params.busId,
-                busName: bus ? bus.name : "Busz",
-                title: `${bus ? bus.name : "A"} járat elindult`,
+                type: notificationType,
+                busId: busId,
+                notificationId: notificationId,
+                busName: busName,
+                title: notificationTitle,
             }
         };
 
-        return admin.messaging().sendToTopic("departure", payload);
+        return admin.messaging().sendToTopic("bus_notification", payload);
     });

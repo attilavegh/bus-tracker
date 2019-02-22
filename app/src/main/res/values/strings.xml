@@ -9,6 +9,7 @@
     <string name="inactive_bus_message">A busz még nem indult el.</string>
     <string name="active_bus_message">A busz már elindult.</string>
     <string name="no_bus">Nincs megjelenítendő járat</string>
+    <string name="bus_became_inactive">A járat már nem aktív</string>
 
     <string name="login_button">Bejelentkezés</string>
     <string name="notification">Értesítések kezelése</string>
@@ -20,7 +21,8 @@
     <string name="logout">Kilépés</string>
     <string name="website">Weboldal</string>
     <string name="contact">Kapcsolat</string>
-    <string name="notification_channel">departure_notification</string>
+    <string name="notification_channelId">departure_notification</string>
+    <string name="notification_channelName">Járatok indulása</string>
 
     <string name="contactTitle">Kapcsolatfelvétel célja</string>
     <string name="contactBusiness">Ügyintézés</string>

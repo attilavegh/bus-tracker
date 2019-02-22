@@ -7,15 +7,49 @@ import android.widget.Toast
 
 class ToastUtils(private val context: Context, private val resources: Resources) {
 
+    private var openToast: Toast = Toast(context)
+
     fun create(messageResource: Int) {
+        closeOpenToast()
+
         val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_SHORT)
         toast.setGravity(Gravity.BOTTOM, 0, 100 * resources.displayMetrics.density.toInt())
-        toast.show()
+
+        show(toast)
+        saveToastReference(toast)
+    }
+
+    fun createLong(messageResource: Int) {
+        closeOpenToast()
+
+        val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.BOTTOM, 0, 100 * resources.displayMetrics.density.toInt())
+
+        show(toast)
+        saveToastReference(toast)
     }
 
     fun create(messageResource: String) {
+        closeOpenToast()
+
         val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_SHORT)
         toast.setGravity(Gravity.BOTTOM, 0, 100 * resources.displayMetrics.density.toInt())
-        toast.show()
+
+        show(toast)
+        saveToastReference(toast)
+    }
+
+    fun closeOpenToast() {
+        openToast.cancel()
+    }
+
+    private fun show(toast: Toast) {
+        if (ApplicationUtils.isAppForeground()) {
+            toast.show()
+        }
+    }
+
+    private fun saveToastReference(toast: Toast) {
+        openToast = toast
     }
 }

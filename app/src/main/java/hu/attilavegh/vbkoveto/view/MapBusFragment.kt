@@ -72,17 +72,23 @@ class MapBusFragment : MapFragmentBase() {
     }
 
     private fun onBusCheck(bus: Bus) {
-        positionMarker(bus)
+        if (bus.active) {
+            positionMarker(bus)
+        } else {
+            marker.remove()
+            toastUtils.createLong(R.string.bus_became_inactive)
+        }
+    }
+
+    private fun positionMarker(bus: Bus) {
+        val position = LatLng(bus.location.latitude, bus.location.longitude)
+        marker.position = position
+
         map.moveCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(bus.location.latitude, bus.location.longitude),
                 CAMERA_ZOOM
             )
         )
-    }
-
-    private fun positionMarker(bus: Bus) {
-        val position = LatLng(bus.location.latitude, bus.location.longitude)
-        marker.position = position
     }
 }

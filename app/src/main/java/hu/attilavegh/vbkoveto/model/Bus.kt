@@ -11,7 +11,8 @@ data class Bus(
     val active: Boolean = false,
     var favorite: Boolean = false,
     val location: GeoPoint = GeoPoint(0.0, 0.0),
-    val departureTime: Timestamp = Timestamp.now()
+    val departureTime: Timestamp = Timestamp.now(),
+    val notificationId: Int = 0
 ) {
 
     fun getFormattedTimestamp(): String {

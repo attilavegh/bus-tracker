@@ -109,9 +109,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun loadApp(user: UserModel) {
         val activityType = if (user.isDriver) DriverActivity::class.java else UserActivity::class.java
-
         val intent = Intent(this, activityType)
-        intent.putExtra("user", UserModel(user.email, user.isDriver, user.name, user.imgUrl))
 
         this.startActivity(intent)
         finish()
@@ -119,10 +117,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val id = getString(R.string.notification_channel)
+            val id = getString(R.string.notification_channelId)
+            val name = getString(R.string.notification_channelName)
             val importance = NotificationManager.IMPORTANCE_HIGH
 
-            val channel = NotificationChannel(id, id, importance)
+            val channel = NotificationChannel(id, name, importance)
 
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)

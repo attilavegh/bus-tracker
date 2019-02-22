@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.widget.ImageButton
+import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.utility.*
 
@@ -29,6 +30,7 @@ class UserActivity : AppCompatActivity(),
     private lateinit var fragmentUtils: FragmentUtils
 
     private lateinit var notificationController: NotificationController
+    private lateinit var authController: AuthController
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -52,16 +54,31 @@ class UserActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
         toolbar = findViewById(R.id.toolbar)
-        user = intent.getParcelableExtra("user")
+
 
         titleUtils = ActivityTitleUtils(toolbar)
         toastUtils = ToastUtils(this, resources)
         fragmentUtils = FragmentUtils(supportFragmentManager)
 
         notificationController = NotificationController(this)
+        authController = AuthController(this)
+
+        user = authController.getUser()
+
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.bus_list_item
+    }
+
+    override fun onResume() {
+        super.onResume()
+        notificationController.removeAllNotifications()
+        checkBusFromNotification()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        toastUtils.closeOpenToast()
     }
 
     override fun onBusSelection(bus: Bus) {
@@ -129,5 +146,18 @@ class UserActivity : AppCompatActivity(),
         fragmentUtils.switchTo(mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
 
         titleUtils.set(bus.name)
+    }
+
+    private fun checkBusFromNotification() {
+        val isNotification = intent.getBooleanExtra("notification", false)
+        val busId = intent.getStringExtra("busId")
+        val busName = intent.getStringExtra("busName")
+
+        if (isNotification) {
+            val bus = Bus(busId, busName)
+            initCheckBusView(bus)
+
+            intent.removeExtra("notification")
+        }
     }
 }
