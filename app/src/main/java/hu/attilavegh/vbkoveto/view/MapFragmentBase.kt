@@ -35,8 +35,4 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
     }
-
-    protected fun onNoBus() {
-        toastUtils.create(R.string.no_bus)
-    }
 }

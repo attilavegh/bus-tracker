@@ -29,6 +29,9 @@
     <string name="contactFeedback">Visszajelzés</string>
     <string name="contactNoEmailClient">Nincs email kliens telepítve.</string>
 
+    <string name="loginError">Hiba a bejelentkezés közben.</string>
+    <string name="busError">Hiba!</string>
+
     <!-- Mock text -->
     <string name="bus_name_mock">Járat 1</string>
     <string name="bus_start_time_mock">8:00</string>
