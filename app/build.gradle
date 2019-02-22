@@ -19,10 +19,24 @@ android {
     androidExtensions {
         experimental = true
     }
+    signingConfigs {
+        release {
+            storeFile file("release.keystore")
+            storePassword "attilavegh_vbkoveto"
+            keyAlias "release"
+            keyPassword "attilavegh_vbkoveto"
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
         }
     }
     productFlavors {
