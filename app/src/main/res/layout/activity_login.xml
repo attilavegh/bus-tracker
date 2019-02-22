@@ -44,7 +44,7 @@
                 android:layout_alignParentBottom="true"
                 android:paddingRight="30dp"
                 android:paddingEnd="30dp"
-                android:drawableLeft="@mipmap/google_logo" android:drawableStart="@mipmap/google_logo"
+                android:drawableLeft="@mipmap/login_google_logo" android:drawableStart="@mipmap/login_google_logo"
         />
     </RelativeLayout>
 </LinearLayout>
