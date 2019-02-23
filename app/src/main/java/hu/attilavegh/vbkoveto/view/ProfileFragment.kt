@@ -42,8 +42,7 @@ class ProfileFragment : Fragment(),
 
     private lateinit var contactConfig: ContactConfig
 
-    private var firebaseController: FirebaseController =
-        FirebaseController()
+    private var firebaseController: FirebaseController = FirebaseController()
     private lateinit var authController: AuthController
 
     private lateinit var titleUtils: ActivityTitleUtils

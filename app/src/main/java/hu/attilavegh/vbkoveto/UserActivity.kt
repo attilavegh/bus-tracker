@@ -58,7 +58,6 @@ class UserActivity : AppCompatActivity(),
         setContentView(R.layout.activity_user)
         toolbar = findViewById(R.id.toolbar)
 
-
         titleUtils = ActivityTitleUtils(toolbar)
         toastUtils = ToastUtils(this, resources)
         fragmentUtils = FragmentUtils(supportFragmentManager)
@@ -66,8 +65,8 @@ class UserActivity : AppCompatActivity(),
         notificationController = NotificationController(this)
         authController = AuthController(this)
 
+        enableNotification()
         user = authController.getUser()
-
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.bus_list_item
@@ -75,6 +74,7 @@ class UserActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
+
         notificationController.removeAllNotifications()
         checkBusFromNotification()
     }
@@ -161,6 +161,13 @@ class UserActivity : AppCompatActivity(),
             initCheckBusView(bus)
 
             intent.removeExtra("notification")
+        }
+    }
+
+    private fun enableNotification() {
+        if (notificationController.isFirstStart()) {
+            notificationController.markFirstStart()
+            notificationController.enable()
         }
     }
 }

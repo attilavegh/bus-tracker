@@ -8,12 +8,18 @@ import hu.attilavegh.vbkoveto.model.Bus
 const val NOTIFICATION_SHARED_PREFERENCES_FILE_NAME = "hu.attilavegh.vbkoveto.controller.notification"
 const val NOTIFICATION_ACTIVE = "active"
 
+const val START_SHARED_PREFERENCES_FILE_NAME = "hu.attilavegh.vbkoveto.controller.start"
+const val FIRST_START = "firstStart"
+
+const val NOTIFICATION_TOPIC = "bus_notification"
+
 class NotificationController(private val context: Context) {
 
     private var notificationSharedPreferences = context.getSharedPreferences(NOTIFICATION_SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
+    private var startSharedPreferences = context.getSharedPreferences(START_SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
 
     fun enable() {
-        FirebaseMessaging.getInstance().subscribeToTopic("bus_notification")
+        FirebaseMessaging.getInstance().subscribeToTopic(NOTIFICATION_TOPIC)
 
         val preferencesEditor = notificationSharedPreferences.edit()
 
@@ -22,7 +28,7 @@ class NotificationController(private val context: Context) {
     }
 
     fun disable() {
-        FirebaseMessaging.getInstance().unsubscribeFromTopic("bus_notification")
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(NOTIFICATION_TOPIC)
 
         val preferencesEditor = notificationSharedPreferences.edit()
 
@@ -59,5 +65,16 @@ class NotificationController(private val context: Context) {
     fun removeAllNotifications() {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancelAll()
+    }
+
+    fun markFirstStart() {
+        val preferencesEditor = startSharedPreferences.edit()
+
+        preferencesEditor.putBoolean(FIRST_START, false)
+        preferencesEditor.apply()
+    }
+
+    fun isFirstStart(): Boolean {
+        return !startSharedPreferences.contains(FIRST_START)
     }
 }
