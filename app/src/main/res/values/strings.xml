@@ -26,7 +26,7 @@
 
     <string name="contactTitle">Kapcsolatfelvétel célja</string>
     <string name="contactBusiness">Ügyintézés</string>
-    <string name="contactFeedback">Visszajelzés</string>
+    <string name="contactFeedback">Végh Busz alkalmazás visszajelzés</string>
     <string name="contactNoEmailClient">Nincs email kliens telepítve.</string>
 
     <string name="loginError">Hiba a bejelentkezés közben.</string>
