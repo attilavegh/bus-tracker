@@ -1,4 +1,4 @@
-package hu.attilavegh.vbkoveto.view
+package hu.attilavegh.vbkoveto.view.user
 
 import android.content.Context
 import android.os.Bundle
@@ -14,13 +14,12 @@ import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
 import hu.attilavegh.vbkoveto.model.Bus
-import android.graphics.BitmapFactory
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import hu.attilavegh.vbkoveto.utility.BitmapUtils
+import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
+import hu.attilavegh.vbkoveto.view.MapFragmentBase
 
 class MapBusFragment : MapFragmentBase() {
 
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnBusFragmentInterActionListener? = null
 
     private lateinit var selectedBusId: String
     private lateinit var marker: Marker
@@ -37,7 +36,7 @@ class MapBusFragment : MapFragmentBase() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnBusFragmentInterActionListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnFragmentInteractionListener")
@@ -49,7 +48,7 @@ class MapBusFragment : MapFragmentBase() {
         listener = null
     }
 
-    interface OnFragmentInteractionListener
+    interface OnBusFragmentInterActionListener
 
     companion object {
         fun newInstance(): MapBusFragment = MapBusFragment()

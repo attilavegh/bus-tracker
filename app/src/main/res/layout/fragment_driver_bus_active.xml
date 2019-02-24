@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:background="?attr/selectableItemBackground"
+        android:layout_width="match_parent" android:layout_height="@dimen/row_height">
+
+    <GridLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_content_height"
+            android:layout_marginLeft="@dimen/list_padding" android:layout_marginStart="@dimen/list_padding"
+            android:columnCount="4"
+            android:rowCount="2">
+
+        <TextView
+                android:text="@string/bus_name_mock"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:id="@+id/bus_name"
+                android:gravity="center"
+                android:textSize="22sp" android:textStyle="bold"
+                android:textColor="@color/navbarGray" app:fontFamily="sans-serif"
+                android:layout_row="0" android:layout_column="0" android:layout_columnSpan="3" android:layout_rowSpan="2"/>
+
+
+        <ImageButton
+                android:visibility="invisible"
+                android:layout_width="@dimen/row_action_button_width"
+                android:layout_height="@dimen/row_action_button_height" app:srcCompat="@drawable/favorite_off" android:id="@+id/fav_button"
+                android:contentDescription="@string/fav_button"
+                android:paddingTop="6dp"
+                android:background="@color/transparent"
+                android:layout_gravity="fill_vertical | end"
+                android:layout_column="3" android:layout_row="0" android:layout_rowSpan="2"/>
+    </GridLayout>
+
+    <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/separator"/>
+</LinearLayout>
+
+

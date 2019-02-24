@@ -7,7 +7,7 @@
                                              android:layout_marginTop="@dimen/activity_bar_padding"
                                              android:layout_marginBottom="@dimen/activity_bar_padding"
                                              android:background="@color/white"
-                                             tools:context=".view.NotificationFragment">
+                                             tools:context=".view.user.NotificationFragment">
     <ScrollView android:layout_width="0dp"
                 android:layout_height="0dp" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"

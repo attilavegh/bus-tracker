@@ -8,20 +8,20 @@ import hu.attilavegh.vbkoveto.R
 
 class FragmentUtils(private val fragmentManager: FragmentManager) {
 
-    fun switchTo(fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
+    fun switchTo(container: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
         fragment.arguments = bundle
 
         fragmentManager.popBackStack()
         fragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
+            .replace(container, fragment)
             .commit()
     }
 
-    fun switchTo(fragment: Fragment, tag: String, bundle: Bundle = Bundle.EMPTY) {
+    fun switchTo(container: Int, fragment: Fragment, tag: String, bundle: Bundle = Bundle.EMPTY) {
         fragment.arguments = bundle
 
         fragmentManager.beginTransaction()
-            .replace(R.id.container, fragment, tag)
+            .replace(container, fragment, tag)
             .addToBackStack(tag)
             .commit()
     }

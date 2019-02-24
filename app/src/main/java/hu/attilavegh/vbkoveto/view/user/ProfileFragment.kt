@@ -1,4 +1,4 @@
-package hu.attilavegh.vbkoveto.view
+package hu.attilavegh.vbkoveto.view.user
 
 import android.content.Context
 import android.content.Intent
@@ -31,10 +31,10 @@ import hu.attilavegh.vbkoveto.model.ContactConfig
 import io.reactivex.disposables.Disposable
 
 class ProfileFragment : Fragment(),
-    NotificationFragment.OnFragmentInteractionListener,
+    NotificationFragment.OnNotificationFragmentInteractionListener,
     View.OnClickListener {
 
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnProfileFragmentInteractionListener? = null
 
     private lateinit var user: UserModel
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -72,7 +72,7 @@ class ProfileFragment : Fragment(),
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnProfileFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnFragmentInteractionListener")
@@ -108,7 +108,7 @@ class ProfileFragment : Fragment(),
     }
 
     private fun onNotificationClick() {
-        fragmentUtils.switchTo(NotificationFragment.newInstance(), FragmentTagName.NOTIFICATION.name)
+        fragmentUtils.switchTo(R.id.container, NotificationFragment.newInstance(), FragmentTagName.NOTIFICATION.name)
         titleUtils.set(getString(R.string.notification))
     }
 
@@ -132,7 +132,7 @@ class ProfileFragment : Fragment(),
         showContactSelector()
     }
 
-    interface OnFragmentInteractionListener {
+    interface OnProfileFragmentInteractionListener {
         fun finishActivityAfterLogout()
     }
 

@@ -1,4 +1,4 @@
-package hu.attilavegh.vbkoveto.presenter
+package hu.attilavegh.vbkoveto.presenter.user
 
 import android.view.ViewGroup
 import android.widget.TextView
@@ -22,7 +22,8 @@ class ActiveBusViewHolder(
                 busStatusTime.text = bus.getFormattedTimestamp()
 
                 setFavoriteStatus(bus)
-                tagControls(bus)
+                tagItem(bus)
+                tagFavoriteButton(bus)
             }
         }
 }

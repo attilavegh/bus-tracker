@@ -12,15 +12,19 @@ import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.utility.*
 
 import hu.attilavegh.vbkoveto.model.*
-import hu.attilavegh.vbkoveto.view.*
+import hu.attilavegh.vbkoveto.view.user.BusFragment
+import hu.attilavegh.vbkoveto.view.user.MapBusFragment
+import hu.attilavegh.vbkoveto.view.user.MapBusesFragment
+import hu.attilavegh.vbkoveto.view.user.NotificationFragment
+import hu.attilavegh.vbkoveto.view.user.ProfileFragment
 import kotlinx.android.synthetic.main.activity_user.*
 
 class UserActivity : AppCompatActivity(),
-    BusFragment.OnListFragmentInteractionListener,
-    MapBusFragment.OnFragmentInteractionListener,
-    MapBusesFragment.OnFragmentInteractionListener,
-    ProfileFragment.OnFragmentInteractionListener,
-    NotificationFragment.OnFragmentInteractionListener {
+    BusFragment.OnBusListItemInteractionListener,
+    MapBusFragment.OnBusFragmentInterActionListener,
+    MapBusesFragment.OnBusesFragmentInteractionListener,
+    ProfileFragment.OnProfileFragmentInteractionListener,
+    NotificationFragment.OnNotificationFragmentInteractionListener {
 
     private lateinit var toolbar: Toolbar
 
@@ -127,7 +131,7 @@ class UserActivity : AppCompatActivity(),
 
     private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
         titleUtils.set(getString(titleId))
-        fragmentUtils.switchTo(fragment, bundle)
+        fragmentUtils.switchTo(R.id.container, fragment, bundle)
     }
 
     private fun onBusClick(bus: Bus) {
@@ -146,7 +150,7 @@ class UserActivity : AppCompatActivity(),
         argument.putString("id", bus.id)
 
         val mapFragment = MapBusFragment.newInstance()
-        fragmentUtils.switchTo(mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
+        fragmentUtils.switchTo(R.id.container, mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
 
         titleUtils.set(bus.name)
     }

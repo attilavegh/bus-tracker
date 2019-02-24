@@ -1,4 +1,4 @@
-package hu.attilavegh.vbkoveto.view
+package hu.attilavegh.vbkoveto.view.user
 
 import android.content.Context
 import android.os.Bundle
@@ -12,7 +12,7 @@ import hu.attilavegh.vbkoveto.controller.NotificationController
 import android.support.v7.widget.SwitchCompat
 
 class NotificationFragment: Fragment() {
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnNotificationFragmentInteractionListener? = null
 
     private lateinit var notificationSwitch: SwitchCompat
     private lateinit var notificationController: NotificationController
@@ -33,7 +33,7 @@ class NotificationFragment: Fragment() {
 
         notificationController = NotificationController(context)
 
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnNotificationFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnFragmentInteractionListener")
@@ -45,7 +45,7 @@ class NotificationFragment: Fragment() {
         listener = null
     }
 
-    interface OnFragmentInteractionListener
+    interface OnNotificationFragmentInteractionListener
 
     companion object {
         fun newInstance(): NotificationFragment = NotificationFragment()

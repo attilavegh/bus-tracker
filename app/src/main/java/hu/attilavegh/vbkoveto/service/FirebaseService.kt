@@ -2,19 +2,16 @@ package hu.attilavegh.vbkoveto.service
 
 import android.content.Context
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.model.ContactConfig
 import hu.attilavegh.vbkoveto.model.DriverConfig
 import io.reactivex.Observable
 import java.util.*
-
-const val LOG_TAG_DRIVER_CONFIG = "firebase_driverConfig"
-const val LOG_TAG_CONTACT_CONFIG = "firebase_contactConfig"
-const val LOG_TAG_BUS_LIST = "firebase_getBusList"
-const val LOG_TAG_BUS_LOCATION_ERROR = "firebase_updateLocation"
 
 class FirebaseController {
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -26,13 +23,9 @@ class FirebaseController {
                 .addOnSuccessListener { config ->
                     if (config != null) {
                         emitter.onNext(config.toObject(ContactConfig::class.java)!!)
-                    } else {
-                        Log.d(LOG_TAG_CONTACT_CONFIG, "No such document")
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d(LOG_TAG_CONTACT_CONFIG, "failed with ", exception)
-
                     emitter.onError(exception)
                     return@addOnFailureListener
                 }
@@ -46,39 +39,41 @@ class FirebaseController {
                 .addOnSuccessListener { config ->
                     if (config != null) {
                         emitter.onNext(config.toObject(DriverConfig::class.java)!!)
-                    } else {
-                        Log.d(LOG_TAG_DRIVER_CONFIG, "No such document")
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d(LOG_TAG_DRIVER_CONFIG, "failed with ", exception)
-
                     emitter.onError(exception)
                     return@addOnFailureListener
                 }
         }
     }
 
-    fun updateBusLocation(bus: Bus, location: GeoPoint): Observable<Bus> {
+    fun updateBusLocation(id: String, location: GeoPoint): Observable<Bus> {
         return Observable.create { emitter ->
-            database.collection("buses").document(bus.id)
+            database.collection("buses").document(id)
                 .update("location", location)
                 .addOnFailureListener { e ->
-                    Log.d(LOG_TAG_BUS_LOCATION_ERROR, "failed with ", e)
                     emitter.onError(e)
                 }
         }
     }
 
+    fun updateBusStatus(id: String, active: Boolean, departureTime: Timestamp = Timestamp.now()): Observable<Bus> {
+        return Observable.create { emitter ->
+            database.collection("buses").document(id)
+                .update("active", active, "departureTime", departureTime)
+                .addOnFailureListener { e -> emitter.onError(e) }
+        }
+    }
+
     fun getBusList(context: Context): Observable<List<Bus>> {
         val notificationController = NotificationController(context)
+        val authController = AuthController(context)
 
         return Observable.create { emitter ->
             database.collection("buses")
                 .addSnapshotListener(EventListener<QuerySnapshot> { busList, error ->
                     if (error != null) {
-                        Log.w(LOG_TAG_BUS_LIST, "Listen failed.", error)
-
                         emitter.onError(error)
                         return@EventListener
                     }
@@ -90,7 +85,7 @@ class FirebaseController {
                         }
                     }
 
-                    val sortedBuses = sortBuses(buses)
+                    val sortedBuses = sortBuses(buses, authController.getUser().isDriver)
                     setNotificationStatus(sortedBuses, notificationController)
                     emitter.onNext(sortedBuses)
                 })
@@ -103,8 +98,6 @@ class FirebaseController {
             database.collection("buses").document(id)
                 .addSnapshotListener(EventListener<DocumentSnapshot> { bus, error ->
                     if (error != null) {
-                        Log.w(LOG_TAG_BUS_LIST, "Listen failed.", error)
-
                         emitter.onError(error)
                         return@EventListener
                     }
@@ -116,10 +109,10 @@ class FirebaseController {
         }
     }
 
-    private fun sortBuses(buses: List<Bus>): List<Bus> {
-        return when (true) {
-            true -> buses.sortedWith(compareBy { !it.active })
-            false -> buses.sortedWith(compareBy { it.active })
+    private fun sortBuses(buses: List<Bus>, isDriver: Boolean): List<Bus> {
+        return when (isDriver) {
+            true -> buses.sortedWith(compareBy { it.active })
+            false -> buses.sortedWith(compareBy { !it.active })
         }
     }
 

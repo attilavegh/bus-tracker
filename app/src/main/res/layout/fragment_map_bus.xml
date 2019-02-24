@@ -6,5 +6,5 @@
           android:layout_height="match_parent"
           android:id="@+id/map_bus"
           android:layout_marginTop="@dimen/activity_bar_padding" android:layout_marginBottom="@dimen/activity_bar_padding"
-          tools:context=".view.MapBusFragment"
+          tools:context=".view.user.MapBusFragment"
           android:name="com.google.android.gms.maps.SupportMapFragment"/>

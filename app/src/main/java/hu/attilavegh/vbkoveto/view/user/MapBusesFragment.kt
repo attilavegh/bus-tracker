@@ -1,4 +1,4 @@
-package hu.attilavegh.vbkoveto.view
+package hu.attilavegh.vbkoveto.view.user
 
 import android.content.Context
 import android.os.Bundle
@@ -9,16 +9,17 @@ import com.google.android.gms.maps.CameraUpdateFactory
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import hu.attilavegh.vbkoveto.model.Bus
+import hu.attilavegh.vbkoveto.view.CAMERA_BOUND_PADDING
+import hu.attilavegh.vbkoveto.view.MapFragmentBase
 
 class MapBusesFragment : MapFragmentBase() {
 
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnBusesFragmentInteractionListener? = null
 
     private var markers: ArrayList<Marker> = arrayListOf()
 
@@ -34,14 +35,14 @@ class MapBusesFragment : MapFragmentBase() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnBusesFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
-    interface OnFragmentInteractionListener
+    interface OnBusesFragmentInteractionListener
 
     companion object {
         fun newInstance(): MapBusesFragment = MapBusesFragment()
@@ -82,7 +83,9 @@ class MapBusesFragment : MapFragmentBase() {
         removeMarkers()
 
         if (!buses.isEmpty()) {
-            map.moveCamera(CameraUpdateFactory.newLatLngBounds(positionMarkers(buses), CAMERA_BOUND_PADDING))
+            map.moveCamera(CameraUpdateFactory.newLatLngBounds(positionMarkers(buses),
+                CAMERA_BOUND_PADDING
+            ))
         }
     }
 

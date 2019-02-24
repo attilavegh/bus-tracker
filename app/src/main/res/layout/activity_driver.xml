@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/container"
+        android:id="@+id/driver_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".UserActivity">
@@ -15,7 +15,7 @@
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent">
 
         <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/driver_toolbar"
                 app:title="@string/app_name"
                 app:titleTextColor="@color/white"
                 android:layout_width="match_parent"

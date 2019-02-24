@@ -25,6 +25,8 @@ import hu.attilavegh.vbkoveto.utility.ProgressBarUtils
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
+    private lateinit var loginButton: Button
+
     private lateinit var authController: AuthController
     private val firebaseController = FirebaseController()
     private lateinit var firebaseListener: Disposable
@@ -39,7 +41,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_login)
-        findViewById<Button>(R.id.login_button).setOnClickListener(this)
+        loginButton = findViewById(R.id.login_button)
+        loginButton.setOnClickListener(this)
 
         createNotificationChannel()
 
@@ -86,6 +89,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun onLogin() {
         progressBar.show()
+        loginButton.setText(R.string.login_button_inprogress)
 
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, 204)
@@ -106,6 +110,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     {
                         run {
                             progressBar.hide()
+                            loginButton.setText(R.string.login_button)
                             toastUtils.create(R.string.loginError, 40)
                         }
                     }
@@ -113,6 +118,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         } catch (e: ApiException) {
             progressBar.hide()
+            loginButton.setText(R.string.login_button)
 
             when (e.statusCode) {
                 7 -> toastUtils.create(R.string.loginNetworkError, 40)
@@ -130,6 +136,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         finish()
 
         progressBar.hide()
+        loginButton.setText(R.string.login_button)
     }
 
     private fun createNotificationChannel() {

@@ -1,12 +1,14 @@
-package hu.attilavegh.vbkoveto.presenter
+package hu.attilavegh.vbkoveto.presenter.driver
 
 import android.view.ViewGroup
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.model.Bus
+import hu.attilavegh.vbkoveto.presenter.BusViewHolderBase
+import hu.attilavegh.vbkoveto.presenter.user.BusViewHolder
 
-class InactiveBusViewHolder(
+class InactiveDriverBusViewHolder(
     parent: ViewGroup
-): BusViewHolder(parent, R.layout.fragment_bus_inactive) {
+): BusViewHolderBase(parent, R.layout.fragment_driver_bus_inactive) {
 
     override var viewModel: Bus? = null
         set(value) {
@@ -14,8 +16,7 @@ class InactiveBusViewHolder(
             value?.let { bus ->
                 busName.text = bus.name
 
-                setFavoriteStatus(bus)
-                tagControls(bus)
+                tagItem(bus)
             }
         }
 }
