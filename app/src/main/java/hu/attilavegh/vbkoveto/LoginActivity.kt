@@ -21,6 +21,7 @@ import io.reactivex.disposables.Disposable
 import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.os.Build
+import hu.attilavegh.vbkoveto.utility.ProgressBarUtils
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -30,6 +31,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private val playServicesUtils = PlayServicesUtils(this)
     private lateinit var toastUtils: ToastUtils
+    private lateinit var progressBar: ProgressBarUtils
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
@@ -43,6 +45,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         authController = AuthController(this)
         toastUtils = ToastUtils(this, resources)
+        progressBar = ProgressBarUtils(this)
 
         playServicesUtils.checkPlayServices()
 
@@ -82,6 +85,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun onLogin() {
+        progressBar.show()
+
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, 204)
     }
@@ -98,12 +103,22 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                             loadApp(user)
                         }
                     },
-                    { toastUtils.create(R.string.loginError) }
+                    {
+                        run {
+                            progressBar.hide()
+                            toastUtils.create(R.string.loginError, 40)
+                        }
+                    }
                 )
             }
         } catch (e: ApiException) {
-            // TODO: error handling
-            println("Could not sign in:" + e.statusCode)
+            progressBar.hide()
+
+            when (e.statusCode) {
+                7 -> toastUtils.create(R.string.loginNetworkError, 40)
+                12501 -> toastUtils.create(R.string.loginInterrupted, 40)
+                else -> toastUtils.create(R.string.loginError, 40)
+            }
         }
     }
 
@@ -113,6 +128,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         this.startActivity(intent)
         finish()
+
+        progressBar.hide()
     }
 
     private fun createNotificationChannel() {

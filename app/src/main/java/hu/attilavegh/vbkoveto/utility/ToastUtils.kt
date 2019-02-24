@@ -9,31 +9,31 @@ class ToastUtils(private val context: Context, private val resources: Resources)
 
     private var openToast: Toast = Toast(context)
 
-    fun create(messageResource: Int) {
+    fun create(messageResource: Int, offset: Int = 100) {
         closeOpenToast()
 
         val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.BOTTOM, 0, 100 * resources.displayMetrics.density.toInt())
+        toast.setGravity(Gravity.BOTTOM, 0, offset * resources.displayMetrics.density.toInt())
 
         show(toast)
         saveToastReference(toast)
     }
 
-    fun createLong(messageResource: Int) {
+    fun createLong(messageResource: Int, offset: Int = 100) {
         closeOpenToast()
 
         val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_LONG)
-        toast.setGravity(Gravity.BOTTOM, 0, 100 * resources.displayMetrics.density.toInt())
+        toast.setGravity(Gravity.BOTTOM, 0, offset * resources.displayMetrics.density.toInt())
 
         show(toast)
         saveToastReference(toast)
     }
 
-    fun create(messageResource: String) {
+    fun create(messageResource: String, offset: Int = 100) {
         closeOpenToast()
 
         val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.BOTTOM, 0, 100 * resources.displayMetrics.density.toInt())
+        toast.setGravity(Gravity.BOTTOM, 0, offset * resources.displayMetrics.density.toInt())
 
         show(toast)
         saveToastReference(toast)

@@ -30,6 +30,8 @@
     <string name="contactNoEmailClient">Nincs email kliens telepítve.</string>
 
     <string name="loginError">Hiba a bejelentkezés közben.</string>
+    <string name="loginNetworkError">Nincs internetkapcsolat.</string>
+    <string name="loginInterrupted">Bejelentkezés megszakítva.</string>
     <string name="busError">Hiba!</string>
 
     <!-- Mock text -->
