@@ -89,7 +89,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun onLogin() {
         progressBar.show()
-        loginButton.setText(R.string.login_button_inprogress)
 
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, 204)
@@ -110,7 +109,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     {
                         run {
                             progressBar.hide()
-                            loginButton.setText(R.string.login_button)
                             toastUtils.create(R.string.loginError, 40)
                         }
                     }
@@ -118,7 +116,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         } catch (e: ApiException) {
             progressBar.hide()
-            loginButton.setText(R.string.login_button)
 
             when (e.statusCode) {
                 7 -> toastUtils.create(R.string.loginNetworkError, 40)
@@ -136,7 +133,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         finish()
 
         progressBar.hide()
-        loginButton.setText(R.string.login_button)
     }
 
     private fun createNotificationChannel() {

@@ -12,7 +12,6 @@
     <string name="bus_became_inactive">A járat már nem aktív</string>
 
     <string name="login_button">Bejelentkezés</string>
-    <string name="login_button_inprogress">Bejelentkezés…</string>
     <string name="notification">Értesítések kezelése</string>
     <string name="notification_title">Jelzések</string>
     <string name="notification_subtitle">Értesítés küldése a kedvenc járatok indulásakor.</string>
