@@ -9,30 +9,80 @@
         android:layout_height="match_parent"
         tools:context=".UserActivity">
 
-    <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent">
+    <FrameLayout android:orientation="vertical" android:layout_width="match_parent"
+                 android:layout_height="match_parent" app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 android:gravity="bottom">
 
-        <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                app:title="@string/app_name"
-                app:titleTextColor="@color/white"
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/user_fragment_container"
+                android:layout_marginBottom="56dp"
+                android:layout_marginTop="56dp">
+        </FrameLayout>
+
+        <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                app:popupTheme="@style/AppTheme"/>
-    </android.support.design.widget.AppBarLayout>
+                android:background="@color/colorPrimary"
+                android:id="@+id/notification_bar"
+                android:clickable="true"
+                android:translationY="56dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true">
 
-    <android.support.design.widget.BottomNavigationView
-            android:id="@+id/navigation"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:background="@color/navbarGray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/navigation"
-            app:itemIconTint="@color/navigation_item"
-            app:labelVisibilityMode="unlabeled" app:layout_constraintHorizontal_bias="0.0"/>
+            <View
+                    android:layout_marginLeft="@dimen/notification_bar_separator_margin"
+                    android:layout_marginStart="@dimen/notification_bar_separator_margin"
+                    android:layout_marginRight="@dimen/notification_bar_separator_margin"
+                    android:layout_marginEnd="@dimen/notification_bar_separator_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:id="@+id/notification_bar_separator"
+                    android:background="@color/separator"/>
+
+            <TextView
+                    android:text="@string/notification_bar_mock_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:padding="@dimen/notification_bar_padding"
+                    android:textSize="17sp"
+                    android:textAlignment="center"
+                    android:id="@+id/notification_bar_text"/>
+        </FrameLayout>
+
+        <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:elevation="0dp"
+                android:id="@+id/app_bar"
+                android:theme="@style/AppTheme" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent">
+
+            <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    app:title="@string/app_name"
+                    app:titleTextColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    app:popupTheme="@style/AppTheme"/>
+        </android.support.design.widget.AppBarLayout>
+
+
+        <android.support.design.widget.BottomNavigationView
+                android:id="@+id/navigation"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" android:layout_gravity="bottom"
+                android:background="@color/navbarGray"
+                app:menu="@menu/navigation"
+                app:itemIconTint="@color/navigation_item"
+                app:labelVisibilityMode="unlabeled"/>
+    </FrameLayout>
+
 </android.support.constraint.ConstraintLayout>

@@ -5,6 +5,5 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:id="@+id/map_driver"
-          android:layout_marginTop="@dimen/activity_bar_padding"
           tools:context=".view.driver.DriverMapFragment"
           android:name="com.google.android.gms.maps.SupportMapFragment"/>

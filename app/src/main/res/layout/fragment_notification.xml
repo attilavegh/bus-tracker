@@ -4,8 +4,6 @@
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-                                             android:layout_marginTop="@dimen/activity_bar_padding"
-                                             android:layout_marginBottom="@dimen/activity_bar_padding"
                                              android:background="@color/white"
                                              tools:context=".view.user.NotificationFragment">
     <ScrollView android:layout_width="0dp"

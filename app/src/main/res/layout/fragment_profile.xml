@@ -6,8 +6,6 @@
                                              android:layout_height="match_parent"
                                              tools:context=".view.user.ProfileFragment" android:gravity="center"
                                              android:id="@+id/profile_container"
-                                             android:layout_marginTop="@dimen/activity_bar_padding"
-                                             android:layout_marginBottom="@dimen/activity_bar_padding"
                                              android:background="@color/white">
 
 

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 import android.widget.ImageButton
 import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.utility.NotificationBarUtils
 import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.utility.*
 
@@ -31,10 +32,10 @@ class UserActivity : AppCompatActivity(),
     lateinit var user: UserModel
 
     lateinit var titleUtils: ActivityTitleUtils
-    private lateinit var toastUtils: ToastUtils
     private lateinit var fragmentUtils: FragmentUtils
 
     private lateinit var notificationController: NotificationController
+    private lateinit var notificationBarUtils: NotificationBarUtils
     private lateinit var authController: AuthController
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -63,10 +64,10 @@ class UserActivity : AppCompatActivity(),
         toolbar = findViewById(R.id.toolbar)
 
         titleUtils = ActivityTitleUtils(toolbar)
-        toastUtils = ToastUtils(this, resources)
         fragmentUtils = FragmentUtils(supportFragmentManager)
 
         notificationController = NotificationController(this)
+        notificationBarUtils = NotificationBarUtils(this)
         authController = AuthController(this)
 
         enableNotification()
@@ -83,11 +84,6 @@ class UserActivity : AppCompatActivity(),
         checkBusFromNotification()
     }
 
-    override fun onPause() {
-        super.onPause()
-        toastUtils.closeOpenToast()
-    }
-
     override fun onBusSelection(bus: Bus) {
         onBusClick(bus)
     }
@@ -97,7 +93,7 @@ class UserActivity : AppCompatActivity(),
             notificationController.add(bus)
             button.setImageResource(R.drawable.favorite_on)
         } else {
-            toastUtils.create(R.string.notification_disabled)
+            notificationBarUtils.show(R.string.notification_disabled)
         }
     }
 
@@ -131,7 +127,7 @@ class UserActivity : AppCompatActivity(),
 
     private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
         titleUtils.set(getString(titleId))
-        fragmentUtils.switchTo(R.id.container, fragment, bundle)
+        fragmentUtils.switchTo(R.id.user_fragment_container, fragment, bundle)
     }
 
     private fun onBusClick(bus: Bus) {
@@ -141,7 +137,7 @@ class UserActivity : AppCompatActivity(),
     private fun checkBus(bus: Bus) {
         when (bus.active) {
             true -> initCheckBusView(bus)
-            false -> toastUtils.create(R.string.inactive_bus_message)
+            false -> notificationBarUtils.showError(R.string.inactive_bus_message)
         }
     }
 
@@ -150,7 +146,7 @@ class UserActivity : AppCompatActivity(),
         argument.putString("id", bus.id)
 
         val mapFragment = MapBusFragment.newInstance()
-        fragmentUtils.switchTo(R.id.container, mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
+        fragmentUtils.switchTo(R.id.user_fragment_container, mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
 
         titleUtils.set(bus.name)
     }

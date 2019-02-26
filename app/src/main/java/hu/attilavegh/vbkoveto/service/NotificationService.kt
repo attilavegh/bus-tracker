@@ -1,9 +1,5 @@
 package hu.attilavegh.vbkoveto.service
 
-import android.app.ActivityManager
-import android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-import android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import hu.attilavegh.vbkoveto.R
@@ -15,19 +11,23 @@ import hu.attilavegh.vbkoveto.UserActivity
 import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.model.NotificationModel
+import hu.attilavegh.vbkoveto.model.UserModel
 import hu.attilavegh.vbkoveto.utility.ApplicationUtils
 
-const val NOTIFICATION_SERVICE_TAG = "FCM Service"
-
-class NotificationService : FirebaseMessagingService() {
+class NotificationService: FirebaseMessagingService() {
 
     private lateinit var notificationController: NotificationController
     private lateinit var authController: AuthController
 
-    override fun onNewToken(token: String?) {
-        super.onNewToken(token)
+    private lateinit var user: UserModel
 
-        Log.d(NOTIFICATION_SERVICE_TAG, "Token: $token")
+    override fun onCreate() {
+        super.onCreate()
+
+        notificationController = NotificationController(this)
+        authController = AuthController(this)
+
+        user = authController.getUser()
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
@@ -39,6 +39,8 @@ class NotificationService : FirebaseMessagingService() {
 
         if (canReceiveNotification(notification)) {
             createNotification(notification)
+        } else if (canReceiveInAppNotification(notification)) {
+            createInAppNotification(notification)
         }
     }
 
@@ -61,6 +63,10 @@ class NotificationService : FirebaseMessagingService() {
         notificationManager.notify(notification.id, notificationBuilder.build())
     }
 
+    private fun createInAppNotification(notification: NotificationModel) {
+
+    }
+
     private fun parseNotificationData(remoteMessage: RemoteMessage?): NotificationModel {
         return NotificationModel(
             remoteMessage!!.data["notificationId"]!!.toInt(),
@@ -72,13 +78,15 @@ class NotificationService : FirebaseMessagingService() {
     }
 
     private fun canReceiveNotification(notification: NotificationModel): Boolean {
-        notificationController = NotificationController(this)
-        authController = AuthController(this)
-
-        val user = authController.getUser()
-
         return notificationController.hasBus(notification.busId)
                 && !ApplicationUtils.isAppForeground()
+                && !user.isDriver
+                && notification.type == "departure"
+    }
+
+    private fun canReceiveInAppNotification(notification: NotificationModel): Boolean {
+        return notificationController.hasBus(notification.busId)
+                && ApplicationUtils.isAppForeground()
                 && !user.isDriver
                 && notification.type == "departure"
     }
