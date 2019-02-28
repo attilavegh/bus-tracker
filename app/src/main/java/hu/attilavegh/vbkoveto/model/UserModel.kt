@@ -8,4 +8,13 @@ data class UserModel(
     val email: String = "",
     var isDriver: Boolean = false,
     val name: String = "",
-    val imgUrl: String = ""): Parcelable
+    val imgUrl: String = ""): Parcelable {
+
+    fun getResizedImage(size: Int): String {
+        if (imgUrl != "" && imgUrl != "null") {
+            return imgUrl.replace("/s96", "/s$size")
+        }
+
+        return imgUrl
+    }
+}

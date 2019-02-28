@@ -160,11 +160,11 @@ class ProfileFragment : Fragment(),
     }
 
     private fun setProfilePicture(view: View) {
-        if (user.imgUrl == "null") {
+        if (user.imgUrl == "null" || user.imgUrl == "") {
             Picasso.with(context).load(R.drawable.default_profile_picture).fit().into(view.profile_picture)
         } else {
             Picasso.with(context)
-                .load(user.imgUrl)
+                .load(user.getResizedImage(512))
                 .placeholder(R.drawable.default_profile_picture)
                 .error(R.drawable.default_profile_picture)
                 .fit()

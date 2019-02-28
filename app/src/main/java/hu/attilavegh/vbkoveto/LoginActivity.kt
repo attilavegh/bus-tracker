@@ -81,6 +81,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun createGoogleAuthClient() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.oauth_key))
             .requestEmail()
             .build()
 
