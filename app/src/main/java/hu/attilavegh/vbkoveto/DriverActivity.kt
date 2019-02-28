@@ -44,7 +44,7 @@ class DriverActivity : AppCompatActivity(),
         authController = AuthController(this)
 
         titleUtils = ActivityTitleUtils(toolbar)
-        toastUtils = ToastUtils(this, resources)
+        toastUtils = ToastUtils(this)
         fragmentUtils = FragmentUtils(supportFragmentManager)
 
         fragmentUtils.switchTo(R.id.driver_container, DriverBusFragment.newInstance())

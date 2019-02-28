@@ -69,7 +69,7 @@ class MapBusFragment : MapFragmentBase() {
     private fun getBus(id: String) {
         firebaseListener = firebaseController.getBus(id).subscribe(
             { onBusCheck(it) },
-            { toastUtils.create(R.string.busError) }
+            { toastUtils.create(R.string.error) }
         )
     }
 

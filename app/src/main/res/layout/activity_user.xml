@@ -9,30 +9,115 @@
         android:layout_height="match_parent"
         tools:context=".UserActivity">
 
-    <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent">
+    <FrameLayout android:orientation="vertical" android:layout_width="match_parent"
+                 android:layout_height="match_parent" app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 android:gravity="bottom">
 
-        <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                app:title="@string/app_name"
-                app:titleTextColor="@color/white"
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/user_fragment_container"
+                android:layout_marginBottom="56dp"
+                android:layout_marginTop="56dp">
+        </FrameLayout>
+
+        <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:elevation="0dp"
+                android:id="@+id/app_bar"
+                android:theme="@style/AppTheme" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent">
+
+            <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    app:title="@string/app_name"
+                    app:titleTextColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    app:popupTheme="@style/AppTheme"/>
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                app:popupTheme="@style/AppTheme"/>
-    </android.support.design.widget.AppBarLayout>
+                android:background="@color/colorAccent"
+                android:id="@+id/internet_status"
+                android:clickable="true"
+                android:translationY="-56dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true">
 
-    <android.support.design.widget.BottomNavigationView
-            android:id="@+id/navigation"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:background="@color/navbarGray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/navigation"
-            app:itemIconTint="@color/navigation_item"
-            app:labelVisibilityMode="unlabeled" app:layout_constraintHorizontal_bias="0.0"/>
+            <TextView
+                    android:text="@string/internet_status_mock_text"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="56dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:layout_marginLeft="@dimen/list_padding"
+                    android:layout_marginRight="@dimen/list_padding"
+                    android:textAlignment="center"
+                    android:drawableLeft="@drawable/bus"
+                    android:drawableStart="@drawable/bus"
+                    android:drawablePadding="15dp"
+                    android:id="@+id/internet_status_text"/>
+        </FrameLayout>
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@color/colorPrimary"
+                android:id="@+id/notification_bar"
+                android:clickable="true"
+                android:translationY="-70dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true">
+
+            <TextView
+                    android:text="@string/notification_bar_mock_text"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="70dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:layout_marginLeft="@dimen/list_padding"
+                    android:layout_marginRight="@dimen/list_padding"
+                    android:textAlignment="center"
+                    android:drawableLeft="@drawable/bus"
+                    android:drawableStart="@drawable/bus"
+                    android:drawablePadding="@dimen/list_padding"
+                    android:id="@+id/notification_bar_text"/>
+
+            <View
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="50dp"
+                    android:layout_height="3dp"
+                    android:id="@+id/notification_bar_handler"
+                    android:background="@drawable/rounded_view"
+                    android:layout_gravity="bottom|center"/>
+        </FrameLayout>
+
+        <android.support.design.widget.BottomNavigationView
+                android:id="@+id/navigation"
+                android:layout_width="match_parent"
+                android:layout_height="56dp" android:layout_gravity="bottom"
+                android:background="@color/navbarGray"
+                app:menu="@menu/navigation"
+                app:itemIconTint="@color/navigation_item"
+                app:labelVisibilityMode="unlabeled"/>
+    </FrameLayout>
+
 </android.support.constraint.ConstraintLayout>

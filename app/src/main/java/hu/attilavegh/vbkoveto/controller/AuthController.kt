@@ -18,7 +18,7 @@ class AuthController(private val context: Context) {
 
     fun login(account: GoogleSignInAccount, config: DriverConfig): UserModel {
         val isDriver = account.email == config.email
-        val user = UserModel(account.email!!, isDriver, account.displayName, account.photoUrl.toString())
+        val user = UserModel(account.email!!, isDriver, account.displayName!!, account.photoUrl.toString())
 
         val preferencesEditor = authSharedPreferences.edit()
         val serializedUser = gson.toJson(user)
@@ -36,8 +36,12 @@ class AuthController(private val context: Context) {
     }
 
     fun getUser(): UserModel {
-        val serializedUser = authSharedPreferences.getString(USER_PREFERENCES_NAME, "")
-        return gson.fromJson<UserModel>(serializedUser, UserModel::class.java)
+        if (isLoggedIn()) {
+            val serializedUser = authSharedPreferences.getString(USER_PREFERENCES_NAME, "")
+            return gson.fromJson<UserModel>(serializedUser, UserModel::class.java)
+        }
+
+        return UserModel()
     }
 
     fun isLoggedIn(): Boolean {

@@ -30,7 +30,7 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        toastUtils = ToastUtils(context, resources)
+        toastUtils = ToastUtils(context)
     }
 
     override fun onDetach() {

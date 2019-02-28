@@ -5,15 +5,14 @@ import android.content.res.Resources
 import android.view.Gravity
 import android.widget.Toast
 
-class ToastUtils(private val context: Context, private val resources: Resources) {
+class ToastUtils(private val context: Context) {
 
     private var openToast: Toast = Toast(context)
 
     fun create(messageResource: Int, offset: Int = 100) {
         closeOpenToast()
-
         val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.BOTTOM, 0, offset * resources.displayMetrics.density.toInt())
+        toast.setGravity(Gravity.BOTTOM, 0, offset * context.resources.displayMetrics.density.toInt())
 
         show(toast)
         saveToastReference(toast)
@@ -23,7 +22,7 @@ class ToastUtils(private val context: Context, private val resources: Resources)
         closeOpenToast()
 
         val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_LONG)
-        toast.setGravity(Gravity.BOTTOM, 0, offset * resources.displayMetrics.density.toInt())
+        toast.setGravity(Gravity.BOTTOM, 0, offset * context.resources.displayMetrics.density.toInt())
 
         show(toast)
         saveToastReference(toast)
@@ -33,7 +32,7 @@ class ToastUtils(private val context: Context, private val resources: Resources)
         closeOpenToast()
 
         val toast: Toast = Toast.makeText(context, messageResource, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.BOTTOM, 0, offset * resources.displayMetrics.density.toInt())
+        toast.setGravity(Gravity.BOTTOM, 0, offset * context.resources.displayMetrics.density.toInt())
 
         show(toast)
         saveToastReference(toast)

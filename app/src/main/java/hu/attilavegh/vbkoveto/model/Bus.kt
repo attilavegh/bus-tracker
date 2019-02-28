@@ -20,11 +20,6 @@ data class Bus(
     }
 
     private fun formatDepartureTime(timestamp: Timestamp): String {
-        return if (timestamp != null) {
-            val simpleDateFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
-            simpleDateFormat.format(timestamp.toDate())
-        } else {
-            ""
-        }
+        return SimpleDateFormat("HH:mm", Locale.GERMANY).format(timestamp.toDate())
     }
 }

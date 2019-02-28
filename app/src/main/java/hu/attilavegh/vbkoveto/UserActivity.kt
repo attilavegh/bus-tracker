@@ -3,11 +3,13 @@ package hu.attilavegh.vbkoveto
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 import android.widget.ImageButton
 import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.utility.NotificationBarUtils
 import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.utility.*
 
@@ -18,6 +20,10 @@ import hu.attilavegh.vbkoveto.view.user.MapBusesFragment
 import hu.attilavegh.vbkoveto.view.user.NotificationFragment
 import hu.attilavegh.vbkoveto.view.user.ProfileFragment
 import kotlinx.android.synthetic.main.activity_user.*
+import android.content.Intent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
 
 class UserActivity : AppCompatActivity(),
     BusFragment.OnBusListItemInteractionListener,
@@ -31,11 +37,34 @@ class UserActivity : AppCompatActivity(),
     lateinit var user: UserModel
 
     lateinit var titleUtils: ActivityTitleUtils
-    private lateinit var toastUtils: ToastUtils
     private lateinit var fragmentUtils: FragmentUtils
+    private lateinit var notification: NotificationBarUtils
+    private lateinit var vibratorUtils: VibratorUtils
+    private lateinit var toastUtils: ToastUtils
 
     private lateinit var notificationController: NotificationController
     private lateinit var authController: AuthController
+
+    private val inAppNotificationReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val busId = intent.getStringExtra("busId")
+            val busName = intent.getStringExtra("busName")
+            val message = intent.getStringExtra("title")
+
+            val bus = Bus(busId, busName)
+            showInAppNotification(message, bus)
+        }
+    }
+
+    private val inAppNotificationHandler = object: BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val busId = intent.getStringExtra("busId")
+            val busName = intent.getStringExtra("busName")
+
+            val bus = Bus(busId, busName)
+            initCheckBusView(bus)
+        }
+    }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -63,13 +92,16 @@ class UserActivity : AppCompatActivity(),
         toolbar = findViewById(R.id.toolbar)
 
         titleUtils = ActivityTitleUtils(toolbar)
-        toastUtils = ToastUtils(this, resources)
         fragmentUtils = FragmentUtils(supportFragmentManager)
+        vibratorUtils = VibratorUtils(this)
+        notification = NotificationBarUtils(this)
+        toastUtils = ToastUtils(this)
 
         notificationController = NotificationController(this)
         authController = AuthController(this)
 
         enableNotification()
+        initNotificationBroadcastManagers()
         user = authController.getUser()
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
@@ -81,11 +113,6 @@ class UserActivity : AppCompatActivity(),
 
         notificationController.removeAllNotifications()
         checkBusFromNotification()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        toastUtils.closeOpenToast()
     }
 
     override fun onBusSelection(bus: Bus) {
@@ -131,14 +158,10 @@ class UserActivity : AppCompatActivity(),
 
     private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
         titleUtils.set(getString(titleId))
-        fragmentUtils.switchTo(R.id.container, fragment, bundle)
+        fragmentUtils.switchTo(R.id.user_fragment_container, fragment, bundle)
     }
 
     private fun onBusClick(bus: Bus) {
-        checkBus(bus)
-    }
-
-    private fun checkBus(bus: Bus) {
         when (bus.active) {
             true -> initCheckBusView(bus)
             false -> toastUtils.create(R.string.inactive_bus_message)
@@ -150,9 +173,16 @@ class UserActivity : AppCompatActivity(),
         argument.putString("id", bus.id)
 
         val mapFragment = MapBusFragment.newInstance()
-        fragmentUtils.switchTo(R.id.container, mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
+        fragmentUtils.switchTo(R.id.user_fragment_container, mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
 
         titleUtils.set(bus.name)
+    }
+
+    private fun enableNotification() {
+        if (notificationController.isFirstStart()) {
+            notificationController.markFirstStart()
+            notificationController.enable()
+        }
     }
 
     private fun checkBusFromNotification() {
@@ -168,10 +198,17 @@ class UserActivity : AppCompatActivity(),
         }
     }
 
-    private fun enableNotification() {
-        if (notificationController.isFirstStart()) {
-            notificationController.markFirstStart()
-            notificationController.enable()
+    private fun showInAppNotification(message: String, bus: Bus) {
+        if (navigation.selectedItemId != R.id.bus_list_item) {
+            vibratorUtils.vibrate(100)
+            notification.show(message, bus)
+        } else {
+            vibratorUtils.vibrate(100)
         }
+    }
+
+    private fun initNotificationBroadcastManagers() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(inAppNotificationReceiver, IntentFilter("inAppNotificationReceiver"))
+        LocalBroadcastManager.getInstance(this).registerReceiver(inAppNotificationHandler, IntentFilter("inAppNotificationHandler"))
     }
 }
