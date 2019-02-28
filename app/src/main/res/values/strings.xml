@@ -17,7 +17,7 @@
     <string name="notification_subtitle">Értesítés küldése a kedvenc járatok indulásakor.</string>
     <string name="notification_buses">Kedvenc járatok</string>
     <string name="notification_text">Nézze meg a járat jelenlegi helyzetét.</string>
-    <string name="notification_disabled">Engedélyezze az értesítések használatát.</string>
+    <string name="notification_disabled">Engedélyezze az értesítéseket.</string>
     <string name="logout">Kilépés</string>
     <string name="website">Weboldal</string>
     <string name="contact">Kapcsolat</string>
@@ -32,7 +32,7 @@
     <string name="loginError">Hiba a bejelentkezés közben.</string>
     <string name="loginNetworkError">Nincs internetkapcsolat.</string>
     <string name="loginInterrupted">Bejelentkezés megszakítva.</string>
-    <string name="busError">Hiba!</string>
+    <string name="error">Hiba!</string>
 
     <!-- Mock text -->
     <string name="bus_name_mock">Járat 1</string>
@@ -45,7 +45,8 @@
     <string name="user_name_mock">Sam Smith</string>
     <string name="title_activity_driver">DriverActivity</string>
     <string name="notification_settings_fav_icon">notification_settings_fav_icon</string>
-    <string name="notification_bar_mock_text">Alkalmazáson belüli értesítés.</string>
+    <string name="notification_bar_mock_text">Alkalmazáson belüli értesítés. Részletek az értesítésről.</string>
+    <string name="internet_status_mock_text">Nincs internetkapcsolat.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

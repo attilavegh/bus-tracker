@@ -53,7 +53,7 @@ class ProfileFragment : Fragment(),
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
 
         authController = AuthController(context!!)
-        toastUtils = ToastUtils(context!!, resources)
+        toastUtils = ToastUtils(context!!)
         fragmentUtils = FragmentUtils(activity!!.supportFragmentManager)
 
         getParentContent()
@@ -63,7 +63,7 @@ class ProfileFragment : Fragment(),
 
         firebaseListener = firebaseController.getContactConfig().subscribe(
             { result -> contactConfig = ContactConfig(result.businessEmail, result.feedbackEmail, result.website) },
-            { error -> toastUtils.create(error.toString()) }
+            { toastUtils.create(R.string.error) }
         )
 
         return view
@@ -163,7 +163,12 @@ class ProfileFragment : Fragment(),
         if (user.imgUrl == "null") {
             Picasso.with(context).load(R.drawable.default_profile_picture).fit().into(view.profile_picture)
         } else {
-            Picasso.with(context).load(user.imgUrl).fit().into(view.profile_picture)
+            Picasso.with(context)
+                .load(user.imgUrl)
+                .placeholder(R.drawable.default_profile_picture)
+                .error(R.drawable.default_profile_picture)
+                .fit()
+                .into(view.profile_picture)
         }
     }
 

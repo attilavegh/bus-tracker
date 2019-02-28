@@ -23,40 +23,6 @@
                 android:layout_marginTop="56dp">
         </FrameLayout>
 
-        <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@color/colorPrimary"
-                android:id="@+id/notification_bar"
-                android:clickable="true"
-                android:translationY="56dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:focusable="true">
-
-            <View
-                    android:layout_marginLeft="@dimen/notification_bar_separator_margin"
-                    android:layout_marginStart="@dimen/notification_bar_separator_margin"
-                    android:layout_marginRight="@dimen/notification_bar_separator_margin"
-                    android:layout_marginEnd="@dimen/notification_bar_separator_margin"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:id="@+id/notification_bar_separator"
-                    android:background="@color/separator"/>
-
-            <TextView
-                    android:text="@string/notification_bar_mock_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:padding="@dimen/notification_bar_padding"
-                    android:textSize="17sp"
-                    android:textAlignment="center"
-                    android:id="@+id/notification_bar_text"/>
-        </FrameLayout>
-
         <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,6 +40,75 @@
                     app:popupTheme="@style/AppTheme"/>
         </android.support.design.widget.AppBarLayout>
 
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@color/colorAccent"
+                android:id="@+id/internet_status"
+                android:clickable="true"
+                android:translationY="-56dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true">
+
+            <TextView
+                    android:text="@string/internet_status_mock_text"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="56dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:layout_marginLeft="@dimen/list_padding"
+                    android:layout_marginRight="@dimen/list_padding"
+                    android:textAlignment="center"
+                    android:drawableLeft="@drawable/bus"
+                    android:drawableStart="@drawable/bus"
+                    android:drawablePadding="15dp"
+                    android:id="@+id/internet_status_text"/>
+        </FrameLayout>
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@color/colorPrimary"
+                android:id="@+id/notification_bar"
+                android:clickable="true"
+                android:translationY="-70dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true">
+
+            <TextView
+                    android:text="@string/notification_bar_mock_text"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="70dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:layout_marginLeft="@dimen/list_padding"
+                    android:layout_marginRight="@dimen/list_padding"
+                    android:textAlignment="center"
+                    android:drawableLeft="@drawable/bus"
+                    android:drawableStart="@drawable/bus"
+                    android:drawablePadding="@dimen/list_padding"
+                    android:id="@+id/notification_bar_text"/>
+
+            <View
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="50dp"
+                    android:layout_height="3dp"
+                    android:id="@+id/notification_bar_handler"
+                    android:background="@drawable/rounded_view"
+                    android:layout_gravity="bottom|center"/>
+        </FrameLayout>
 
         <android.support.design.widget.BottomNavigationView
                 android:id="@+id/navigation"

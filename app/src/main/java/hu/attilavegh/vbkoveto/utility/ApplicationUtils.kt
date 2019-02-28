@@ -16,5 +16,9 @@ class ApplicationUtils {
         fun dpToPx(dp: Float, context: Context): Float {
             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)
         }
+
+        fun pxToDp(px: Float, context: Context): Float {
+            return px / context.resources.displayMetrics.density
+        }
     }
 }

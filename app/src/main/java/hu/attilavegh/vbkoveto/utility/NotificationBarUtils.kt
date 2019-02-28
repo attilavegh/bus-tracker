@@ -1,91 +1,118 @@
 package hu.attilavegh.vbkoveto.utility
 
 import android.app.Activity
+import android.content.Intent
 import android.widget.FrameLayout
 import hu.attilavegh.vbkoveto.R
 import android.os.Handler
-import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
+import hu.attilavegh.vbkoveto.model.Bus
+import android.view.GestureDetector.SimpleOnGestureListener
 
-enum class NotificationDuration(private val time: Long) {
-    SHORT(2500), INFINITE(0);
-
-    fun value(): Long {
-        return time
-    }
-}
-
-class NotificationBarUtils(private val activity: Activity) {
+@Suppress("ClickableViewAccessibility")
+class NotificationBarUtils(private val activity: Activity) : View.OnTouchListener {
+    private val openPosition: Float = 0f
+    private val closePosition: Float = -70f
+    private val displayTime: Long = 3000
 
     private val notificationBar: FrameLayout = activity.findViewById(R.id.notification_bar)
-    private val notificationBarSeparator: View = activity.findViewById(R.id.notification_bar_separator)
     private val notificationBarText: TextView = activity.findViewById(R.id.notification_bar_text)
-    private val userContentContainer: FrameLayout = activity.findViewById(R.id.user_fragment_container)
+
+    private val closeHandler = Handler()
+    private val closer: Runnable = Runnable { close() }
+    private val gestureDetector = GestureDetector(activity, SingleTap())
+    private var deltaY: Float = 0f
+
+    private var message = ""
+    private var bus = Bus()
 
     companion object {
         var isOpen: Boolean = false
     }
 
-    fun show(message: Int, duration: NotificationDuration = NotificationDuration.SHORT) {
-        if (isOpen) {
-            close()
+    init {
+        notificationBar.setOnTouchListener(this)
+    }
+
+    private inner class SingleTap: SimpleOnGestureListener() {
+        override fun onSingleTapUp(event: MotionEvent): Boolean {
+            return true
+        }
+    }
+
+    override fun onTouch(view: View, motion: MotionEvent): Boolean {
+        val y = motion.rawY
+
+        if (gestureDetector.onTouchEvent(motion)) {
+            onNotificationClick()
+            return true
         }
 
-        isOpen = true
-        setDefaultStyle()
-        setText(message)
-        animate(duration)
+        when (motion.action) {
+            MotionEvent.ACTION_DOWN -> {
+                deltaY = y
+                closeHandler.removeCallbacks(closer)
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if (y <= deltaY) {
+                    notificationBar.y = -(deltaY - y)
+                }
+            }
+            MotionEvent.ACTION_UP -> {
+                close(100)
+            }
+        }
+
+        return false
     }
 
-    fun show(message: String, duration: NotificationDuration = NotificationDuration.SHORT) {
-        setDefaultStyle()
-        setText(message)
-        animate(duration)
+    fun show(message: String, bus: Bus) {
+        saveData(message, bus)
+        open()
     }
 
-    fun showError(message: Int, duration: NotificationDuration = NotificationDuration.SHORT) {
-        setErrorStyle()
-        setText(message)
-        animate(duration)
+    private fun open(duration: Long = 300) {
+
+        if (isOpen) {
+            closeHandler.removeCallbacks(closer)
+
+            setText(message)
+            closeHandler.postDelayed(closer, displayTime)
+        } else {
+            isOpen = true
+            setText(message)
+
+            notificationBar.animate().translationY(ApplicationUtils.dpToPx(openPosition, activity)).duration = duration
+            closeHandler.postDelayed(closer, displayTime)
+        }
     }
 
-    private fun setText(message: Int) {
-        notificationBarText.setText(message)
+    private fun close(duration: Long = 300) {
+        isOpen = false
+        notificationBar.animate().translationY(ApplicationUtils.dpToPx(closePosition, activity)).duration = duration
     }
 
     private fun setText(message: String) {
         notificationBarText.text = message
     }
 
-    private fun animate(duration: NotificationDuration) {
-        notificationBar.animate().translationY(ApplicationUtils.dpToPx(56f, activity)).duration = 300
-        userContentContainer.animate().translationY(ApplicationUtils.dpToPx(56f, activity)).duration = 300
-
-        if (duration != NotificationDuration.INFINITE) {
-            Handler().postDelayed({ hide() }, duration.value())
-        }
+    private fun saveData(message: String, bus: Bus) {
+        this.message = message
+        this.bus = bus
     }
 
-    private fun setErrorStyle() {
-        notificationBar.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorAccent))
-        notificationBarSeparator.visibility = View.INVISIBLE
-    }
+    private fun onNotificationClick() {
+        closeHandler.removeCallbacks(closer)
+        close()
 
-    private fun setDefaultStyle() {
-        notificationBar.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorPrimary))
-        notificationBarSeparator.visibility = View.VISIBLE
-    }
+        val intent = Intent("inAppNotificationHandler")
+        intent.putExtra("busId", bus.id)
+        intent.putExtra("busName", bus.name)
 
-    private fun hide(duration: Long = 300) {
-        notificationBar.animate().translationY(ApplicationUtils.dpToPx(0f, activity)).duration = duration
-        userContentContainer.animate().translationY(ApplicationUtils.dpToPx(0f, activity)).duration = 300
-
-        isOpen = false
-        Handler().postDelayed({ setDefaultStyle() }, duration)
-    }
-
-    private fun close() {
-        notificationBar.translationY = 0f
+        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent)
     }
 }

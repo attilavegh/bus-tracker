@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         createNotificationChannel()
 
         authController = AuthController(this)
-        toastUtils = ToastUtils(this, resources)
+        toastUtils = ToastUtils(this)
         progressBar = ProgressBarUtils(this)
 
         playServicesUtils.checkPlayServices()

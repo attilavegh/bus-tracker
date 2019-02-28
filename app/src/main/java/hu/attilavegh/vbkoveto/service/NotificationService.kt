@@ -13,33 +13,30 @@ import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.model.NotificationModel
 import hu.attilavegh.vbkoveto.model.UserModel
 import hu.attilavegh.vbkoveto.utility.ApplicationUtils
+import android.support.v4.content.LocalBroadcastManager
 
 class NotificationService: FirebaseMessagingService() {
 
     private lateinit var notificationController: NotificationController
     private lateinit var authController: AuthController
 
-    private lateinit var user: UserModel
-
     override fun onCreate() {
         super.onCreate()
-
         notificationController = NotificationController(this)
         authController = AuthController(this)
-
-        user = authController.getUser()
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+        val user = authController.getUser()
         val notification = parseNotificationData(remoteMessage)
 
         if (notification.type == "arrival") {
             removeOutdatedNotification(notification)
         }
 
-        if (canReceiveNotification(notification)) {
+        if (canReceiveNotification(notification, user)) {
             createNotification(notification)
-        } else if (canReceiveInAppNotification(notification)) {
+        } else if (canReceiveInAppNotification(notification, user)) {
             createInAppNotification(notification)
         }
     }
@@ -64,7 +61,12 @@ class NotificationService: FirebaseMessagingService() {
     }
 
     private fun createInAppNotification(notification: NotificationModel) {
+        val intent = Intent("inAppNotificationReceiver")
+        intent.putExtra("busId", notification.busId)
+        intent.putExtra("busName", notification.busName)
+        intent.putExtra("title", notification.title)
 
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
     private fun parseNotificationData(remoteMessage: RemoteMessage?): NotificationModel {
@@ -77,14 +79,14 @@ class NotificationService: FirebaseMessagingService() {
         )
     }
 
-    private fun canReceiveNotification(notification: NotificationModel): Boolean {
+    private fun canReceiveNotification(notification: NotificationModel, user: UserModel): Boolean {
         return notificationController.hasBus(notification.busId)
                 && !ApplicationUtils.isAppForeground()
                 && !user.isDriver
                 && notification.type == "departure"
     }
 
-    private fun canReceiveInAppNotification(notification: NotificationModel): Boolean {
+    private fun canReceiveInAppNotification(notification: NotificationModel, user: UserModel): Boolean {
         return notificationController.hasBus(notification.busId)
                 && ApplicationUtils.isAppForeground()
                 && !user.isDriver
@@ -94,10 +96,10 @@ class NotificationService: FirebaseMessagingService() {
     private fun removeOutdatedNotification(notification: NotificationModel) {
         val notificationManager = NotificationManagerCompat.from(this)
         notificationManager.cancel(notification.id)
-
     }
 
     private fun createIntent(notification: NotificationModel): PendingIntent {
+        val pendingIntentFlags = PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_UPDATE_CURRENT
         val intent = Intent(this, UserActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -106,11 +108,6 @@ class NotificationService: FirebaseMessagingService() {
         intent.putExtra("busId", notification.busId)
         intent.putExtra("busName", notification.busName)
 
-        return PendingIntent.getActivity(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        return PendingIntent.getActivity(this, 0, intent, pendingIntentFlags)
     }
 }

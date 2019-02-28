@@ -8,7 +8,6 @@ import android.graphics.Paint
 
 class BitmapUtils {
     companion object {
-
         fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
             val scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888)
 
