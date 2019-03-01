@@ -119,7 +119,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             progressBar.hide()
 
             when (e.statusCode) {
-                7 -> errorStatusUtils.show(R.string.loginNetworkError, R.drawable.error)
+                7 -> errorStatusUtils.show(R.string.networkError, R.drawable.error)
                 12501 -> errorStatusUtils.show(R.string.loginInterrupted, R.drawable.error)
                 else -> errorStatusUtils.show(R.string.loginError, R.drawable.error)
             }

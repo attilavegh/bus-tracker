@@ -14,6 +14,7 @@ import io.reactivex.Observable
 import java.util.*
 
 class FirebaseController {
+
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     fun getContactConfig(): Observable<ContactConfig> {
