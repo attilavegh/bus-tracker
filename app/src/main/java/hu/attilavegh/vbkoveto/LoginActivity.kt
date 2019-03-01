@@ -15,12 +15,12 @@ import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.service.FirebaseController
 import hu.attilavegh.vbkoveto.model.UserModel
 import hu.attilavegh.vbkoveto.utility.PlayServicesUtils
-import hu.attilavegh.vbkoveto.utility.ToastUtils
 
 import io.reactivex.disposables.Disposable
 import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.os.Build
+import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.utility.ProgressBarUtils
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var firebaseListener: Disposable
 
     private val playServicesUtils = PlayServicesUtils(this)
-    private lateinit var toastUtils: ToastUtils
+    private lateinit var errorStatusUtils: ErrorStatusUtils
     private lateinit var progressBar: ProgressBarUtils
 
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         createNotificationChannel()
 
         authController = AuthController(this)
-        toastUtils = ToastUtils(this)
+        errorStatusUtils = ErrorStatusUtils(this)
         progressBar = ProgressBarUtils(this)
 
         playServicesUtils.checkPlayServices()
@@ -110,7 +110,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     {
                         run {
                             progressBar.hide()
-                            toastUtils.create(R.string.loginError, 40)
+                            errorStatusUtils.show(R.string.loginError, R.drawable.error)
                         }
                     }
                 )
@@ -119,9 +119,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             progressBar.hide()
 
             when (e.statusCode) {
-                7 -> toastUtils.create(R.string.loginNetworkError, 40)
-                12501 -> toastUtils.create(R.string.loginInterrupted, 40)
-                else -> toastUtils.create(R.string.loginError, 40)
+                7 -> errorStatusUtils.show(R.string.loginNetworkError, R.drawable.error)
+                12501 -> errorStatusUtils.show(R.string.loginInterrupted, R.drawable.error)
+                else -> errorStatusUtils.show(R.string.loginError, R.drawable.error)
             }
         }
     }

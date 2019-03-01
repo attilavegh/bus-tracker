@@ -39,8 +39,8 @@ class UserActivity : AppCompatActivity(),
     lateinit var titleUtils: ActivityTitleUtils
     private lateinit var fragmentUtils: FragmentUtils
     private lateinit var notification: NotificationBarUtils
+    private lateinit var errorStatusUtils: ErrorStatusUtils
     private lateinit var vibratorUtils: VibratorUtils
-    private lateinit var toastUtils: ToastUtils
 
     private lateinit var notificationController: NotificationController
     private lateinit var authController: AuthController
@@ -95,7 +95,7 @@ class UserActivity : AppCompatActivity(),
         fragmentUtils = FragmentUtils(supportFragmentManager)
         vibratorUtils = VibratorUtils(this)
         notification = NotificationBarUtils(this)
-        toastUtils = ToastUtils(this)
+        errorStatusUtils = ErrorStatusUtils(this)
 
         notificationController = NotificationController(this)
         authController = AuthController(this)
@@ -124,7 +124,7 @@ class UserActivity : AppCompatActivity(),
             notificationController.add(bus)
             button.setImageResource(R.drawable.favorite_on)
         } else {
-            toastUtils.create(R.string.notification_disabled)
+            errorStatusUtils.show(R.string.notification_disabled, R.drawable.notification_white)
         }
     }
 
@@ -164,7 +164,7 @@ class UserActivity : AppCompatActivity(),
     private fun onBusClick(bus: Bus) {
         when (bus.active) {
             true -> initCheckBusView(bus)
-            false -> toastUtils.create(R.string.inactive_bus_message)
+            false -> errorStatusUtils.show(R.string.inactive_bus_message, R.drawable.bus)
         }
     }
 

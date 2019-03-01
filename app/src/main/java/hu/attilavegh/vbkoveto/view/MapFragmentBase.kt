@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.service.FirebaseController
 import hu.attilavegh.vbkoveto.utility.BitmapUtils
-import hu.attilavegh.vbkoveto.utility.ToastUtils
+import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import io.reactivex.disposables.Disposable
 
 const val CAMERA_BOUND_PADDING = 300
@@ -22,7 +22,7 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
     protected lateinit var firebaseListener: Disposable
     protected val firebaseController = FirebaseController()
 
-    protected lateinit var toastUtils: ToastUtils
+    protected lateinit var errorStatusUtils: ErrorStatusUtils
 
     protected lateinit var map: GoogleMap
 
@@ -30,12 +30,12 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        toastUtils = ToastUtils(context)
+        errorStatusUtils = ErrorStatusUtils(activity!!)
     }
 
     override fun onDetach() {
         super.onDetach()
-        toastUtils.closeOpenToast()
+        errorStatusUtils.hide()
         firebaseListener.dispose()
     }
 

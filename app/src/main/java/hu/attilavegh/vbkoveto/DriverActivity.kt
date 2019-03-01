@@ -9,7 +9,6 @@ import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.model.FragmentTagName
 import hu.attilavegh.vbkoveto.utility.ActivityTitleUtils
 import hu.attilavegh.vbkoveto.utility.FragmentUtils
-import hu.attilavegh.vbkoveto.utility.ToastUtils
 import hu.attilavegh.vbkoveto.view.driver.DriverMapFragment
 import android.view.Menu
 import android.view.MenuItem
@@ -17,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.view.driver.DriverBusFragment
 
 class DriverActivity : AppCompatActivity(),
@@ -26,7 +26,7 @@ class DriverActivity : AppCompatActivity(),
     private lateinit var toolbar: Toolbar
 
     private lateinit var titleUtils: ActivityTitleUtils
-    private lateinit var toastUtils: ToastUtils
+    private lateinit var errorStatusUtils: ErrorStatusUtils
     private lateinit var fragmentUtils: FragmentUtils
 
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -44,7 +44,7 @@ class DriverActivity : AppCompatActivity(),
         authController = AuthController(this)
 
         titleUtils = ActivityTitleUtils(toolbar)
-        toastUtils = ToastUtils(this)
+        errorStatusUtils = ErrorStatusUtils(this)
         fragmentUtils = FragmentUtils(supportFragmentManager)
 
         fragmentUtils.switchTo(R.id.driver_container, DriverBusFragment.newInstance())
@@ -81,7 +81,7 @@ class DriverActivity : AppCompatActivity(),
     private fun driveBus(bus: Bus) {
         when (!bus.active) {
             true -> initDriveBusView(bus)
-            false -> toastUtils.create(R.string.active_bus_message, 40)
+            false -> errorStatusUtils.show(R.string.active_bus_message, R.drawable.bus)
         }
     }
 

@@ -76,7 +76,6 @@ class NotificationBarUtils(private val activity: Activity) : View.OnTouchListene
     }
 
     private fun open(duration: Long = 300) {
-
         if (isOpen) {
             closeHandler.removeCallbacks(closer)
 

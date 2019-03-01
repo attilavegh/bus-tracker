@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="@color/colorAccent"
-                android:id="@+id/internet_status"
+                android:id="@+id/error_status"
                 android:clickable="true"
                 android:translationY="-56dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
                     android:drawableLeft="@drawable/bus"
                     android:drawableStart="@drawable/bus"
                     android:drawablePadding="15dp"
-                    android:id="@+id/internet_status_text"/>
+                    android:id="@+id/error_status_text"/>
         </FrameLayout>
 
         <FrameLayout

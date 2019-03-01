@@ -26,8 +26,8 @@ import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.utility.ActivityTitleUtils
 import hu.attilavegh.vbkoveto.service.FirebaseController
 import hu.attilavegh.vbkoveto.utility.FragmentUtils
-import hu.attilavegh.vbkoveto.utility.ToastUtils
 import hu.attilavegh.vbkoveto.model.ContactConfig
+import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import io.reactivex.disposables.Disposable
 
 class ProfileFragment : Fragment(),
@@ -46,14 +46,14 @@ class ProfileFragment : Fragment(),
     private lateinit var authController: AuthController
 
     private lateinit var titleUtils: ActivityTitleUtils
-    private lateinit var toastUtils: ToastUtils
+    private lateinit var errorStatusUtils: ErrorStatusUtils
     private lateinit var fragmentUtils: FragmentUtils
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
 
         authController = AuthController(context!!)
-        toastUtils = ToastUtils(context!!)
+        errorStatusUtils = ErrorStatusUtils(activity!!)
         fragmentUtils = FragmentUtils(activity!!.supportFragmentManager)
 
         getParentContent()
@@ -63,7 +63,7 @@ class ProfileFragment : Fragment(),
 
         firebaseListener = firebaseController.getContactConfig().subscribe(
             { result -> contactConfig = ContactConfig(result.businessEmail, result.feedbackEmail, result.website) },
-            { toastUtils.create(R.string.error) }
+            { errorStatusUtils.show(R.string.error, R.drawable.error) }
         )
 
         return view
@@ -203,7 +203,7 @@ class ProfileFragment : Fragment(),
         try {
             startActivity(Intent.createChooser(emailIntent, subject))
         } catch (ex: android.content.ActivityNotFoundException) {
-            toastUtils.create(R.string.contactNoEmailClient)
+            errorStatusUtils.show(R.string.contactNoEmailClient, R.drawable.error)
         }
     }
 }

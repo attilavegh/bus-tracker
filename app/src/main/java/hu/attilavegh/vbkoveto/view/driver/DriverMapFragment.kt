@@ -77,7 +77,7 @@ class DriverMapFragment : MapFragmentBase() {
     private fun updateBus(id: String) {
         firebaseListener = firebaseController.updateBusLocation(id, GeoPoint(0.0, 0.0)).subscribe(
             { positionMarker(LatLng(0.0, 0.0)) },
-            { toastUtils.create(R.string.error) }
+            { errorStatusUtils.show(R.string.error, R.drawable.error) }
         )
     }
 
