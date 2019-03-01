@@ -25,7 +25,7 @@ class DriverActivity : AppCompatActivity(),
 
     private lateinit var toolbar: Toolbar
 
-    private lateinit var titleUtils: ActivityTitleUtils
+    lateinit var titleUtils: ActivityTitleUtils
     private lateinit var errorStatusUtils: ErrorStatusUtils
     private lateinit var fragmentUtils: FragmentUtils
 
@@ -47,7 +47,16 @@ class DriverActivity : AppCompatActivity(),
         errorStatusUtils = ErrorStatusUtils(this)
         fragmentUtils = FragmentUtils(supportFragmentManager)
 
-        fragmentUtils.switchTo(R.id.driver_container, DriverBusFragment.newInstance())
+        titleUtils.set(getString(R.string.title_buses))
+        fragmentUtils.switchTo(R.id.driver_fragment_container, DriverBusFragment.newInstance())
+    }
+
+    override fun onBackPressed() {
+        val hasSubFragment = supportFragmentManager.backStackEntryCount > 0
+
+        if (!hasSubFragment) {
+            super.onBackPressed()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -89,10 +98,10 @@ class DriverActivity : AppCompatActivity(),
         val argument = Bundle()
         argument.putString("id", bus.id)
 
-        val driverMapFragment = DriverMapFragment.newInstance()
-        fragmentUtils.switchTo(R.id.driver_container, driverMapFragment, FragmentTagName.BUS_LOCATION.name, argument)
-
         titleUtils.set(bus.name)
+
+        val driverMapFragment = DriverMapFragment.newInstance()
+        fragmentUtils.switchTo(R.id.driver_fragment_container, driverMapFragment, FragmentTagName.BUS_LOCATION.name, argument)
     }
 
     private fun createGoogleAuthClient() {

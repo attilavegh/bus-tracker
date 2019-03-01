@@ -35,6 +35,11 @@
     <string name="loginInterrupted">Bejelentkezés megszakítva.</string>
     <string name="error">Hiba!</string>
 
+    <string name="endDrive">Befejezés</string>
+    <string name="endDriveQuestion">Biztosan befejezi a járatot?</string>
+    <string name="endDriveTitle">Járat befejezése</string>
+    <string name="cancel_message">Mégse</string>
+
     <!-- Mock text -->
     <string name="bus_name_mock">Járat 1</string>
     <string name="bus_start_time_mock">8:00</string>

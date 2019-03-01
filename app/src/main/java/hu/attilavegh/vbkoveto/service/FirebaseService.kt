@@ -49,20 +49,22 @@ class FirebaseController {
         }
     }
 
-    fun updateBusLocation(id: String, location: GeoPoint): Observable<Bus> {
+    fun updateBusLocation(id: String, location: GeoPoint): Observable<String> {
         return Observable.create { emitter ->
             database.collection("buses").document(id)
                 .update("location", location)
+                .addOnCompleteListener { emitter.onNext(id) }
                 .addOnFailureListener { e ->
                     emitter.onError(e)
                 }
         }
     }
 
-    fun updateBusStatus(id: String, active: Boolean, departureTime: Timestamp = Timestamp.now()): Observable<Bus> {
+    fun updateBusStatus(id: String, active: Boolean, departureTime: Timestamp = Timestamp.now()): Observable<String> {
         return Observable.create { emitter ->
             database.collection("buses").document(id)
                 .update("active", active, "departureTime", departureTime)
+                .addOnCompleteListener { emitter.onNext(id) }
                 .addOnFailureListener { e -> emitter.onError(e) }
         }
     }

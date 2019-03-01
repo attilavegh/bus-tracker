@@ -3,6 +3,7 @@
     <color name="colorPrimary">#71A02D</color>
     <color name="colorPrimaryDark">#4E7C02</color>
     <color name="colorAccent">#DF594D</color>
+    <color name="colorAccentTransparent">#C2DF594D</color>
     <color name="loginStatusBarColor">#000000</color>
     <color name="transparent">#00000000</color>
 

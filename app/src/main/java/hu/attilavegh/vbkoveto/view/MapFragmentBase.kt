@@ -41,6 +41,8 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        map.uiSettings.isMapToolbarEnabled = false
+
         customMarker = createCustomMarker()
     }
 
