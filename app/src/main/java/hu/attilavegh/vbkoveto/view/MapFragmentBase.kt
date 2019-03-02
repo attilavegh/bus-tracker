@@ -2,7 +2,9 @@ package hu.attilavegh.vbkoveto.view
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.View
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptor
@@ -42,7 +44,6 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.uiSettings.isMapToolbarEnabled = false
-
         customMarker = createCustomMarker()
     }
 

@@ -99,13 +99,14 @@ class FirebaseController {
         return Observable.create { emitter ->
 
             database.collection("buses").document(id)
-                .addSnapshotListener(EventListener<DocumentSnapshot> { bus, error ->
+                .addSnapshotListener(MetadataChanges.INCLUDE, EventListener<DocumentSnapshot> { bus, error ->
+
                     if (error != null) {
                         emitter.onError(error)
                         return@EventListener
                     }
 
-                    if (bus != null) {
+                    if (bus != null && !bus.metadata.isFromCache) {
                         emitter.onNext(bus.toObject(Bus::class.java)!!)
                     }
                 })

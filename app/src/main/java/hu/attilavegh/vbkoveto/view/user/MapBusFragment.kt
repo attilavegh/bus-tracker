@@ -9,7 +9,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
@@ -57,7 +56,7 @@ class MapBusFragment : MapFragmentBase() {
     override fun onMapReady(googleMap: GoogleMap) {
         super.onMapReady(googleMap)
 
-        marker = map.addMarker(MarkerOptions().position(LatLng(0.0, 0.0)))
+        marker = map.addMarker(addCustomMarker().position(LatLng(47.19888, 18.13761)))
         getSelectedBusId()
         getBus(selectedBusId)
     }
