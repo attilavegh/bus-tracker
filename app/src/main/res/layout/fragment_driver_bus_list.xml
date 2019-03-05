@@ -9,4 +9,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.user.BusFragment"
-        tools:listitem="@layout/fragment_bus_active"/>
+        tools:listitem="@layout/fragment_driver_bus_active"/>

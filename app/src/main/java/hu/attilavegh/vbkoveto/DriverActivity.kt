@@ -1,6 +1,7 @@
 package hu.attilavegh.vbkoveto
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate
@@ -16,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.service.LocationService
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.view.driver.DriverBusFragment
 
@@ -23,6 +25,7 @@ class DriverActivity : AppCompatActivity(),
     DriverBusFragment.OnDriverBusListItemInteractionListener,
     DriverMapFragment.OnMapDriverFragmentInteractionListener {
 
+    private var selectedBus: Bus = Bus()
     private lateinit var toolbar: Toolbar
 
     lateinit var titleUtils: ActivityTitleUtils
@@ -84,21 +87,43 @@ class DriverActivity : AppCompatActivity(),
     }
 
     override fun onBusSelection(bus: Bus) {
-        driveBus(bus)
-    }
+        selectedBus = bus
 
-    private fun driveBus(bus: Bus) {
         when (!bus.active) {
-            true -> initDriveBusView(bus)
+            true -> initDriveBusView()
             false -> errorStatusUtils.show(R.string.active_bus_message, R.drawable.bus)
         }
     }
 
-    private fun initDriveBusView(bus: Bus) {
-        val argument = Bundle()
-        argument.putString("id", bus.id)
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        val permissionGranted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
 
-        titleUtils.set(bus.name)
+        when (requestCode) {
+            LocationService.LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (permissionGranted) {
+                    loadDriveBusView()
+                } else {
+                    errorStatusUtils.show(R.string.gps_needed, R.drawable.map)
+                }
+            }
+
+            else -> {}
+        }
+    }
+
+    private fun initDriveBusView() {
+        if (LocationService.checkPermission(this)) {
+            loadDriveBusView()
+        } else {
+            LocationService.requestPermission(this)
+        }
+    }
+
+    private fun loadDriveBusView() {
+        val argument = Bundle()
+        argument.putString("id", selectedBus.id)
+
+        titleUtils.set(selectedBus.name)
 
         val driverMapFragment = DriverMapFragment.newInstance()
         fragmentUtils.switchTo(R.id.driver_fragment_container, driverMapFragment, FragmentTagName.BUS_LOCATION.name, argument)

@@ -3,12 +3,14 @@
     <color name="colorPrimary">#71A02D</color>
     <color name="colorPrimaryDark">#4E7C02</color>
     <color name="colorAccent">#DF594D</color>
-    <color name="colorAccentTransparent">#C2DF594D</color>
     <color name="loginStatusBarColor">#000000</color>
+
+    <color name="colorAccentTransparent">#CCDF594D</color>
+    <color name="navbarGrayTransparent">#CC444444</color>
+    <color name="whiteTransparent">#99FFFFFF</color>
     <color name="transparent">#00000000</color>
 
     <color name="white">#FFFFFF</color>
-    <color name="white_transparent">#99FFFFFF</color>
     <color name="navbarGray">#444444</color>
     <color name="lightGray">#AEAEAE</color>
     <color name="subtitleGray">#938F8F</color>

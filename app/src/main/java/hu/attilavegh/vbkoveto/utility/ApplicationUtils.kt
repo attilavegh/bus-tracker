@@ -1,8 +1,13 @@
 package hu.attilavegh.vbkoveto.utility
 
+import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.util.TypedValue
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+
+private const val PLAY_SERVICES_RESOLUTION_REQUEST = 9000
 
 class ApplicationUtils {
     companion object {
@@ -19,6 +24,21 @@ class ApplicationUtils {
 
         fun pxToDp(px: Float, context: Context): Float {
             return px / context.resources.displayMetrics.density
+        }
+
+        fun checkPlayServices(activity: Activity): Boolean {
+            val googleAPI = GoogleApiAvailability.getInstance()
+            val result = googleAPI.isGooglePlayServicesAvailable(activity)
+
+            if (result != ConnectionResult.SUCCESS) {
+                if (googleAPI.isUserResolvableError(result)) {
+                    googleAPI.getErrorDialog(activity, result, PLAY_SERVICES_RESOLUTION_REQUEST).show()
+                }
+
+                return false
+            }
+
+            return true
         }
     }
 }

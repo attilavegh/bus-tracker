@@ -18,7 +18,9 @@
     <string name="notification_buses">Kedvenc járatok</string>
     <string name="notification_text">Nézze meg a járat jelenlegi helyzetét.</string>
     <string name="notification_disabled">Engedélyezze az értesítéseket.</string>
+    <string name="gps_needed">Engedélyezze a helymeghatározást.</string>
     <string name="logout">Kilépés</string>
+    <string name="reset_bus_status">Busz visszaállítása</string>
     <string name="website">Weboldal</string>
     <string name="contact">Kapcsolat</string>
     <string name="notification_channelId">departure_notification</string>
@@ -42,7 +44,9 @@
 
     <!-- Mock text -->
     <string name="bus_name_mock">Járat 1</string>
-    <string name="bus_start_time_mock">8:00</string>
+    <string name="bus_start_time_mock">12:00</string>
+    <string name="bus_start_time_counter_mock">00:00</string>
+    <string name="bus_start_time_conter_label">Eltelt idő</string>
 
     <string name="dash">—</string>
     <string name="fav_button">fav</string>

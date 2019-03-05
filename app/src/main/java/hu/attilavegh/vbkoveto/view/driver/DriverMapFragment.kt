@@ -1,36 +1,39 @@
 package hu.attilavegh.vbkoveto.view.driver
 
 import android.content.Context
+import android.location.Location
 import android.os.Bundle
 import android.widget.Button
 import com.google.android.gms.maps.CameraUpdateFactory
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.Marker
 import com.google.firebase.firestore.GeoPoint
 import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
-import io.reactivex.disposables.Disposable
 import android.support.v7.app.AlertDialog
 import android.view.*
+import android.widget.TextView
 import hu.attilavegh.vbkoveto.DriverActivity
+import hu.attilavegh.vbkoveto.model.DriverConfig
+import hu.attilavegh.vbkoveto.service.LocationService
+import hu.attilavegh.vbkoveto.utility.StopwatchUtils
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.addTo
 
-class DriverMapFragment: MapFragmentBase() {
-
-    private lateinit var exitButton: Button
-    private var hasExitedSuccessfully = false
+class DriverMapFragment : MapFragmentBase() {
 
     private var listener: OnMapDriverFragmentInteractionListener? = null
-    private lateinit var statusListener: Disposable
+
+    private lateinit var driverActivity: DriverActivity
+    private lateinit var locationService: LocationService
+    private lateinit var stopwatchUtils: StopwatchUtils
 
     private lateinit var selectedBusId: String
-    // private lateinit var currentPosition: LatLng
-    private lateinit var marker: Marker
+    private lateinit var exitButton: Button
+    private lateinit var counterView: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_map_driver, container, false)
@@ -39,8 +42,16 @@ class DriverMapFragment: MapFragmentBase() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map_driver) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        selectedBusId = arguments!!.getString("id") ?: ""
+        driverActivity = activity as DriverActivity
+
+        locationService = LocationService(driverActivity)
+
         exitButton = view.findViewById(R.id.driver_map_exit)
         exitButton.setOnClickListener { showExitAlertDialog() }
+
+        counterView = view.findViewById(R.id.driver_time_counter)
+        stopwatchUtils = StopwatchUtils(counterView)
 
         return view
     }
@@ -61,9 +72,10 @@ class DriverMapFragment: MapFragmentBase() {
 
     override fun onDetach() {
         super.onDetach()
-
         listener = null
-        statusListener.dispose()
+
+        stopwatchUtils.stop()
+        locationService.stop()
     }
 
     interface OnMapDriverFragmentInteractionListener
@@ -75,54 +87,51 @@ class DriverMapFragment: MapFragmentBase() {
     override fun onMapReady(googleMap: GoogleMap) {
         super.onMapReady(googleMap)
 
-        getSelectedBusId()
-        statusListener = updateBusStatus(true).subscribe()
-        getCurrentPosition()
+        stopwatchUtils.start()
+        updateBusStatus(true).subscribe().addTo(disposables)
 
-        marker = map.addMarker(MarkerOptions().position(LatLng(21.0, 34.0)))
-        updateBusLocation(selectedBusId)
+        firebaseController.getDriverConfig()
+            .switchMap { config: DriverConfig ->  locationService.getLocation(config.locationMinTime, config.locationMinDistance) }
+            .map { location: Location -> LatLng(location.latitude, location.longitude) }
+            .switchMap { position: LatLng -> updateBusLocation(position) }
+            .subscribe()
+            .addTo(disposables)
     }
 
-    private fun getSelectedBusId() {
-        selectedBusId = arguments!!.getString("id") ?: ""
-    }
+    private fun updateBusLocation(position: LatLng): Observable<String> {
+        positionMarker(position)
 
-    private fun updateBusLocation(id: String) {
-        firebaseListener = firebaseController.updateBusLocation(id, GeoPoint(0.0, 0.0)).subscribe(
-            { positionMarker(LatLng(0.0, 0.0)) },
-            { errorStatusUtils.show(R.string.error, R.drawable.error) }
-        )
+        val firebaseLocation = GeoPoint(position.latitude, position.longitude)
+        return firebaseController.updateBusLocation(selectedBusId, firebaseLocation)
+            .doOnNext { positionMarker(position) }
+            .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
     }
 
     private fun positionMarker(position: LatLng) {
-        marker.remove()
-        marker = map.addMarker(addCustomMarker().position(position))
-
+        map.clear()
+        map.addMarker(addCustomMarker().position(position))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, CAMERA_ZOOM))
-    }
-
-    private fun getCurrentPosition() {
-
     }
 
     private fun showExitAlertDialog() {
         AlertDialog.Builder(context!!)
             .setTitle(R.string.endDriveTitle)
             .setMessage(R.string.endDriveQuestion)
-            .setPositiveButton(R.string.endDrive) { _, _ -> exit()}
+            .setPositiveButton(R.string.endDrive) { _, _ -> exit() }
             .setNegativeButton(R.string.cancel_message, null).show()
     }
 
     private fun exit() {
-        if (!hasExitedSuccessfully) {
-            statusListener = updateBusStatus(false).subscribe ({
-                hasExitedSuccessfully = true
-                (activity!! as DriverActivity).titleUtils.setPrevious()
-                fragmentManager!!.popBackStackImmediate()
-            }, {
-                errorStatusUtils.show(R.string.error, R.drawable.error)
-            })
+        val onSuccessfulExit = {
+            fragmentManager!!.popBackStackImmediate()
+            driverActivity.titleUtils.setPrevious()
         }
+
+        updateBusStatus(false)
+            .doOnNext { onSuccessfulExit() }
+            .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
+            .subscribe()
+            .addTo(disposables)
     }
 
     private fun updateBusStatus(status: Boolean): Observable<String> {

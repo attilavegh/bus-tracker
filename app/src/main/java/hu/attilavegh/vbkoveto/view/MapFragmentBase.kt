@@ -14,6 +14,7 @@ import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.service.FirebaseController
 import hu.attilavegh.vbkoveto.utility.BitmapUtils
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 const val CAMERA_BOUND_PADDING = 300
@@ -21,11 +22,10 @@ const val CAMERA_ZOOM = 13.0f
 
 open class MapFragmentBase : Fragment(), OnMapReadyCallback {
 
-    protected lateinit var firebaseListener: Disposable
     protected val firebaseController = FirebaseController()
+    protected var disposables = CompositeDisposable()
 
     protected lateinit var errorStatusUtils: ErrorStatusUtils
-
     protected lateinit var map: GoogleMap
 
     private lateinit var customMarker: BitmapDescriptor
@@ -38,7 +38,7 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
     override fun onDetach() {
         super.onDetach()
         errorStatusUtils.hide()
-        firebaseListener.dispose()
+        disposables.dispose()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

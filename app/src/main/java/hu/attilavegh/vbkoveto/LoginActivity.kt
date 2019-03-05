@@ -14,12 +14,12 @@ import com.google.android.gms.common.api.ApiException
 import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.service.FirebaseController
 import hu.attilavegh.vbkoveto.model.UserModel
-import hu.attilavegh.vbkoveto.utility.PlayServicesUtils
 
 import io.reactivex.disposables.Disposable
 import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.os.Build
+import hu.attilavegh.vbkoveto.utility.ApplicationUtils
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.utility.ProgressBarUtils
 
@@ -31,7 +31,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private val firebaseController = FirebaseController()
     private lateinit var firebaseListener: Disposable
 
-    private val playServicesUtils = PlayServicesUtils(this)
     private lateinit var errorStatusUtils: ErrorStatusUtils
     private lateinit var progressBar: ProgressBarUtils
 
@@ -50,7 +49,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         errorStatusUtils = ErrorStatusUtils(this)
         progressBar = ProgressBarUtils(this)
 
-        playServicesUtils.checkPlayServices()
+        ApplicationUtils.checkPlayServices(this)
 
         initLogin()
     }

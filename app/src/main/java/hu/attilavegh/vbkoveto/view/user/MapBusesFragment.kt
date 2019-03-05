@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.Marker
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.view.CAMERA_BOUND_PADDING
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
+import io.reactivex.rxkotlin.addTo
 
 class MapBusesFragment : MapFragmentBase() {
 
@@ -59,9 +60,10 @@ class MapBusesFragment : MapFragmentBase() {
     }
 
     private fun getBuses() {
-        firebaseListener = firebaseController.getBusList(context!!).subscribe(
+        firebaseController.getBusList(context!!).subscribe(
             { result -> onSuccess(result) },
-            { errorStatusUtils.show(R.string.error, R.drawable.error) })
+            { errorStatusUtils.show(R.string.error, R.drawable.error) }
+        ).addTo(disposables)
     }
 
     private fun onSuccess(result: List<Bus>) {
@@ -83,9 +85,12 @@ class MapBusesFragment : MapFragmentBase() {
         removeMarkers()
 
         if (!buses.isEmpty()) {
-            map.moveCamera(CameraUpdateFactory.newLatLngBounds(positionMarkers(buses),
-                CAMERA_BOUND_PADDING
-            ))
+            map.moveCamera(
+                CameraUpdateFactory.newLatLngBounds(
+                    positionMarkers(buses),
+                    CAMERA_BOUND_PADDING
+                )
+            )
         }
     }
 

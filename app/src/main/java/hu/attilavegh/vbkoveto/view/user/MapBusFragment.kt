@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.Marker
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
+import io.reactivex.rxkotlin.addTo
 
 class MapBusFragment : MapFragmentBase() {
 
@@ -66,10 +67,10 @@ class MapBusFragment : MapFragmentBase() {
     }
 
     private fun getBus(id: String) {
-        firebaseListener = firebaseController.getBus(id).subscribe(
+        firebaseController.getBus(id).subscribe(
             { onBusCheck(it) },
             { errorStatusUtils.show(R.string.error, R.drawable.error) }
-        )
+        ).addTo(disposables)
     }
 
     private fun onBusCheck(bus: Bus) {
