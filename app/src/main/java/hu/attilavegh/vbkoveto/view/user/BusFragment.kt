@@ -12,7 +12,7 @@ import android.widget.ImageButton
 import hu.attilavegh.vbkoveto.presenter.user.BusItemRecyclerViewAdapter
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.controller.AuthController
-import hu.attilavegh.vbkoveto.service.FirebaseController
+import hu.attilavegh.vbkoveto.service.FirebaseService
 
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.view.BusListItemInteractionListenerBase
@@ -23,7 +23,7 @@ class BusFragment: Fragment() {
     private var listener: OnBusListItemInteractionListener? = null
     private lateinit var firebaseListener: Disposable
 
-    private val firebaseController = FirebaseController()
+    private val firebaseService = FirebaseService()
     private lateinit var authController: AuthController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,7 +35,7 @@ class BusFragment: Fragment() {
             adapter = BusItemRecyclerViewAdapter(listener)
         }
 
-        firebaseListener = firebaseController.getBusList(context!!).subscribe {
+        firebaseListener = firebaseService.getBusList(context!!).subscribe {
             (view.adapter as BusItemRecyclerViewAdapter).buses = it
         }
 

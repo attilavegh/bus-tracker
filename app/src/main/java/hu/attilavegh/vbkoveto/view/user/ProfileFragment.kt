@@ -24,7 +24,7 @@ import android.net.Uri
 import android.support.v7.app.AlertDialog
 import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.utility.ActivityTitleUtils
-import hu.attilavegh.vbkoveto.service.FirebaseController
+import hu.attilavegh.vbkoveto.service.FirebaseService
 import hu.attilavegh.vbkoveto.utility.FragmentUtils
 import hu.attilavegh.vbkoveto.model.ContactConfig
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
@@ -42,7 +42,7 @@ class ProfileFragment : Fragment(),
 
     private lateinit var contactConfig: ContactConfig
 
-    private var firebaseController: FirebaseController = FirebaseController()
+    private var firebaseService = FirebaseService()
     private lateinit var authController: AuthController
 
     private lateinit var titleUtils: ActivityTitleUtils
@@ -61,7 +61,7 @@ class ProfileFragment : Fragment(),
         fillProfileInfo(view)
         createSettingsItemListeners(view)
 
-        firebaseListener = firebaseController.getContactConfig().subscribe(
+        firebaseListener = firebaseService.getContactConfig().subscribe(
             { result -> contactConfig = ContactConfig(result.businessEmail, result.feedbackEmail, result.website) },
             { errorStatusUtils.show(R.string.error, R.drawable.error) }
         )

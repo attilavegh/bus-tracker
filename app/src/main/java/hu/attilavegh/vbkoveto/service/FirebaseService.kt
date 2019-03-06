@@ -1,7 +1,6 @@
 package hu.attilavegh.vbkoveto.service
 
 import android.content.Context
-import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
@@ -13,7 +12,7 @@ import hu.attilavegh.vbkoveto.model.DriverConfig
 import io.reactivex.Observable
 import java.util.*
 
-class FirebaseController {
+class FirebaseService {
 
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
 

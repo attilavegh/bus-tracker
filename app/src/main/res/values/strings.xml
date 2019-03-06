@@ -50,6 +50,7 @@
 
     <string name="dash">—</string>
     <string name="fav_button">fav</string>
+    <string name="reset_status_button">reset_status</string>
     <string name="login_background">login_background</string>
     <string name="vb_logo">Logo</string>
     <string name="user_name_mock">Sam Smith</string>

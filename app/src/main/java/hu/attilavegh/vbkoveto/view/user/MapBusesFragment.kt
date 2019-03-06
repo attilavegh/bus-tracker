@@ -60,7 +60,7 @@ class MapBusesFragment : MapFragmentBase() {
     }
 
     private fun getBuses() {
-        firebaseController.getBusList(context!!).subscribe(
+        firebaseService.getBusList(context!!).subscribe(
             { result -> onSuccess(result) },
             { errorStatusUtils.show(R.string.error, R.drawable.error) }
         ).addTo(disposables)

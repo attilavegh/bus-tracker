@@ -88,9 +88,8 @@ class DriverMapFragment : MapFragmentBase() {
         super.onMapReady(googleMap)
 
         stopwatchUtils.start()
-        updateBusStatus(true).subscribe().addTo(disposables)
 
-        firebaseController.getDriverConfig()
+        firebaseService.getDriverConfig()
             .switchMap { config: DriverConfig ->  locationService.getLocation(config.locationMinTime, config.locationMinDistance) }
             .map { location: Location -> LatLng(location.latitude, location.longitude) }
             .switchMap { position: LatLng -> updateBusLocation(position) }
@@ -102,7 +101,7 @@ class DriverMapFragment : MapFragmentBase() {
         positionMarker(position)
 
         val firebaseLocation = GeoPoint(position.latitude, position.longitude)
-        return firebaseController.updateBusLocation(selectedBusId, firebaseLocation)
+        return firebaseService.updateBusLocation(selectedBusId, firebaseLocation)
             .doOnNext { positionMarker(position) }
             .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
     }
@@ -135,6 +134,6 @@ class DriverMapFragment : MapFragmentBase() {
     }
 
     private fun updateBusStatus(status: Boolean): Observable<String> {
-        return firebaseController.updateBusStatus(selectedBusId, status).take(1)
+        return firebaseService.updateBusStatus(selectedBusId, status).take(1)
     }
 }

@@ -25,12 +25,13 @@
 
 
         <ImageButton
-                android:visibility="invisible"
                 android:layout_width="@dimen/row_action_button_width"
-                android:layout_height="@dimen/row_action_button_height" app:srcCompat="@drawable/favorite_off" android:id="@+id/fav_button"
-                android:contentDescription="@string/fav_button"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/settings_disabled"
+                android:id="@+id/reset_status_button"
+                android:contentDescription="@string/reset_status_button"
                 android:paddingTop="6dp"
-                android:background="@color/transparent"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_gravity="fill_vertical | end"
                 android:layout_column="3" android:layout_row="0" android:layout_rowSpan="2"/>
     </GridLayout>

@@ -2,28 +2,25 @@ package hu.attilavegh.vbkoveto.view
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.View
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MarkerOptions
 import hu.attilavegh.vbkoveto.R
-import hu.attilavegh.vbkoveto.service.FirebaseController
+import hu.attilavegh.vbkoveto.service.FirebaseService
 import hu.attilavegh.vbkoveto.utility.BitmapUtils
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 
 const val CAMERA_BOUND_PADDING = 300
 const val CAMERA_ZOOM = 13.0f
 
 open class MapFragmentBase : Fragment(), OnMapReadyCallback {
 
-    protected val firebaseController = FirebaseController()
-    protected var disposables = CompositeDisposable()
+    protected val firebaseService = FirebaseService()
+    protected val disposables = CompositeDisposable()
 
     protected lateinit var errorStatusUtils: ErrorStatusUtils
     protected lateinit var map: GoogleMap

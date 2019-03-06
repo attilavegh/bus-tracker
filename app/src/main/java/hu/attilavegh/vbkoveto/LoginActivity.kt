@@ -12,7 +12,7 @@ import com.google.android.gms.tasks.Task
 import android.content.Intent
 import com.google.android.gms.common.api.ApiException
 import hu.attilavegh.vbkoveto.controller.AuthController
-import hu.attilavegh.vbkoveto.service.FirebaseController
+import hu.attilavegh.vbkoveto.service.FirebaseService
 import hu.attilavegh.vbkoveto.model.UserModel
 
 import io.reactivex.disposables.Disposable
@@ -27,8 +27,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var loginButton: Button
 
+    private val firebaseController = FirebaseService()
     private lateinit var authController: AuthController
-    private val firebaseController = FirebaseController()
     private lateinit var firebaseListener: Disposable
 
     private lateinit var errorStatusUtils: ErrorStatusUtils
@@ -43,12 +43,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         loginButton = findViewById(R.id.login_button)
         loginButton.setOnClickListener(this)
 
-        createNotificationChannel()
-
         authController = AuthController(this)
         errorStatusUtils = ErrorStatusUtils(this)
         progressBar = ProgressBarUtils(this)
 
+        ApplicationUtils.createNotificationChannel(this)
         ApplicationUtils.checkPlayServices(this)
 
         initLogin()
@@ -133,18 +132,5 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         finish()
 
         progressBar.hide()
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val id = getString(R.string.notification_channelId)
-            val name = getString(R.string.notification_channelName)
-            val importance = NotificationManager.IMPORTANCE_HIGH
-
-            val channel = NotificationChannel(id, name, importance)
-
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
-        }
     }
 }

@@ -20,6 +20,9 @@ import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.service.LocationService
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.view.driver.DriverBusFragment
+import android.support.v7.widget.PopupMenu
+import android.view.View
+import hu.attilavegh.vbkoveto.service.FirebaseService
 
 class DriverActivity : AppCompatActivity(),
     DriverBusFragment.OnDriverBusListItemInteractionListener,
@@ -32,6 +35,7 @@ class DriverActivity : AppCompatActivity(),
     private lateinit var errorStatusUtils: ErrorStatusUtils
     private lateinit var fragmentUtils: FragmentUtils
 
+    private val firebaseService = FirebaseService()
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var authController: AuthController
 
@@ -86,6 +90,21 @@ class DriverActivity : AppCompatActivity(),
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onResetStatus(bus: Bus, view: View) {
+        val popupMenu = PopupMenu(this, view)
+        popupMenu.menuInflater.inflate(R.menu.driver_bus_item_menu, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.driver_bus_item_menu -> firebaseService.updateBusStatus(bus.id, false).take(1).subscribe()
+            }
+
+            true
+        }
+
+        popupMenu.show()
+    }
+
     override fun onBusSelection(bus: Bus) {
         selectedBus = bus
 
@@ -107,7 +126,8 @@ class DriverActivity : AppCompatActivity(),
                 }
             }
 
-            else -> {}
+            else -> {
+            }
         }
     }
 
@@ -120,13 +140,25 @@ class DriverActivity : AppCompatActivity(),
     }
 
     private fun loadDriveBusView() {
-        val argument = Bundle()
-        argument.putString("id", selectedBus.id)
+        val load = {
+            val argument = Bundle()
+            argument.putString("id", selectedBus.id)
 
-        titleUtils.set(selectedBus.name)
+            titleUtils.set(selectedBus.name)
 
-        val driverMapFragment = DriverMapFragment.newInstance()
-        fragmentUtils.switchTo(R.id.driver_fragment_container, driverMapFragment, FragmentTagName.BUS_LOCATION.name, argument)
+            val driverMapFragment = DriverMapFragment.newInstance()
+            fragmentUtils.switchTo(
+                R.id.driver_fragment_container,
+                driverMapFragment,
+                FragmentTagName.BUS_LOCATION.name,
+                argument
+            )
+        }
+
+        firebaseService.updateBusStatus(selectedBus.id, true).take(1)
+            .doOnNext { load() }
+            .doOnError { errorStatusUtils.show(R.string.networkError, R.drawable.error)}
+            .subscribe()
     }
 
     private fun createGoogleAuthClient() {

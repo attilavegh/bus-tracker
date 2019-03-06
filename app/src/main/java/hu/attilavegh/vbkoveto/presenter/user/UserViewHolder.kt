@@ -8,7 +8,7 @@ import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.presenter.BusViewHolderBase
 import kotlinx.android.synthetic.main.fragment_bus_active.view.*
 
-abstract class BusViewHolder(
+abstract class UserViewHolder(
     parent: ViewGroup,
     layout: Int
 ): BusViewHolderBase(parent, layout) {

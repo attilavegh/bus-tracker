@@ -37,8 +37,8 @@ class BusItemRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BusViewHolderBase {
         return when (viewType) {
-            activeLayoutId -> ActiveBusViewHolder(parent)
-            else -> InactiveBusViewHolder(parent)
+            activeLayoutId -> ActiveUserViewHolder(parent)
+            else -> InactiveUserViewHolder(parent)
         }
     }
 

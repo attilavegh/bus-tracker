@@ -10,8 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.presenter.driver.DriverBusItemRecyclerViewAdapter
-import hu.attilavegh.vbkoveto.service.FirebaseController
+import hu.attilavegh.vbkoveto.service.FirebaseService
 import hu.attilavegh.vbkoveto.view.BusListItemInteractionListenerBase
 import io.reactivex.disposables.Disposable
 
@@ -20,7 +21,7 @@ class DriverBusFragment: Fragment() {
     private var listener: OnDriverBusListItemInteractionListener? = null
     private lateinit var firebaseListener: Disposable
 
-    private val firebaseController = FirebaseController()
+    private val firebaseController = FirebaseService()
     private lateinit var authController: AuthController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,7 +56,9 @@ class DriverBusFragment: Fragment() {
         listener = null
     }
 
-    interface OnDriverBusListItemInteractionListener: BusListItemInteractionListenerBase
+    interface OnDriverBusListItemInteractionListener: BusListItemInteractionListenerBase {
+        fun onResetStatus(bus: Bus, view: View)
+    }
 
     companion object {
         fun newInstance(): DriverBusFragment = DriverBusFragment()

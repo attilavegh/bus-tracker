@@ -2,10 +2,14 @@ package hu.attilavegh.vbkoveto.utility
 
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
 import android.util.TypedValue
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import hu.attilavegh.vbkoveto.R
 
 private const val PLAY_SERVICES_RESOLUTION_REQUEST = 9000
 
@@ -39,6 +43,19 @@ class ApplicationUtils {
             }
 
             return true
+        }
+
+        fun createNotificationChannel(activity: Activity) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val id = activity.getString(R.string.notification_channelId)
+                val name = activity.getString(R.string.notification_channelName)
+                val importance = NotificationManager.IMPORTANCE_HIGH
+
+                val channel = NotificationChannel(id, name, importance)
+
+                val notificationManager = activity.getSystemService(NotificationManager::class.java)
+                notificationManager.createNotificationChannel(channel)
+            }
         }
     }
 }
