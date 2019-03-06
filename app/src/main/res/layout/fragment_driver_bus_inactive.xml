@@ -25,12 +25,13 @@
 
 
         <ImageButton
-                android:layout_width="@dimen/row_action_button_width"
-                android:layout_height="@dimen/row_action_button_height"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 app:srcCompat="@drawable/settings"
                 android:id="@+id/reset_status_button"
                 android:contentDescription="@string/reset_status_button"
-                android:paddingTop="6dp"
+                android:paddingStart="@dimen/list_padding" android:paddingLeft="@dimen/list_padding"
+                android:paddingRight="@dimen/list_padding" android:paddingEnd="@dimen/list_padding"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_gravity="fill_vertical | end"
                 android:layout_column="3" android:layout_row="0" android:layout_rowSpan="2"/>
