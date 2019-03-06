@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog
 import android.view.*
 import android.widget.TextView
 import hu.attilavegh.vbkoveto.DriverActivity
+import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.model.DriverConfig
 import hu.attilavegh.vbkoveto.service.LocationService
 import hu.attilavegh.vbkoveto.utility.StopwatchUtils
@@ -89,6 +90,11 @@ class DriverMapFragment : MapFragmentBase() {
 
         stopwatchUtils.start()
 
+        firebaseService.getBus(selectedBusId)
+            .doOnNext { bus -> checkBusStatus(bus)}
+            .subscribe()
+            .addTo(disposables)
+
         firebaseService.getDriverConfig()
             .switchMap { config: DriverConfig ->  locationService.getLocation(config.locationMinTime, config.locationMinDistance) }
             .map { location: Location -> LatLng(location.latitude, location.longitude) }
@@ -135,5 +141,11 @@ class DriverMapFragment : MapFragmentBase() {
 
     private fun updateBusStatus(status: Boolean): Observable<String> {
         return firebaseService.updateBusStatus(selectedBusId, status).take(1)
+    }
+
+    private fun checkBusStatus(bus: Bus) {
+        if (!bus.active) {
+            exit()
+        }
     }
 }

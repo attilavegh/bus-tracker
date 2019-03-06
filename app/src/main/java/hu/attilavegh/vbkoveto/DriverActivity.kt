@@ -125,9 +125,7 @@ class DriverActivity : AppCompatActivity(),
                     errorStatusUtils.show(R.string.gps_needed, R.drawable.map)
                 }
             }
-
-            else -> {
-            }
+            else -> {}
         }
     }
 

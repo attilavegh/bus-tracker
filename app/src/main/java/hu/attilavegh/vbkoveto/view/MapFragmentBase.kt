@@ -34,7 +34,6 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
 
     override fun onDetach() {
         super.onDetach()
-        errorStatusUtils.hide()
         disposables.dispose()
     }
 
