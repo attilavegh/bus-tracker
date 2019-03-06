@@ -22,13 +22,14 @@ class MapBusFragment : MapFragmentBase() {
     private var listener: OnBusFragmentInterActionListener? = null
 
     private lateinit var selectedBusId: String
-    private lateinit var marker: Marker
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_map_bus, container, false)
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map_bus) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        selectedBusId = arguments!!.getString("id") ?: ""
 
         return view
     }
@@ -57,36 +58,27 @@ class MapBusFragment : MapFragmentBase() {
     override fun onMapReady(googleMap: GoogleMap) {
         super.onMapReady(googleMap)
 
-        marker = map.addMarker(addCustomMarker().position(LatLng(47.19888, 18.13761)))
-        getSelectedBusId()
-        getBus(selectedBusId)
-    }
-
-    private fun getSelectedBusId() {
-        selectedBusId = arguments!!.getString("id") ?: ""
-    }
-
-    private fun getBus(id: String) {
-        firebaseService.getBus(id).subscribe(
-            { onBusCheck(it) },
-            { errorStatusUtils.show(R.string.error, R.drawable.error) }
-        ).addTo(disposables)
+        firebaseService.getBus(selectedBusId)
+            .doOnNext { onBusCheck(it) }
+            .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
+            .subscribe()
+            .addTo(disposables)
     }
 
     private fun onBusCheck(bus: Bus) {
         if (bus.active) {
             positionMarker(bus)
         } else {
-            marker.remove()
+            map.clear()
             errorStatusUtils.show(R.string.bus_became_inactive, R.drawable.bus)
         }
     }
 
     private fun positionMarker(bus: Bus) {
-        marker.remove()
+        map.clear()
 
         val position = LatLng(bus.location.latitude, bus.location.longitude)
-        marker = map.addMarker(addCustomMarker().position(position))
+        map.addMarker(addCustomMarker().position(position))
 
         map.moveCamera(
             CameraUpdateFactory.newLatLngZoom(

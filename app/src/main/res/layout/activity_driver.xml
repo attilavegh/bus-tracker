@@ -45,7 +45,7 @@
                 android:background="@color/colorAccent"
                 android:id="@+id/error_status"
                 android:clickable="true"
-                android:translationY="-056dp"
+                android:translationY="-56dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

@@ -22,8 +22,6 @@ class MapBusesFragment : MapFragmentBase() {
 
     private var listener: OnBusesFragmentInteractionListener? = null
 
-    private var markers: ArrayList<Marker> = arrayListOf()
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_map_buses, container, false)
 
@@ -52,27 +50,20 @@ class MapBusesFragment : MapFragmentBase() {
     override fun onMapReady(googleMap: GoogleMap) {
         super.onMapReady(googleMap)
 
-        initFirebaseListener()
+        firebaseService.getBusList(context!!)
+            .doOnNext { handleBuses(it) }
+            .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
+            .subscribe()
+            .addTo(disposables)
     }
 
-    private fun initFirebaseListener() {
-        getBuses()
-    }
-
-    private fun getBuses() {
-        firebaseService.getBusList(context!!).subscribe(
-            { result -> onSuccess(result) },
-            { errorStatusUtils.show(R.string.error, R.drawable.error) }
-        ).addTo(disposables)
-    }
-
-    private fun onSuccess(result: List<Bus>) {
+    private fun handleBuses(result: List<Bus>) {
         val filteredBuses = result.filter { bus -> bus.active }
 
         if (!filteredBuses.isEmpty()) {
-            onBusesCheck(filteredBuses)
+            showBuses(filteredBuses)
         } else {
-            removeMarkers()
+            map.clear()
             onNoBus()
         }
     }
@@ -81,8 +72,8 @@ class MapBusesFragment : MapFragmentBase() {
         errorStatusUtils.show(R.string.no_bus, R.drawable.bus)
     }
 
-    private fun onBusesCheck(buses: List<Bus>) {
-        removeMarkers()
+    private fun showBuses(buses: List<Bus>) {
+        map.clear()
 
         if (!buses.isEmpty()) {
             map.moveCamera(
@@ -100,13 +91,9 @@ class MapBusesFragment : MapFragmentBase() {
         buses.forEach {
             val position = LatLng(it.location.latitude, it.location.longitude)
             boundsBuilder.include(position)
-            markers.add(map.addMarker(addCustomMarker().position(position)))
+            map.addMarker(addCustomMarker().position(position))
         }
 
         return boundsBuilder.build()
-    }
-
-    private fun removeMarkers() {
-        markers.forEach { it.remove() }
     }
 }
