@@ -9,7 +9,7 @@
     <string name="inactive_bus_message">A busz még nem indult el.</string>
     <string name="active_bus_message">A busz már elindult.</string>
     <string name="no_bus">Nincs megjelenítendő járat</string>
-    <string name="bus_became_inactive">A járat már nem aktív</string>
+    <string name="bus_became_inactive">A járat megérkezett.</string>
 
     <string name="login_button">Bejelentkezés</string>
     <string name="notification">Értesítések kezelése</string>
