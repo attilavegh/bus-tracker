@@ -79,12 +79,6 @@ class MapBusFragment : MapFragmentBase() {
 
         val position = LatLng(bus.location.latitude, bus.location.longitude)
         map.addMarker(addCustomMarker().position(position))
-
-        map.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(bus.location.latitude, bus.location.longitude),
-                CAMERA_ZOOM
-            )
-        )
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, CAMERA_ZOOM))
     }
 }
