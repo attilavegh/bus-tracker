@@ -47,8 +47,8 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
         return MarkerOptions().icon(customMarker)
     }
 
-    private fun createCustomMarker(): BitmapDescriptor {
-        var markerBitmap = BitmapFactory.decodeResource(resources, R.drawable.marker)
+    protected fun createCustomMarker(drawable: Int = R.drawable.marker): BitmapDescriptor {
+        var markerBitmap = BitmapFactory.decodeResource(resources, drawable)
         markerBitmap = BitmapUtils.scaleBitmap(markerBitmap, 65, 90)
 
         return BitmapDescriptorFactory.fromBitmap(markerBitmap)

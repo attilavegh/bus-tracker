@@ -46,6 +46,8 @@ class MapBusFragment : MapFragmentBase() {
         departureLabel = view.findViewById(R.id.map_bus_departure)
         arrivalLabel = view.findViewById(R.id.map_bus_arrival)
 
+        departureLabel.text = arguments!!.getString("departure") ?: "-"
+
         return view
     }
 
@@ -93,7 +95,6 @@ class MapBusFragment : MapFragmentBase() {
 
     private fun onBusCheck(bus: Bus) {
         if (bus.active) {
-            departureLabel.text = bus.getFormattedDepartureTime()
             positionMarker(bus)
         } else {
             map.clear()

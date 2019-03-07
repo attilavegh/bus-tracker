@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
 
 import com.google.android.gms.maps.GoogleMap
@@ -18,15 +20,26 @@ import hu.attilavegh.vbkoveto.view.CAMERA_BOUND_PADDING
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
 import io.reactivex.rxkotlin.addTo
 
-class MapBusesFragment : MapFragmentBase() {
+class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
 
     private var listener: OnBusesFragmentInteractionListener? = null
+
+    private lateinit var labelContainer: FrameLayout
+    private lateinit var busNameLabel: TextView
+    private lateinit var busDepartureLabel: TextView
+
+    private var buses = listOf<Bus>()
+    private var markers = arrayListOf<Marker>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_map_buses, container, false)
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map_buses) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        labelContainer = view.findViewById(R.id.map_buses_label_container)
+        busNameLabel = view.findViewById(R.id.map_buses_name)
+        busDepartureLabel = view.findViewById(R.id.map_buses_departure)
 
         return view
     }
@@ -49,6 +62,11 @@ class MapBusesFragment : MapFragmentBase() {
 
     override fun onMapReady(googleMap: GoogleMap) {
         super.onMapReady(googleMap)
+        googleMap.setOnMarkerClickListener(this)
+        googleMap.setOnMapClickListener {
+            labelContainer.visibility = View.INVISIBLE
+            resetMarkerIcons()
+        }
 
         firebaseService.getBusList(context!!)
             .doOnNext { handleBuses(it) }
@@ -57,8 +75,22 @@ class MapBusesFragment : MapFragmentBase() {
             .addTo(disposables)
     }
 
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val selectedBus = buses[marker.tag as Int]
+
+        labelContainer.visibility = View.VISIBLE
+        busNameLabel.text = selectedBus.name
+        busDepartureLabel.text = selectedBus.getFormattedDepartureTime()
+
+        resetMarkerIcons()
+        marker.setIcon(createCustomMarker(R.drawable.marker_selected))
+
+        return true
+    }
+
     private fun handleBuses(result: List<Bus>) {
         val filteredBuses = result.filter { bus -> bus.active }
+        buses = filteredBuses
 
         if (!filteredBuses.isEmpty()) {
             showBuses(filteredBuses)
@@ -83,12 +115,20 @@ class MapBusesFragment : MapFragmentBase() {
     private fun positionMarkers(buses: List<Bus>): LatLngBounds {
         val boundsBuilder = LatLngBounds.builder()
 
-        buses.forEach {
-            val position = LatLng(it.location.latitude, it.location.longitude)
+        buses.forEachIndexed { index, bus ->
+            val position = LatLng(bus.location.latitude, bus.location.longitude)
             boundsBuilder.include(position)
-            map.addMarker(addCustomMarker().position(position))
+
+            val marker = map.addMarker(addCustomMarker().position(position))
+            marker.tag = index
+
+            markers.add(marker)
         }
 
         return boundsBuilder.build()
+    }
+
+    private fun resetMarkerIcons() {
+        markers.forEach { it.setIcon(createCustomMarker()) }
     }
 }

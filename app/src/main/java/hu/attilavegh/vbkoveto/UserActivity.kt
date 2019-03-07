@@ -171,6 +171,7 @@ class UserActivity : AppCompatActivity(),
     private fun initCheckBusView(bus: Bus) {
         val argument = Bundle()
         argument.putString("id", bus.id)
+        argument.putString("departure", bus.getFormattedDepartureTime())
 
         val mapFragment = MapBusFragment.newInstance()
         fragmentUtils.switchTo(R.id.user_fragment_container, mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
