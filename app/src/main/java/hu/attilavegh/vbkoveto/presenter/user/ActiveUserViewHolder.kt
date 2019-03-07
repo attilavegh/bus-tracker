@@ -19,7 +19,7 @@ class ActiveUserViewHolder(
             value?.let { bus ->
                 busName.text = bus.name
                 busStatus.text = if (bus.active) activeStatusText else ""
-                busStatusTime.text = bus.getFormattedTimestamp()
+                busStatusTime.text = bus.getFormattedDepartureTime()
 
                 setFavoriteStatus(bus)
                 tagItem(bus)

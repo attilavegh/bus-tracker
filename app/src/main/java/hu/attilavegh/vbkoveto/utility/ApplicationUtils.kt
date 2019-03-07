@@ -9,7 +9,10 @@ import android.os.Build
 import android.util.TypedValue
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.firebase.Timestamp
 import hu.attilavegh.vbkoveto.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val PLAY_SERVICES_RESOLUTION_REQUEST = 9000
 
@@ -28,6 +31,14 @@ class ApplicationUtils {
 
         fun pxToDp(px: Float, context: Context): Float {
             return px / context.resources.displayMetrics.density
+        }
+
+        fun createDisplayTime(millis: Long): String {
+            return SimpleDateFormat("HH:mm", Locale.GERMANY).format(Date(millis))
+        }
+
+        fun createDisplayTime(timestamp: Timestamp): String {
+            return SimpleDateFormat("HH:mm", Locale.GERMANY).format(timestamp.toDate())
         }
 
         fun checkPlayServices(activity: Activity): Boolean {

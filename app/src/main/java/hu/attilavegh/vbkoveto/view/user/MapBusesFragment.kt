@@ -76,12 +76,7 @@ class MapBusesFragment : MapFragmentBase() {
         map.clear()
 
         if (!buses.isEmpty()) {
-            map.moveCamera(
-                CameraUpdateFactory.newLatLngBounds(
-                    positionMarkers(buses),
-                    CAMERA_BOUND_PADDING
-                )
-            )
+            map.moveCamera(CameraUpdateFactory.newLatLngBounds(positionMarkers(buses), CAMERA_BOUND_PADDING))
         }
     }
 

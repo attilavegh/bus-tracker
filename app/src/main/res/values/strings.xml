@@ -42,6 +42,10 @@
     <string name="endDriveTitle">Járat befejezése</string>
     <string name="cancel_message">Mégse</string>
 
+    <string name="map_arrival">Várható érkezés</string>
+    <string name="map_departure">Indulás</string>
+    <string name="map_time_default">–</string>
+
     <!-- Mock text -->
     <string name="bus_name_mock">Járat 1</string>
     <string name="bus_start_time_mock">12:00</string>
