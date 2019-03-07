@@ -24,6 +24,8 @@ import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import hu.attilavegh.vbkoveto.service.LocationService
 
 class UserActivity : AppCompatActivity(),
     BusFragment.OnBusListItemInteractionListener,
@@ -34,6 +36,7 @@ class UserActivity : AppCompatActivity(),
 
     private lateinit var toolbar: Toolbar
 
+    private var selectedBus: Bus = Bus()
     lateinit var user: UserModel
 
     lateinit var titleUtils: ActivityTitleUtils
@@ -61,8 +64,8 @@ class UserActivity : AppCompatActivity(),
             val busId = intent.getStringExtra("busId")
             val busName = intent.getStringExtra("busName")
 
-            val bus = Bus(busId, busName)
-            initCheckBusView(bus)
+            selectedBus = Bus(busId, busName)
+            initBusView()
         }
     }
 
@@ -115,10 +118,6 @@ class UserActivity : AppCompatActivity(),
         checkBusFromNotification()
     }
 
-    override fun onBusSelection(bus: Bus) {
-        onBusClick(bus)
-    }
-
     override fun onFavoriteAdd(bus: Bus, button: ImageButton) {
         if (notificationController.isEnabled()) {
             notificationController.add(bus)
@@ -155,28 +154,41 @@ class UserActivity : AppCompatActivity(),
         }
     }
 
-
-    private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
-        titleUtils.set(getString(titleId))
-        fragmentUtils.switchTo(R.id.user_fragment_container, fragment, bundle)
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            LocationService.LOCATION_PERMISSION_REQUEST_CODE -> { loadBusView() }
+            else -> {}
+        }
     }
 
-    private fun onBusClick(bus: Bus) {
+    override fun onBusSelection(bus: Bus) {
+        selectedBus = bus
+
         when (bus.active) {
-            true -> initCheckBusView(bus)
+            true -> initBusView()
             false -> errorStatusUtils.show(R.string.inactive_bus_message, R.drawable.bus)
         }
     }
 
-    private fun initCheckBusView(bus: Bus) {
+    private fun initBusView() {
+        if (LocationService.checkPermission(this)) {
+            loadBusView()
+        } else {
+            LocationService.requestPermission(this)
+        }
+    }
+
+    private fun loadBusView() {
         val argument = Bundle()
-        argument.putString("id", bus.id)
-        argument.putString("departure", bus.getFormattedDepartureTime())
+        argument.putString("id", selectedBus.id)
+        argument.putString("departure", selectedBus.getFormattedDepartureTime())
+        argument.putDouble("latitude", selectedBus.location.latitude)
+        argument.putDouble("longitude", selectedBus.location.longitude)
 
         val mapFragment = MapBusFragment.newInstance()
         fragmentUtils.switchTo(R.id.user_fragment_container, mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
 
-        titleUtils.set(bus.name)
+        titleUtils.set(selectedBus.name)
     }
 
     private fun enableNotification() {
@@ -192,8 +204,8 @@ class UserActivity : AppCompatActivity(),
         val busName = intent.getStringExtra("busName")
 
         if (isNotification) {
-            val bus = Bus(busId, busName)
-            initCheckBusView(bus)
+            selectedBus = Bus(busId, busName)
+            initBusView()
 
             intent.removeExtra("notification")
         }
@@ -211,5 +223,10 @@ class UserActivity : AppCompatActivity(),
     private fun initNotificationBroadcastManagers() {
         LocalBroadcastManager.getInstance(this).registerReceiver(inAppNotificationReceiver, IntentFilter("inAppNotificationReceiver"))
         LocalBroadcastManager.getInstance(this).registerReceiver(inAppNotificationHandler, IntentFilter("inAppNotificationHandler"))
+    }
+
+    private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
+        titleUtils.set(getString(titleId))
+        fragmentUtils.switchTo(R.id.user_fragment_container, fragment, bundle)
     }
 }

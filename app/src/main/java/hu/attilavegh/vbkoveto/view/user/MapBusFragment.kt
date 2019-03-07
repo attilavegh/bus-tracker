@@ -32,6 +32,7 @@ class MapBusFragment : MapFragmentBase() {
     private lateinit var arrivalLabel: TextView
 
     private lateinit var selectedBusId: String
+    private lateinit var initialPosition: LatLng
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_map_bus, container, false)
@@ -42,11 +43,11 @@ class MapBusFragment : MapFragmentBase() {
         locationService = LocationService(activity as UserActivity)
 
         selectedBusId = arguments!!.getString("id") ?: ""
+        initialPosition = LatLng(arguments!!.getDouble("latitude"), arguments!!.getDouble("longitude"))
 
         departureLabel = view.findViewById(R.id.map_bus_departure)
-        arrivalLabel = view.findViewById(R.id.map_bus_arrival)
-
         departureLabel.text = arguments!!.getString("departure") ?: "-"
+        arrivalLabel = view.findViewById(R.id.map_bus_arrival)
 
         return view
     }
@@ -76,7 +77,7 @@ class MapBusFragment : MapFragmentBase() {
 
     override fun onMapReady(googleMap: GoogleMap) {
         super.onMapReady(googleMap)
-
+        positionMarker(initialPosition)
 
         firebaseService.getBus(selectedBusId)
             .doOnNext { onBusCheck(it) }
@@ -95,7 +96,7 @@ class MapBusFragment : MapFragmentBase() {
 
     private fun onBusCheck(bus: Bus) {
         if (bus.active) {
-            positionMarker(bus)
+            positionMarker(LatLng(bus.location.latitude, bus.location.longitude))
         } else {
             map.clear()
             errorStatusUtils.show(R.string.bus_became_inactive, R.drawable.bus)
@@ -109,10 +110,8 @@ class MapBusFragment : MapFragmentBase() {
         )
     }
 
-    private fun positionMarker(bus: Bus) {
+    private fun positionMarker(position: LatLng) {
         map.clear()
-
-        val position = LatLng(bus.location.latitude, bus.location.longitude)
         map.addMarker(addCustomMarker().position(position))
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, CAMERA_ZOOM))
     }

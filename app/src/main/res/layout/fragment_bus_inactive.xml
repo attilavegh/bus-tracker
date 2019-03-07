@@ -33,7 +33,7 @@
                 android:background="@color/transparent"
                 android:paddingStart="@dimen/list_padding" android:paddingLeft="@dimen/list_padding"
                 android:paddingRight="@dimen/list_padding" android:paddingEnd="@dimen/list_padding"
-                android:layout_gravity="fill_vertical | end"
+                android:layout_gravity="fill_vertical|end"
                 android:layout_column="3" android:layout_row="0" android:layout_rowSpan="2"/>
     </GridLayout>
 
