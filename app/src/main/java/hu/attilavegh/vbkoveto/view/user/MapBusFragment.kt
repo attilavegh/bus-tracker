@@ -13,13 +13,14 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.firebase.firestore.auth.User
 import hu.attilavegh.vbkoveto.UserActivity
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.service.LocationService
+import hu.attilavegh.vbkoveto.utility.NotificationBarUtils
 import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 
@@ -27,6 +28,7 @@ class MapBusFragment : MapFragmentBase() {
 
     private var listener: OnBusFragmentInterActionListener? = null
     private lateinit var locationService: LocationService
+    private lateinit var notificationBar: NotificationBarUtils
 
     private lateinit var departureLabel: TextView
     private lateinit var arrivalLabel: TextView
@@ -41,6 +43,7 @@ class MapBusFragment : MapFragmentBase() {
         mapFragment.getMapAsync(this)
 
         locationService = LocationService(activity as UserActivity)
+        notificationBar = NotificationBarUtils(activity as UserActivity)
 
         selectedBusId = arguments!!.getString("id") ?: ""
         initialPosition = LatLng(arguments!!.getDouble("latitude"), arguments!!.getDouble("longitude"))
@@ -66,7 +69,17 @@ class MapBusFragment : MapFragmentBase() {
         super.onDetach()
         listener = null
 
-        locationService.stop()
+        locationService.pause()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        locationService.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        locationService.resume(15000, 100f)
     }
 
     interface OnBusFragmentInterActionListener
@@ -83,8 +96,12 @@ class MapBusFragment : MapFragmentBase() {
             .doOnNext { onBusCheck(it) }
             .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
             .switchMap { bus ->
-                locationService.getLocation(15000, 400f).switchMap { location ->
-                    getEstimatedArrival(bus, location)
+                locationService.getLocation(15000, 100f).switchMap { location ->
+                    if (bus.active) {
+                        getEstimatedArrival(bus, location)
+                    } else {
+                        Observable.create<String> { emitter -> emitter.onNext(getString(R.string.map_time_default)) }
+                    }
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
@@ -96,10 +113,12 @@ class MapBusFragment : MapFragmentBase() {
 
     private fun onBusCheck(bus: Bus) {
         if (bus.active) {
+            departureLabel.text = bus.getFormattedDepartureTime()
             positionMarker(LatLng(bus.location.latitude, bus.location.longitude))
         } else {
             map.clear()
-            errorStatusUtils.show(R.string.bus_became_inactive, R.drawable.bus)
+            departureLabel.setText(R.string.map_time_default)
+            notificationBar.show(R.string.bus_became_inactive)
         }
     }
 

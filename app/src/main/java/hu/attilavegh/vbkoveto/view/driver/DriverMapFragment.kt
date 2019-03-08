@@ -76,7 +76,7 @@ class DriverMapFragment : MapFragmentBase() {
         listener = null
 
         stopwatchUtils.stop()
-        locationService.stop()
+        locationService.pause()
     }
 
     interface OnMapDriverFragmentInteractionListener

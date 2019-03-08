@@ -27,6 +27,7 @@ class NotificationBarUtils(private val activity: Activity) : View.OnTouchListene
     private val gestureDetector = GestureDetector(activity, SingleTap())
     private var deltaY: Float = 0f
 
+    private var clickableNotification = true
     private var message = ""
     private var bus = Bus()
 
@@ -47,7 +48,7 @@ class NotificationBarUtils(private val activity: Activity) : View.OnTouchListene
     override fun onTouch(view: View, motion: MotionEvent): Boolean {
         val y = motion.rawY
 
-        if (gestureDetector.onTouchEvent(motion)) {
+        if (gestureDetector.onTouchEvent(motion) && clickableNotification) {
             onNotificationClick()
             return true
         }
@@ -71,7 +72,17 @@ class NotificationBarUtils(private val activity: Activity) : View.OnTouchListene
     }
 
     fun show(message: String, bus: Bus) {
-        saveData(message, bus)
+        clickableNotification = true
+        this.message = message
+        this.bus = bus
+
+        open()
+    }
+
+    fun show(message: Int) {
+        clickableNotification = false
+        this.message = activity.getString(message)
+
         open()
     }
 
@@ -97,11 +108,6 @@ class NotificationBarUtils(private val activity: Activity) : View.OnTouchListene
 
     private fun setText(message: String) {
         notificationBarText.text = message
-    }
-
-    private fun saveData(message: String, bus: Bus) {
-        this.message = message
-        this.bus = bus
     }
 
     private fun onNotificationClick() {

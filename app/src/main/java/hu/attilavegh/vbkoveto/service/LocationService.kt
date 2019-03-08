@@ -18,6 +18,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.json.JSONObject
 import hu.attilavegh.vbkoveto.utility.ApplicationUtils
+import org.json.JSONException
 
 class LocationService(private val activity: Activity) {
 
@@ -74,18 +75,26 @@ class LocationService(private val activity: Activity) {
         return location
     }
 
-    fun stop() {
+    fun pause() {
         locationManager.removeUpdates(locationListener)
     }
 
+    fun resume(minTime: Long, minDistance: Float) {
+        requestLocationUpdates(minTime, minDistance)
+    }
+
     private fun getDuration(response: String): String {
-        val routes = JSONObject(response).getJSONArray("routes")
-        val leg = routes.getJSONObject(0).getJSONArray("legs").getJSONObject(0)
-        val estimatedTime = leg.getJSONObject("duration").getLong("value") * 1000
+        return try {
+            val routes = JSONObject(response).getJSONArray("routes")
+            val leg = routes.getJSONObject(0).getJSONArray("legs").getJSONObject(0)
+            val estimatedTime = leg.getJSONObject("duration").getLong("value") * 1000
 
-        val arrivalTime = estimatedTime + System.currentTimeMillis()
+            val arrivalTime = estimatedTime + System.currentTimeMillis()
 
-        return ApplicationUtils.createDisplayTime(arrivalTime)
+            ApplicationUtils.createDisplayTime(arrivalTime)
+        } catch (exception: JSONException) {
+            activity.getString(R.string.map_time_default)
+        }
     }
 
     private fun requestLocationUpdates(minTime: Long, minDistance: Float) {

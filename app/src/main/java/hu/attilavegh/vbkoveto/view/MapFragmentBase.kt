@@ -25,8 +25,6 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
     protected lateinit var errorStatusUtils: ErrorStatusUtils
     protected lateinit var map: GoogleMap
 
-    private lateinit var customMarker: BitmapDescriptor
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         errorStatusUtils = ErrorStatusUtils(activity!!)
@@ -40,11 +38,10 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.uiSettings.isMapToolbarEnabled = false
-        customMarker = createCustomMarker()
     }
 
     protected fun addCustomMarker(): MarkerOptions {
-        return MarkerOptions().icon(customMarker)
+        return MarkerOptions().icon(createCustomMarker())
     }
 
     protected fun createCustomMarker(drawable: Int = R.drawable.marker): BitmapDescriptor {
