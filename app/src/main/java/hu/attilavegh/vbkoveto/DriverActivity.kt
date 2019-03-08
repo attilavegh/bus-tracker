@@ -155,7 +155,7 @@ class DriverActivity : AppCompatActivity(),
 
         firebaseService.updateBusStatus(selectedBus.id, true).take(1)
             .doOnNext { load() }
-            .doOnError { errorStatusUtils.show(R.string.networkError, R.drawable.error)}
+            .doOnError { errorStatusUtils.show(R.string.network_error, R.drawable.error)}
             .subscribe()
     }
 

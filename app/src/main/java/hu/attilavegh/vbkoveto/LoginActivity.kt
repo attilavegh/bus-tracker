@@ -16,9 +16,6 @@ import hu.attilavegh.vbkoveto.service.FirebaseService
 import hu.attilavegh.vbkoveto.model.UserModel
 
 import io.reactivex.disposables.Disposable
-import android.app.NotificationManager
-import android.app.NotificationChannel
-import android.os.Build
 import hu.attilavegh.vbkoveto.utility.ApplicationUtils
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.utility.ProgressBarUtils
@@ -108,7 +105,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     {
                         run {
                             progressBar.hide()
-                            errorStatusUtils.show(R.string.loginError, R.drawable.error)
+                            errorStatusUtils.show(R.string.login_error, R.drawable.error)
                         }
                     }
                 )
@@ -117,9 +114,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             progressBar.hide()
 
             when (e.statusCode) {
-                7 -> errorStatusUtils.show(R.string.networkError, R.drawable.error)
-                12501 -> errorStatusUtils.show(R.string.loginInterrupted, R.drawable.error)
-                else -> errorStatusUtils.show(R.string.loginError, R.drawable.error)
+                7 -> errorStatusUtils.show(R.string.network_error, R.drawable.error)
+                12501 -> errorStatusUtils.show(R.string.login_interrupted, R.drawable.error)
+                else -> errorStatusUtils.show(R.string.login_error, R.drawable.error)
             }
         }
     }

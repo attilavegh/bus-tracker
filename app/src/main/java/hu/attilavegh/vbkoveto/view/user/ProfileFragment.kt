@@ -178,12 +178,12 @@ class ProfileFragment : Fragment(),
 
     private fun showContactSelector() {
         val topics = arrayOf(
-            resources.getString(R.string.contactBusiness),
-            resources.getString(R.string.contactFeedback)
+            resources.getString(R.string.contact_business),
+            resources.getString(R.string.contact_feedback)
         )
 
         val builder = AlertDialog.Builder(context!!)
-        builder.setTitle(R.string.contactTitle)
+        builder.setTitle(R.string.contact_title)
         builder.setItems(topics) { _, topic ->
             when (topic) {
                 0 -> openEmailClient(arrayOf(contactConfig.businessEmail), topics[topic])
@@ -203,7 +203,7 @@ class ProfileFragment : Fragment(),
         try {
             startActivity(Intent.createChooser(emailIntent, subject))
         } catch (ex: android.content.ActivityNotFoundException) {
-            errorStatusUtils.show(R.string.contactNoEmailClient, R.drawable.error)
+            errorStatusUtils.show(R.string.contact_no_email_client, R.drawable.error)
         }
     }
 }

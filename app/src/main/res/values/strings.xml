@@ -26,20 +26,19 @@
     <string name="notification_channelId">departure_notification</string>
     <string name="notification_channelName">Járatok indulása</string>
 
-    <string name="contactTitle">Kapcsolatfelvétel célja</string>
-    <string name="contactBusiness">Ügyintézés</string>
-    <string name="contactFeedback">Végh Busz alkalmazás visszajelzés</string>
-    <string name="contactNoEmailClient">Nincs email kliens telepítve.</string>
+    <string name="contact_title">Kapcsolatfelvétel célja</string>
+    <string name="contact_business">Ügyintézés</string>
+    <string name="contact_feedback">Végh Busz alkalmazás visszajelzés</string>
+    <string name="contact_no_email_client">Nincs email kliens telepítve.</string>
 
-    <string name="loginError">Hiba a bejelentkezés közben.</string>
-    <string name="networkError">Nincs internetkapcsolat.</string>
-    <string name="networkConnected">Kapcsolódva.</string>
-    <string name="loginInterrupted">Bejelentkezés megszakítva.</string>
+    <string name="login_error">Hiba a bejelentkezés közben.</string>
+    <string name="network_error">Nincs internetkapcsolat.</string>
+    <string name="login_interrupted">Bejelentkezés megszakítva.</string>
     <string name="error">Hiba!</string>
 
-    <string name="endDrive">Befejezés</string>
-    <string name="endDriveQuestion">Biztosan befejezi a járatot?</string>
-    <string name="endDriveTitle">Járat befejezése</string>
+    <string name="end_drive">Befejezés</string>
+    <string name="end_drive_question">Biztosan befejezi a járatot?</string>
+    <string name="end_drive_title">Járat befejezése</string>
     <string name="cancel_message">Mégse</string>
 
     <string name="map_arrival">Várható érkezés</string>

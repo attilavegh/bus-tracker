@@ -120,9 +120,9 @@ class DriverMapFragment : MapFragmentBase() {
 
     private fun showExitAlertDialog() {
         AlertDialog.Builder(context!!)
-            .setTitle(R.string.endDriveTitle)
-            .setMessage(R.string.endDriveQuestion)
-            .setPositiveButton(R.string.endDrive) { _, _ -> exit() }
+            .setTitle(R.string.end_drive_title)
+            .setMessage(R.string.end_drive_question)
+            .setPositiveButton(R.string.end_drive) { _, _ -> exit() }
             .setNegativeButton(R.string.cancel_message, null).show()
     }
 

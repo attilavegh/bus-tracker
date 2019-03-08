@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/list"
+        android:id="@+id/driver_bus_list"
         android:name="hu.attilavegh.vbkoveto.BusFragment"
         android:background="@color/white"
         android:layout_width="match_parent"

@@ -9,7 +9,7 @@ import hu.attilavegh.vbkoveto.R
 
 class ProgressBarUtils(activity: Activity) {
 
-    private val progressBar = activity.findViewById<ProgressBar>(R.id.progressBar)
+    private val progressBar = activity.findViewById<ProgressBar>(R.id.progress_bar)
 
     init {
         progressBar.indeterminateDrawable.setColorFilter(ContextCompat.getColor(activity, R.color.colorPrimary), PorterDuff.Mode.SRC_IN)
