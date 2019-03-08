@@ -40,8 +40,8 @@ open class MapFragmentBase : Fragment(), OnMapReadyCallback {
         map.uiSettings.isMapToolbarEnabled = false
     }
 
-    protected fun addCustomMarker(): MarkerOptions {
-        return MarkerOptions().icon(createCustomMarker())
+    protected fun addCustomMarker(drawable: Int = R.drawable.marker): MarkerOptions {
+        return MarkerOptions().icon(createCustomMarker(drawable))
     }
 
     protected fun createCustomMarker(drawable: Int = R.drawable.marker): BitmapDescriptor {

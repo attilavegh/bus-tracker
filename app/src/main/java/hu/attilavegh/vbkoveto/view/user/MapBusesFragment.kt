@@ -30,6 +30,7 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
 
     private var buses = listOf<Bus>()
     private var markers = arrayListOf<Marker>()
+    private var selectedBus = Bus()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_map_buses, container, false)
@@ -64,6 +65,7 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
         super.onMapReady(googleMap)
         googleMap.setOnMarkerClickListener(this)
         googleMap.setOnMapClickListener {
+            selectedBus = Bus()
             labelContainer.visibility = View.INVISIBLE
             resetMarkerIcons()
         }
@@ -76,7 +78,7 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        val selectedBus = buses[marker.tag as Int]
+        selectedBus = buses[marker.tag as Int]
 
         labelContainer.visibility = View.VISIBLE
         busNameLabel.text = selectedBus.name
@@ -89,14 +91,17 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
     }
 
     private fun handleBuses(result: List<Bus>) {
-        val filteredBuses = result.filter { bus -> bus.active }
-        buses = filteredBuses
+        buses = result.filter { bus -> bus.active }
 
-        if (!filteredBuses.isEmpty()) {
-            showBuses(filteredBuses)
+        if (!buses.isEmpty()) {
+            showBuses(buses)
         } else {
-            map.clear()
+            clearMap()
             onNoBus()
+        }
+
+        if (!buses.map { bus -> bus.id }.contains(selectedBus.id)) {
+            labelContainer.visibility = View.INVISIBLE
         }
     }
 
@@ -105,7 +110,7 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
     }
 
     private fun showBuses(buses: List<Bus>) {
-        map.clear()
+        clearMap()
 
         if (!buses.isEmpty()) {
             map.moveCamera(CameraUpdateFactory.newLatLngBounds(positionMarkers(buses), CAMERA_BOUND_PADDING))
@@ -119,7 +124,12 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
             val position = LatLng(bus.location.latitude, bus.location.longitude)
             boundsBuilder.include(position)
 
-            val marker = map.addMarker(addCustomMarker().position(position))
+            val marker = if (bus.id == selectedBus.id) {
+                map.addMarker(addCustomMarker(R.drawable.marker_selected).position(position))
+            } else {
+                map.addMarker(addCustomMarker().position(position))
+            }
+
             marker.tag = index
 
             markers.add(marker)
@@ -130,5 +140,10 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
 
     private fun resetMarkerIcons() {
         markers.forEach { it.setIcon(createCustomMarker()) }
+    }
+
+    private fun clearMap() {
+        map.clear()
+        markers.clear()
     }
 }
