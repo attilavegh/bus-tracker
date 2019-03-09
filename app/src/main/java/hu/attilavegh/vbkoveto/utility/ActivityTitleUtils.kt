@@ -1,6 +1,6 @@
 package hu.attilavegh.vbkoveto.utility
 
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 
 class ActivityTitleUtils(private val toolbar: Toolbar) {
 

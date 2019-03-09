@@ -5,7 +5,7 @@ import android.content.Intent
 import android.widget.FrameLayout
 import hu.attilavegh.vbkoveto.R
 import android.os.Handler
-import android.support.v4.content.LocalBroadcastManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View

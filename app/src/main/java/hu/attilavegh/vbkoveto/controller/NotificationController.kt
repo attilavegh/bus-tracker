@@ -1,7 +1,7 @@
 package hu.attilavegh.vbkoveto.controller
 
 import android.content.Context
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessaging
 import hu.attilavegh.vbkoveto.model.Bus
 

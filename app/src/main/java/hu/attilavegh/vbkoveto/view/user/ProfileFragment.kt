@@ -3,7 +3,7 @@ package hu.attilavegh.vbkoveto.view.user
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +21,7 @@ import hu.attilavegh.vbkoveto.model.FragmentTagName
 
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import android.net.Uri
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.utility.ActivityTitleUtils
 import hu.attilavegh.vbkoveto.service.FirebaseService

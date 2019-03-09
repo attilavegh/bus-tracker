@@ -13,7 +13,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.firebase.firestore.GeoPoint
 import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.view.*
 import android.widget.TextView
 import hu.attilavegh.vbkoveto.DriverActivity
@@ -57,8 +57,9 @@ class DriverMapFragment : MapFragmentBase() {
         return view
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        menu!!.clear()
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        menu.clear()
     }
 
     override fun onAttach(context: Context) {

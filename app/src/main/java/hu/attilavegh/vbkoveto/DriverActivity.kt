@@ -3,9 +3,9 @@ package hu.attilavegh.vbkoveto
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.model.FragmentTagName
 import hu.attilavegh.vbkoveto.utility.ActivityTitleUtils
@@ -20,7 +20,7 @@ import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.service.LocationService
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.view.driver.DriverBusFragment
-import android.support.v7.widget.PopupMenu
+import androidx.appcompat.widget.PopupMenu
 import android.view.View
 import hu.attilavegh.vbkoveto.service.FirebaseService
 

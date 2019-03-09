@@ -2,14 +2,14 @@ package hu.attilavegh.vbkoveto.view.user
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import hu.attilavegh.vbkoveto.R
 import hu.attilavegh.vbkoveto.controller.NotificationController
-import android.support.v7.widget.SwitchCompat
+import androidx.appcompat.widget.SwitchCompat
 
 class NotificationFragment: Fragment() {
     private var listener: OnNotificationFragmentInteractionListener? = null

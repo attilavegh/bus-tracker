@@ -2,7 +2,7 @@ package hu.attilavegh.vbkoveto.view
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptor
