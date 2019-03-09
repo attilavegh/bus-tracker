@@ -15,6 +15,7 @@ import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
 import hu.attilavegh.vbkoveto.UserActivity
 import hu.attilavegh.vbkoveto.model.Bus
+import hu.attilavegh.vbkoveto.model.UserConfig
 import hu.attilavegh.vbkoveto.service.LocationService
 import hu.attilavegh.vbkoveto.utility.NotificationBarUtils
 import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
@@ -33,6 +34,7 @@ class MapBusFragment : MapFragmentBase() {
     private lateinit var departureLabel: TextView
     private lateinit var arrivalLabel: TextView
 
+    private var userConfig = UserConfig()
     private lateinit var selectedBusId: String
     private lateinit var initialPosition: LatLng
 
@@ -79,7 +81,7 @@ class MapBusFragment : MapFragmentBase() {
 
     override fun onResume() {
         super.onResume()
-        locationService.resume(15000, 100f)
+        locationService.resume(userConfig.locationMinTime, userConfig.locationMinDistance)
     }
 
     interface OnBusFragmentInterActionListener
@@ -92,7 +94,11 @@ class MapBusFragment : MapFragmentBase() {
         super.onMapReady(googleMap)
         positionMarker(initialPosition)
 
-        firebaseService.getBus(selectedBusId)
+        firebaseService.getUserConfig()
+            .switchMap { config ->
+                userConfig = config
+                return@switchMap firebaseService.getBus(selectedBusId)
+            }
             .doOnNext { onBusCheck(it) }
             .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
             .switchMap { bus ->

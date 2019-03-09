@@ -9,6 +9,7 @@ import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.model.ContactConfig
 import hu.attilavegh.vbkoveto.model.DriverConfig
+import hu.attilavegh.vbkoveto.model.UserConfig
 import io.reactivex.Observable
 import java.util.*
 
@@ -39,6 +40,21 @@ class FirebaseService {
                 .addOnSuccessListener { config ->
                     if (config != null) {
                         emitter.onNext(config.toObject(DriverConfig::class.java)!!)
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    emitter.onError(exception)
+                    return@addOnFailureListener
+                }
+        }
+    }
+
+    fun getUserConfig(): Observable<UserConfig> {
+        return Observable.create { emitter ->
+            database.collection("config").document("userConfig").get()
+                .addOnSuccessListener { config ->
+                    if (config != null) {
+                        emitter.onNext(config.toObject(UserConfig::class.java)!!)
                     }
                 }
                 .addOnFailureListener { exception ->
