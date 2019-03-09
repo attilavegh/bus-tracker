@@ -15,7 +15,7 @@ import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import io.reactivex.disposables.CompositeDisposable
 
 const val CAMERA_BOUND_PADDING = 300
-const val CAMERA_ZOOM = 13.0f
+const val CAMERA_ZOOM = 15.0f
 
 open class MapFragmentBase : Fragment(), OnMapReadyCallback {
 

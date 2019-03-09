@@ -132,6 +132,6 @@ class MapBusFragment : MapFragmentBase() {
     private fun positionMarker(position: LatLng) {
         map.clear()
         map.addMarker(addCustomMarker().position(position))
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, CAMERA_ZOOM))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, CAMERA_ZOOM))
     }
 }

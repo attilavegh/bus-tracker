@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.view.CAMERA_BOUND_PADDING
+import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
 import io.reactivex.rxkotlin.addTo
 
@@ -113,29 +114,44 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
         clearMap()
 
         if (!buses.isEmpty()) {
-            map.moveCamera(CameraUpdateFactory.newLatLngBounds(positionMarkers(buses), CAMERA_BOUND_PADDING))
+            when (buses.size) {
+                1 -> createMarker(buses[0])
+                else -> createMarkers(buses)
+            }
         }
     }
 
-    private fun positionMarkers(buses: List<Bus>): LatLngBounds {
+    private fun createMarker(bus: Bus) {
+        val position = LatLng(bus.location.latitude, bus.location.longitude)
+        addMarker(bus, 0, position)
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, CAMERA_ZOOM))
+    }
+
+    private fun createMarkers(buses: List<Bus>) {
         val boundsBuilder = LatLngBounds.builder()
 
         buses.forEachIndexed { index, bus ->
             val position = LatLng(bus.location.latitude, bus.location.longitude)
             boundsBuilder.include(position)
 
-            val marker = if (bus.id == selectedBus.id) {
-                map.addMarker(addCustomMarker(R.drawable.marker_selected).position(position))
-            } else {
-                map.addMarker(addCustomMarker().position(position))
-            }
-
-            marker.tag = index
-
-            markers.add(marker)
+            addMarker(bus, index, position)
         }
 
-        return boundsBuilder.build()
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), CAMERA_BOUND_PADDING))
+    }
+
+    private fun addMarker(bus: Bus, index: Int, position: LatLng): Marker {
+        val marker = if (bus.id == selectedBus.id) {
+            map.addMarker(addCustomMarker(R.drawable.marker_selected).position(position))
+        } else {
+            map.addMarker(addCustomMarker().position(position))
+        }
+
+        marker.tag = index
+        markers.add(marker)
+
+        return marker
     }
 
     private fun resetMarkerIcons() {
