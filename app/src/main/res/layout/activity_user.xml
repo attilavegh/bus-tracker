@@ -106,7 +106,7 @@
                     android:layout_width="50dp"
                     android:layout_height="3dp"
                     android:id="@+id/notification_bar_handler"
-                    android:background="@drawable/rounded_view"
+                    android:background="@drawable/rounded_view_white_transparent"
                     android:layout_gravity="bottom|center"/>
         </FrameLayout>
 

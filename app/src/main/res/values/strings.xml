@@ -59,7 +59,7 @@
     <string name="user_name_mock">Sam Smith</string>
     <string name="title_activity_driver">DriverActivity</string>
     <string name="notification_settings_fav_icon">notification_settings_fav_icon</string>
-    <string name="notification_bar_mock_text">Alkalmazáson belüli értesítés. Részletek az értesítésről.</string>
+    <string name="notification_bar_mock_text">Harman járat elindult.</string>
     <string name="internet_status_mock_text">Nincs internetkapcsolat.</string>
 
     <!-- TODO: Remove or change this placeholder text -->

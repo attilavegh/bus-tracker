@@ -21,6 +21,7 @@ class NotificationBarUtils(private val activity: Activity) : View.OnTouchListene
 
     private val notificationBar: FrameLayout = activity.findViewById(R.id.notification_bar)
     private val notificationBarText: TextView = activity.findViewById(R.id.notification_bar_text)
+    private val notificationBarHandler: View = activity.findViewById(R.id.notification_bar_handler)
 
     private val closeHandler = Handler()
     private val closer: Runnable = Runnable { close() }
@@ -56,6 +57,7 @@ class NotificationBarUtils(private val activity: Activity) : View.OnTouchListene
         when (motion.action) {
             MotionEvent.ACTION_DOWN -> {
                 deltaY = y
+                notificationBarHandler.setBackgroundResource(R.drawable.rounded_view_white)
                 closeHandler.removeCallbacks(closer)
             }
             MotionEvent.ACTION_MOVE -> {
@@ -64,6 +66,7 @@ class NotificationBarUtils(private val activity: Activity) : View.OnTouchListene
                 }
             }
             MotionEvent.ACTION_UP -> {
+                notificationBarHandler.setBackgroundResource(R.drawable.rounded_view_white_transparent)
                 close(100)
             }
         }
