@@ -108,7 +108,7 @@ class ProfileFragment : Fragment(),
     }
 
     private fun onNotificationClick() {
-        fragmentUtils.switchTo(R.id.user_fragment_container, NotificationFragment.newInstance(), FragmentTagName.NOTIFICATION.name)
+        fragmentUtils.switchToSubFragment(R.id.user_fragment_container, NotificationFragment.newInstance(), FragmentTagName.NOTIFICATION.name)
         titleUtils.set(getString(R.string.notification))
     }
 

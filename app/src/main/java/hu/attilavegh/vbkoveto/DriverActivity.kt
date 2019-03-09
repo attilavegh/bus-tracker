@@ -55,7 +55,7 @@ class DriverActivity : AppCompatActivity(),
         fragmentUtils = FragmentUtils(supportFragmentManager)
 
         titleUtils.set(getString(R.string.title_buses))
-        fragmentUtils.switchTo(R.id.driver_fragment_container, DriverBusFragment.newInstance())
+        fragmentUtils.switchToMainFragment(R.id.driver_fragment_container, DriverBusFragment.newInstance())
     }
 
     override fun onBackPressed() {
@@ -145,7 +145,7 @@ class DriverActivity : AppCompatActivity(),
             titleUtils.set(selectedBus.name)
 
             val driverMapFragment = DriverMapFragment.newInstance()
-            fragmentUtils.switchTo(
+            fragmentUtils.switchToSubFragment(
                 R.id.driver_fragment_container,
                 driverMapFragment,
                 FragmentTagName.BUS_LOCATION.name,

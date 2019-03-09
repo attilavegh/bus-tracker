@@ -24,7 +24,6 @@ import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import hu.attilavegh.vbkoveto.service.LocationService
 
 class UserActivity : AppCompatActivity(),
@@ -36,6 +35,7 @@ class UserActivity : AppCompatActivity(),
 
     private lateinit var toolbar: Toolbar
 
+    private var isAppCreated = false
     private var selectedBus: Bus = Bus()
     lateinit var user: UserModel
 
@@ -72,15 +72,15 @@ class UserActivity : AppCompatActivity(),
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.bus_list_item -> {
-                openFragment(R.string.title_buses, BusFragment.newInstance())
+                openFragment(R.string.title_buses, BusFragment.newInstance(), R.id.bus_list_item)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.map_item -> {
-                openFragment(R.string.title_buses, MapBusesFragment.newInstance())
+                openFragment(R.string.title_buses, MapBusesFragment.newInstance(), R.id.map_item)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.profile_item -> {
-                openFragment(R.string.title_profile, ProfileFragment.newInstance())
+                openFragment(R.string.title_profile, ProfileFragment.newInstance(), R.id.profile_item)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -109,6 +109,8 @@ class UserActivity : AppCompatActivity(),
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.bus_list_item
+
+        isAppCreated = true
     }
 
     override fun onResume() {
@@ -186,7 +188,7 @@ class UserActivity : AppCompatActivity(),
         argument.putDouble("longitude", selectedBus.location.longitude)
 
         val mapFragment = MapBusFragment.newInstance()
-        fragmentUtils.switchTo(R.id.user_fragment_container, mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
+        fragmentUtils.switchToSubFragment(R.id.user_fragment_container, mapFragment, FragmentTagName.BUS_LOCATION.name, argument)
 
         titleUtils.set(selectedBus.name)
     }
@@ -225,8 +227,12 @@ class UserActivity : AppCompatActivity(),
         LocalBroadcastManager.getInstance(this).registerReceiver(inAppNotificationHandler, IntentFilter("inAppNotificationHandler"))
     }
 
-    private fun openFragment(titleId: Int, fragment: Fragment, bundle: Bundle = Bundle.EMPTY) {
-        titleUtils.set(getString(titleId))
-        fragmentUtils.switchTo(R.id.user_fragment_container, fragment, bundle)
+    private fun openFragment(titleId: Int, fragment: Fragment, fragmentId: Int) {
+        val hasSubFragment = supportFragmentManager.backStackEntryCount > 0
+
+        if (fragmentId != navigation.selectedItemId || hasSubFragment || !isAppCreated) {
+            titleUtils.set(getString(titleId))
+            fragmentUtils.switchToMainFragment(R.id.user_fragment_container, fragment)
+        }
     }
 }
