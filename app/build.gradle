@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'io.fabric'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -63,6 +65,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-firestore:18.1.0'
     implementation 'com.google.firebase:firebase-messaging:17.4.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
