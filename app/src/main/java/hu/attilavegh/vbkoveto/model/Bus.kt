@@ -12,15 +12,10 @@ data class Bus(
     val active: Boolean = false,
     var favorite: Boolean = false,
     val location: GeoPoint = GeoPoint(0.0, 0.0),
-    val departureTime: Timestamp = Timestamp.now(),
-    val notificationId: Int = 0
+    val departureTime: Timestamp = Timestamp.now()
 ) {
 
     fun getFormattedDepartureTime(): String {
-        return formatDepartureTime(departureTime)
-    }
-
-    private fun formatDepartureTime(timestamp: Timestamp): String {
-        return ApplicationUtils.createDisplayTime(timestamp)
+        return ApplicationUtils.createDisplayTime(departureTime)
     }
 }

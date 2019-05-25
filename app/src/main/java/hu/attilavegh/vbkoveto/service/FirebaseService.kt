@@ -96,15 +96,19 @@ class FirebaseService {
                         return@EventListener
                     }
 
-                    val buses = ArrayList<Bus>()
+                    val parsedBuses = ArrayList<Bus>()
                     for (bus in busList!!) {
-                        if (bus != null) {
-                            buses.add(bus.toObject(Bus::class.java))
-                        }
+                        val id = bus.id
+                        val name = bus.data["name"] as String
+                        val active = bus.data["active"] as Boolean
+                        val favorite = notificationController.hasBus(bus.id)
+                        val location = bus.data["location"] as GeoPoint
+                        val departureTime = bus.data["departureTime"] as Timestamp
+
+                        parsedBuses.add(Bus(id, name, active, favorite, location, departureTime))
                     }
 
-                    val sortedBuses = sortBuses(buses, authController.getUser().isDriver)
-                    setNotificationStatus(sortedBuses, notificationController)
+                    val sortedBuses = sortBuses(parsedBuses, authController.getUser().isDriver)
                     emitter.onNext(sortedBuses)
                 })
         }
@@ -133,9 +137,5 @@ class FirebaseService {
             true -> buses.sortedWith(compareBy { it.active })
             false -> buses.sortedWith(compareBy { !it.active })
         }
-    }
-
-    private fun setNotificationStatus(buses: List<Bus>, controller: NotificationController) {
-        buses.forEach { bus -> bus.favorite = controller.hasBus(bus.id) }
     }
 }
