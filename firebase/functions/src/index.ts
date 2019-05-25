@@ -18,7 +18,6 @@ exports.onBusNotification = functions.firestore.document('buses/{busId}')
 
         const notificationType = (bus && bus.active) ? "departure" : "arrival";
         const busId = context.params.busId;
-        const notificationId = (bus) ? bus.notificationId.toString() : (new Date().getMilliseconds() % 2147483647).toString();
         const busName = (bus) ? bus.name : "Busz"
         const notificationTitle = (bus && bus.active) ? `${bus.name} járat elindult` : "";
 
@@ -26,7 +25,6 @@ exports.onBusNotification = functions.firestore.document('buses/{busId}')
             data: {
                 type: notificationType,
                 busId: busId,
-                notificationId: notificationId,
                 busName: busName,
                 title: notificationTitle,
             }

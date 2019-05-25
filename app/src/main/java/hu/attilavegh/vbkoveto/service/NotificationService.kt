@@ -71,7 +71,7 @@ class NotificationService: FirebaseMessagingService() {
 
     private fun parseNotificationData(remoteMessage: RemoteMessage?): NotificationModel {
         return NotificationModel(
-            remoteMessage!!.data["notificationId"]!!.toInt(),
+            remoteMessage!!.data["busId"]!!.hashCode(),
             remoteMessage.data["type"]!!,
             remoteMessage.data["busId"]!!,
             remoteMessage.data["busName"]!!,
