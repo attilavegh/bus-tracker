@@ -22,9 +22,9 @@ import hu.attilavegh.vbkoveto.model.FragmentTagName
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog
-import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.service.AuthenticationService
 import hu.attilavegh.vbkoveto.utility.ActivityTitleUtils
-import hu.attilavegh.vbkoveto.service.FirebaseService
+import hu.attilavegh.vbkoveto.service.FirebaseDataService
 import hu.attilavegh.vbkoveto.utility.FragmentUtils
 import hu.attilavegh.vbkoveto.model.ContactConfig
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
@@ -42,8 +42,8 @@ class ProfileFragment : Fragment(),
 
     private lateinit var contactConfig: ContactConfig
 
-    private var firebaseService = FirebaseService()
-    private lateinit var authController: AuthController
+    private var firebaseDataService = FirebaseDataService()
+    private lateinit var authenticationService: AuthenticationService
 
     private lateinit var titleUtils: ActivityTitleUtils
     private lateinit var errorStatusUtils: ErrorStatusUtils
@@ -52,7 +52,7 @@ class ProfileFragment : Fragment(),
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
 
-        authController = AuthController(context!!)
+        authenticationService = AuthenticationService(context!!)
         errorStatusUtils = ErrorStatusUtils(activity!!)
         fragmentUtils = FragmentUtils(activity!!.supportFragmentManager)
 
@@ -61,10 +61,11 @@ class ProfileFragment : Fragment(),
         fillProfileInfo(view)
         createSettingsItemListeners(view)
 
-        firebaseListener = firebaseService.getContactConfig().subscribe(
-            { result -> contactConfig = ContactConfig(result.businessEmail, result.feedbackEmail, result.website) },
-            { errorStatusUtils.show(R.string.error, R.drawable.error) }
-        )
+        firebaseListener = firebaseDataService.getContactConfig().subscribe({
+            contactConfig = ContactConfig(it.businessEmail, it.feedbackEmail, it.website)
+        }, {
+            errorStatusUtils.show(R.string.error, R.drawable.error)
+        })
 
         return view
     }
@@ -108,13 +109,17 @@ class ProfileFragment : Fragment(),
     }
 
     private fun onNotificationClick() {
-        fragmentUtils.switchToSubFragment(R.id.user_fragment_container, NotificationFragment.newInstance(), FragmentTagName.NOTIFICATION.name)
+        fragmentUtils.switchToSubFragment(
+            R.id.user_fragment_container,
+            NotificationFragment.newInstance(),
+            FragmentTagName.NOTIFICATION.name
+        )
         titleUtils.set(getString(R.string.notification))
     }
 
     private fun onLogoutClick() {
         googleSignInClient.signOut().addOnCompleteListener {
-            authController.logout()
+            authenticationService.logout()
 
             val intent = Intent(context, LoginActivity::class.java)
             this.startActivity(intent)

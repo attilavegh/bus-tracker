@@ -18,10 +18,8 @@ import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.model.UserConfig
 import hu.attilavegh.vbkoveto.service.LocationService
 import hu.attilavegh.vbkoveto.utility.NotificationBarUtils
-import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 
@@ -94,11 +92,9 @@ class MapBusFragment : MapFragmentBase() {
         super.onMapReady(googleMap)
         positionMarker(initialPosition)
 
-        firebaseService.getUserConfig()
-            .switchMap { config ->
-                userConfig = config
-                return@switchMap firebaseService.getBus(selectedBusId)
-            }
+        firebaseDataService.getUserConfig()
+            .doOnNext { config -> userConfig = config }
+            .switchMap { firebaseDataService.getBus(selectedBusId) }
             .doOnNext { onBusCheck(it) }
             .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
             .switchMap { bus ->
@@ -111,10 +107,11 @@ class MapBusFragment : MapFragmentBase() {
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { arrivalLabel.text = it }
-            .doOnError { arrivalLabel.text = "-" }
-            .subscribe()
-            .addTo(disposables)
+            .subscribe({
+                arrivalLabel.text = it
+            }, {
+                arrivalLabel.text = "-"
+            }).addTo(disposables)
     }
 
     private fun onBusCheck(bus: Bus) {
@@ -138,6 +135,6 @@ class MapBusFragment : MapFragmentBase() {
     private fun positionMarker(position: LatLng) {
         map.clear()
         map.addMarker(addCustomMarker().position(position))
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, CAMERA_ZOOM))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, cameraZoom))
     }
 }

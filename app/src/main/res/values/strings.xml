@@ -31,6 +31,8 @@
 
     <string name="login_error">Hiba a bejelentkezés közben.</string>
     <string name="network_error">Nincs internetkapcsolat.</string>
+    <string name="bus_start_error">Hiba a járat indítása közben.</string>
+    <string name="buses_load_error">Hiba a járatok megjelenítése közben.</string>
     <string name="login_interrupted">Bejelentkezés megszakítva.</string>
     <string name="error">Hiba!</string>
 

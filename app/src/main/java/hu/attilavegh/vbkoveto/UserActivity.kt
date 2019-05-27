@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import android.widget.ImageButton
-import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.service.AuthenticationService
 import hu.attilavegh.vbkoveto.utility.NotificationBarUtils
 import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.utility.*
@@ -46,7 +46,7 @@ class UserActivity : AppCompatActivity(),
     private lateinit var vibratorUtils: VibratorUtils
 
     private lateinit var notificationController: NotificationController
-    private lateinit var authController: AuthController
+    private lateinit var authenticationService: AuthenticationService
 
     private val inAppNotificationReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -101,11 +101,11 @@ class UserActivity : AppCompatActivity(),
         errorStatusUtils = ErrorStatusUtils(this)
 
         notificationController = NotificationController(this)
-        authController = AuthController(this)
+        authenticationService = AuthenticationService(this)
 
         enableNotification()
         initNotificationBroadcastManagers()
-        user = authController.getUser()
+        user = authenticationService.getUser()
 
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.bus_list_item

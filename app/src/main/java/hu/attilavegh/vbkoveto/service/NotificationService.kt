@@ -8,7 +8,6 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import hu.attilavegh.vbkoveto.UserActivity
-import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.model.NotificationModel
 import hu.attilavegh.vbkoveto.model.UserModel
@@ -18,16 +17,16 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 class NotificationService: FirebaseMessagingService() {
 
     private lateinit var notificationController: NotificationController
-    private lateinit var authController: AuthController
+    private lateinit var authenticationService: AuthenticationService
 
     override fun onCreate() {
         super.onCreate()
         notificationController = NotificationController(this)
-        authController = AuthController(this)
+        authenticationService = AuthenticationService(this)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
-        val user = authController.getUser()
+        val user = authenticationService.getUser()
         val notification = parseNotificationData(remoteMessage)
 
         if (notification.type == "arrival") {

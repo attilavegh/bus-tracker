@@ -9,10 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import hu.attilavegh.vbkoveto.R
-import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.service.AuthenticationService
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.presenter.driver.DriverBusItemRecyclerViewAdapter
-import hu.attilavegh.vbkoveto.service.FirebaseService
+import hu.attilavegh.vbkoveto.service.FirebaseDataService
+import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.view.BusListItemInteractionListenerBase
 import io.reactivex.disposables.Disposable
 
@@ -21,21 +22,25 @@ class DriverBusFragment: Fragment() {
     private var listener: OnDriverBusListItemInteractionListener? = null
     private lateinit var firebaseListener: Disposable
 
-    private val firebaseController = FirebaseService()
-    private lateinit var authController: AuthController
+    private val firebaseDataService = FirebaseDataService()
+    private lateinit var authenticationService: AuthenticationService
+    private lateinit var errorStatusUtils: ErrorStatusUtils
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_driver_bus_list, container, false)
-        authController = AuthController(context!!)
+        authenticationService = AuthenticationService(context!!)
+        errorStatusUtils = ErrorStatusUtils(activity!!)
 
         with(view as RecyclerView) {
             layoutManager = LinearLayoutManager(context)
             adapter = DriverBusItemRecyclerViewAdapter(listener)
         }
 
-        firebaseListener = firebaseController.getBusList(context!!).subscribe {
+        firebaseListener = firebaseDataService.getBusList(context!!).subscribe({
             (view.adapter as DriverBusItemRecyclerViewAdapter).buses = it
-        }
+        }, {
+            errorStatusUtils.show(R.string.error, R.drawable.error)
+        })
 
         return view
     }
@@ -52,8 +57,12 @@ class DriverBusFragment: Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        firebaseListener.dispose()
         listener = null
+    }
+
+    override fun onPause() {
+        super.onPause()
+        firebaseListener.dispose()
     }
 
     interface OnDriverBusListItemInteractionListener: BusListItemInteractionListenerBase {

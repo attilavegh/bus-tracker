@@ -4,7 +4,6 @@ import android.content.Context
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
-import hu.attilavegh.vbkoveto.controller.AuthController
 import hu.attilavegh.vbkoveto.controller.NotificationController
 import hu.attilavegh.vbkoveto.model.Bus
 import hu.attilavegh.vbkoveto.model.ContactConfig
@@ -13,7 +12,7 @@ import hu.attilavegh.vbkoveto.model.UserConfig
 import io.reactivex.Observable
 import java.util.*
 
-class FirebaseService {
+class FirebaseDataService {
 
     private var database: FirebaseFirestore = FirebaseFirestore.getInstance()
 
@@ -68,7 +67,7 @@ class FirebaseService {
         return Observable.create { emitter ->
             database.collection("buses").document(id)
                 .update("location", location)
-                .addOnCompleteListener { emitter.onNext(id) }
+                .addOnSuccessListener {  emitter.onNext(id) }
                 .addOnFailureListener { e ->
                     emitter.onError(e)
                 }
@@ -79,17 +78,17 @@ class FirebaseService {
         return Observable.create { emitter ->
             database.collection("buses").document(id)
                 .update("active", active, "departureTime", departureTime)
-                .addOnCompleteListener { emitter.onNext(id) }
+                .addOnSuccessListener { emitter.onNext(id) }
                 .addOnFailureListener { e -> emitter.onError(e) }
         }
     }
 
     fun getBusList(context: Context): Observable<List<Bus>> {
         val notificationController = NotificationController(context)
-        val authController = AuthController(context)
+        val isDriver = AuthenticationService(context).getUser().isDriver
 
         return Observable.create { emitter ->
-            database.collection("buses")
+            val busListSnapshotListenerRegistration = database.collection("buses")
                 .addSnapshotListener(EventListener<QuerySnapshot> { busList, error ->
                     if (error != null) {
                         emitter.onError(error)
@@ -108,16 +107,17 @@ class FirebaseService {
                         parsedBuses.add(Bus(id, name, active, favorite, location, departureTime))
                     }
 
-                    val sortedBuses = sortBuses(parsedBuses, authController.getUser().isDriver)
+                    val sortedBuses = sortBuses(parsedBuses, isDriver)
                     emitter.onNext(sortedBuses)
                 })
+
+            emitter.setCancellable { busListSnapshotListenerRegistration.remove() }
         }
     }
 
     fun getBus(id: String): Observable<Bus> {
         return Observable.create { emitter ->
-
-            database.collection("buses").document(id)
+            val busSnapshotListenerRegistration = database.collection("buses").document(id)
                 .addSnapshotListener(MetadataChanges.INCLUDE, EventListener<DocumentSnapshot> { bus, error ->
 
                     if (error != null) {
@@ -128,7 +128,10 @@ class FirebaseService {
                     if (bus != null && !bus.metadata.isFromCache) {
                         emitter.onNext(bus.toObject(Bus::class.java)!!)
                     }
+
                 })
+
+            emitter.setCancellable { busSnapshotListenerRegistration.remove() }
         }
     }
 

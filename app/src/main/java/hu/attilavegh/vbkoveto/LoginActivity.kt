@@ -4,15 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import android.view.View
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
 import android.content.Intent
 import com.google.android.gms.common.api.ApiException
-import hu.attilavegh.vbkoveto.controller.AuthController
-import hu.attilavegh.vbkoveto.service.FirebaseService
+import hu.attilavegh.vbkoveto.service.AuthenticationService
 import hu.attilavegh.vbkoveto.model.UserModel
 
 import io.reactivex.disposables.Disposable
@@ -20,18 +17,17 @@ import hu.attilavegh.vbkoveto.utility.ApplicationUtils
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.utility.ProgressBarUtils
 
+const val SIGN_IN_RESULT_CODE = 204
+
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var loginButton: Button
 
-    private val firebaseController = FirebaseService()
-    private lateinit var authController: AuthController
-    private lateinit var firebaseListener: Disposable
-
     private lateinit var errorStatusUtils: ErrorStatusUtils
     private lateinit var progressBar: ProgressBarUtils
 
-    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var authenticationService: AuthenticationService
+    private lateinit var authenticationListener: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +36,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         loginButton = findViewById(R.id.login_button)
         loginButton.setOnClickListener(this)
 
-        authController = AuthController(this)
+        authenticationService = AuthenticationService(this)
         errorStatusUtils = ErrorStatusUtils(this)
         progressBar = ProgressBarUtils(this)
 
@@ -51,11 +47,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initLogin() {
-        if (authController.isLoggedIn()) {
-            val user = authController.getUser()
+        if (authenticationService.isLoggedIn()) {
+            val user = authenticationService.getUser()
             loadApp(user)
-        } else {
-            createGoogleAuthClient()
         }
     }
 
@@ -68,48 +62,27 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 204) {
+        if (requestCode == SIGN_IN_RESULT_CODE) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
     }
 
-    private fun createGoogleAuthClient() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.oauth_key))
-            .requestEmail()
-            .build()
-
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
-    }
-
     private fun onLogin() {
         progressBar.show()
-
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, 204)
+        startActivityForResult(authenticationService.createSignInIntent(), SIGN_IN_RESULT_CODE)
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
-            val account: GoogleSignInAccount? = completedTask.getResult(ApiException::class.java)
+            val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)!!
 
-            if (account != null) {
-                firebaseListener = firebaseController.getDriverConfig().subscribe(
-                    { result ->
-                        run {
-                            val user = authController.login(account, result)
-                            loadApp(user)
-                        }
-                    },
-                    {
-                        run {
-                            progressBar.hide()
-                            errorStatusUtils.show(R.string.login_error, R.drawable.error)
-                        }
-                    }
-                )
-            }
+            authenticationListener = authenticationService.login(account).subscribe({
+                loadApp(it)
+            }, {
+                progressBar.hide()
+                errorStatusUtils.show(R.string.login_error, R.drawable.error)
+            })
         } catch (e: ApiException) {
             progressBar.hide()
 

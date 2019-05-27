@@ -58,11 +58,11 @@ class LocationService(private val activity: Activity) {
         return Observable.create<String> { emitter ->
             apiUrl.httpGet().responseString { _, _, result ->
                 when (result) {
-                    is Result.Failure -> {
-                        emitter.onError(result.getException())
-                    }
                     is Result.Success -> {
                         emitter.onNext(getDuration(result.get()))
+                    }
+                    is Result.Failure -> {
+                        emitter.onError(result.getException())
                     }
                 }
             }

@@ -11,7 +11,6 @@ import com.google.android.gms.maps.model.LatLng
 import hu.attilavegh.vbkoveto.R
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.firebase.firestore.GeoPoint
-import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
 import androidx.appcompat.app.AlertDialog
 import android.view.*
@@ -91,32 +90,33 @@ class DriverMapFragment : MapFragmentBase() {
 
         stopwatchUtils.start()
 
-        firebaseService.getBus(selectedBusId)
-            .doOnNext { bus -> checkBusStatus(bus)}
-            .subscribe()
-            .addTo(disposables)
+        firebaseDataService.getBus(selectedBusId).subscribe({
+            checkBusStatus(it)
+        }, {
+            errorStatusUtils.show(R.string.error, R.drawable.error)
+        }).addTo(disposables)
 
-        firebaseService.getDriverConfig()
-            .switchMap { config: DriverConfig ->  locationService.getLocation(config.locationMinTime, config.locationMinDistance) }
+        firebaseDataService.getDriverConfig()
+            .switchMap { locationService.getLocation(it.locationMinTime, it.locationMinDistance) }
             .map { location: Location -> LatLng(location.latitude, location.longitude) }
             .switchMap { position: LatLng -> updateBusLocation(position) }
-            .subscribe()
-            .addTo(disposables)
+            .subscribe({}, {
+                errorStatusUtils.show(R.string.error, R.drawable.error)
+            }).addTo(disposables)
     }
 
     private fun updateBusLocation(position: LatLng): Observable<String> {
         positionMarker(position)
 
         val firebaseLocation = GeoPoint(position.latitude, position.longitude)
-        return firebaseService.updateBusLocation(selectedBusId, firebaseLocation)
+        return firebaseDataService.updateBusLocation(selectedBusId, firebaseLocation)
             .doOnNext { positionMarker(position) }
-            .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
     }
 
     private fun positionMarker(position: LatLng) {
         map.clear()
         map.addMarker(addCustomMarker().position(position))
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, CAMERA_ZOOM))
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, cameraZoom))
     }
 
     private fun showExitAlertDialog() {
@@ -128,20 +128,12 @@ class DriverMapFragment : MapFragmentBase() {
     }
 
     private fun exit() {
-        val onSuccessfulExit = {
+        firebaseDataService.updateBusStatus(selectedBusId, false).subscribe({
             fragmentManager!!.popBackStackImmediate()
             driverActivity.titleUtils.setPrevious()
-        }
-
-        updateBusStatus(false)
-            .doOnNext { onSuccessfulExit() }
-            .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
-            .subscribe()
-            .addTo(disposables)
-    }
-
-    private fun updateBusStatus(status: Boolean): Observable<String> {
-        return firebaseService.updateBusStatus(selectedBusId, status).take(1)
+        }, {
+            errorStatusUtils.show(R.string.error, R.drawable.error)
+        }).addTo(disposables)
     }
 
     private fun checkBusStatus(bus: Bus) {

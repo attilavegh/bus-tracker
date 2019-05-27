@@ -9,17 +9,17 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MarkerOptions
 import hu.attilavegh.vbkoveto.R
-import hu.attilavegh.vbkoveto.service.FirebaseService
+import hu.attilavegh.vbkoveto.service.FirebaseDataService
 import hu.attilavegh.vbkoveto.utility.BitmapUtils
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import io.reactivex.disposables.CompositeDisposable
 
-const val CAMERA_BOUND_PADDING = 300
-const val CAMERA_ZOOM = 15.0f
-
 open class MapFragmentBase : Fragment(), OnMapReadyCallback {
 
-    protected val firebaseService = FirebaseService()
+    protected val cameraBoundPadding = 300
+    protected val cameraZoom = 15.0f
+
+    protected val firebaseDataService = FirebaseDataService()
     protected val disposables = CompositeDisposable()
 
     protected lateinit var errorStatusUtils: ErrorStatusUtils

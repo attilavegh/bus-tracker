@@ -16,13 +16,14 @@ import android.view.MenuItem
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import hu.attilavegh.vbkoveto.controller.AuthController
+import hu.attilavegh.vbkoveto.service.AuthenticationService
 import hu.attilavegh.vbkoveto.service.LocationService
 import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
 import hu.attilavegh.vbkoveto.view.driver.DriverBusFragment
 import androidx.appcompat.widget.PopupMenu
 import android.view.View
-import hu.attilavegh.vbkoveto.service.FirebaseService
+import hu.attilavegh.vbkoveto.service.FirebaseDataService
+import io.reactivex.disposables.Disposable
 
 class DriverActivity : AppCompatActivity(),
     DriverBusFragment.OnDriverBusListItemInteractionListener,
@@ -35,9 +36,11 @@ class DriverActivity : AppCompatActivity(),
     private lateinit var errorStatusUtils: ErrorStatusUtils
     private lateinit var fragmentUtils: FragmentUtils
 
-    private val firebaseService = FirebaseService()
+    private val firebaseDataService = FirebaseDataService()
     private lateinit var googleSignInClient: GoogleSignInClient
-    private lateinit var authController: AuthController
+    private lateinit var authenticationService: AuthenticationService
+
+    private lateinit var updateDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +51,7 @@ class DriverActivity : AppCompatActivity(),
         setSupportActionBar(toolbar)
 
         createGoogleAuthClient()
-        authController = AuthController(this)
+        authenticationService = AuthenticationService(this)
 
         titleUtils = ActivityTitleUtils(toolbar)
         errorStatusUtils = ErrorStatusUtils(this)
@@ -76,7 +79,7 @@ class DriverActivity : AppCompatActivity(),
 
         if (id == R.id.driver_logout) {
             googleSignInClient.signOut().addOnCompleteListener {
-                authController.logout()
+                authenticationService.logout()
 
                 val intent = Intent(this, LoginActivity::class.java)
                 this.startActivity(intent)
@@ -96,7 +99,9 @@ class DriverActivity : AppCompatActivity(),
 
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.driver_bus_item_menu -> firebaseService.updateBusStatus(bus.id, false).take(1).subscribe()
+                R.id.driver_bus_item_menu -> firebaseDataService.updateBusStatus(bus.id, false).subscribe({}, {
+                    errorStatusUtils.show(R.string.error, R.drawable.error)
+                })
             }
 
             true
@@ -125,7 +130,8 @@ class DriverActivity : AppCompatActivity(),
                     errorStatusUtils.show(R.string.gps_needed, R.drawable.map)
                 }
             }
-            else -> {}
+            else -> {
+            }
         }
     }
 
@@ -138,10 +144,9 @@ class DriverActivity : AppCompatActivity(),
     }
 
     private fun loadDriveBusView() {
-        val load = {
+        updateDisposable = firebaseDataService.updateBusStatus(selectedBus.id, true).subscribe({
             val argument = Bundle()
             argument.putString("id", selectedBus.id)
-
             titleUtils.set(selectedBus.name)
 
             val driverMapFragment = DriverMapFragment.newInstance()
@@ -151,12 +156,9 @@ class DriverActivity : AppCompatActivity(),
                 FragmentTagName.BUS_LOCATION.name,
                 argument
             )
-        }
-
-        firebaseService.updateBusStatus(selectedBus.id, true).take(1)
-            .doOnNext { load() }
-            .doOnError { errorStatusUtils.show(R.string.network_error, R.drawable.error)}
-            .subscribe()
+        }, {
+            errorStatusUtils.show(R.string.bus_start_error, R.drawable.error)
+        })
     }
 
     private fun createGoogleAuthClient() {

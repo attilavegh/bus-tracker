@@ -16,8 +16,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import hu.attilavegh.vbkoveto.model.Bus
-import hu.attilavegh.vbkoveto.view.CAMERA_BOUND_PADDING
-import hu.attilavegh.vbkoveto.view.CAMERA_ZOOM
 import hu.attilavegh.vbkoveto.view.MapFragmentBase
 import io.reactivex.rxkotlin.addTo
 
@@ -71,11 +69,11 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
             resetMarkerIcons()
         }
 
-        firebaseService.getBusList(context!!)
-            .doOnNext { handleBuses(it) }
-            .doOnError { errorStatusUtils.show(R.string.error, R.drawable.error) }
-            .subscribe()
-            .addTo(disposables)
+        firebaseDataService.getBusList(context!!).subscribe({
+            handleBuses(it)
+        }, {
+            errorStatusUtils.show(R.string.error, R.drawable.error)
+        }).addTo(disposables)
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
@@ -125,7 +123,7 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
         val position = LatLng(bus.location.latitude, bus.location.longitude)
         addMarker(bus, 0, position)
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, CAMERA_ZOOM))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, cameraZoom))
     }
 
     private fun createMarkers(buses: List<Bus>) {
@@ -138,7 +136,7 @@ class MapBusesFragment : MapFragmentBase(), GoogleMap.OnMarkerClickListener {
             addMarker(bus, index, position)
         }
 
-        map.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), CAMERA_BOUND_PADDING))
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), cameraBoundPadding))
     }
 
     private fun addMarker(bus: Bus, index: Int, position: LatLng): Marker {

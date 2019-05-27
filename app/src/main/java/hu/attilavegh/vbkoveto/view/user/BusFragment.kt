@@ -11,10 +11,12 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import hu.attilavegh.vbkoveto.presenter.user.BusItemRecyclerViewAdapter
 import hu.attilavegh.vbkoveto.R
-import hu.attilavegh.vbkoveto.controller.AuthController
-import hu.attilavegh.vbkoveto.service.FirebaseService
+import hu.attilavegh.vbkoveto.service.AuthenticationService
+import hu.attilavegh.vbkoveto.service.FirebaseDataService
 
 import hu.attilavegh.vbkoveto.model.Bus
+import hu.attilavegh.vbkoveto.utility.ErrorStatusUtils
+import hu.attilavegh.vbkoveto.utility.NotificationBarUtils
 import hu.attilavegh.vbkoveto.view.BusListItemInteractionListenerBase
 import io.reactivex.disposables.Disposable
 
@@ -23,21 +25,26 @@ class BusFragment: Fragment() {
     private var listener: OnBusListItemInteractionListener? = null
     private lateinit var firebaseListener: Disposable
 
-    private val firebaseService = FirebaseService()
-    private lateinit var authController: AuthController
+    private val firebaseDataService = FirebaseDataService()
+    private lateinit var authenticationService: AuthenticationService
+    private lateinit var errorStatusUtils: ErrorStatusUtils
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_bus_list, container, false)
-        authController = AuthController(context!!)
+        authenticationService = AuthenticationService(context!!)
+        errorStatusUtils = ErrorStatusUtils(activity!!)
 
         with(view as RecyclerView) {
             layoutManager = LinearLayoutManager(context)
             adapter = BusItemRecyclerViewAdapter(listener)
         }
 
-        firebaseListener = firebaseService.getBusList(context!!).subscribe {
+        firebaseListener = firebaseDataService.getBusList(context!!).subscribe({
             (view.adapter as BusItemRecyclerViewAdapter).buses = it
-        }
+        }, {
+            errorStatusUtils.show(R.string.buses_load_error, R.drawable.error)
+        })
 
         return view
     }
@@ -54,8 +61,12 @@ class BusFragment: Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        firebaseListener.dispose()
         listener = null
+    }
+
+    override fun onPause() {
+        super.onPause()
+        firebaseListener.dispose()
     }
 
     interface OnBusListItemInteractionListener: BusListItemInteractionListenerBase {

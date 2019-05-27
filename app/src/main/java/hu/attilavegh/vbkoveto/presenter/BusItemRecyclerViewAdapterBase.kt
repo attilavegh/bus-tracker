@@ -2,18 +2,9 @@ package hu.attilavegh.vbkoveto.presenter
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageButton
 
-import hu.attilavegh.vbkoveto.R
-import hu.attilavegh.vbkoveto.controller.AuthController
-import hu.attilavegh.vbkoveto.view.user.BusFragment.OnBusListItemInteractionListener
 import hu.attilavegh.vbkoveto.model.Bus
-import hu.attilavegh.vbkoveto.presenter.driver.ActiveDriverBusViewHolder
-import hu.attilavegh.vbkoveto.presenter.driver.InactiveDriverBusViewHolder
 import hu.attilavegh.vbkoveto.view.BusListItemInteractionListenerBase
-
-import kotlinx.android.synthetic.main.fragment_bus_active.view.*
 
 abstract class BusItemRecyclerViewAdapterBase(
     private val listener: BusListItemInteractionListenerBase?
