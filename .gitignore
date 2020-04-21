@@ -48,13 +48,16 @@ captures/
 # Keystore files
 # Uncomment the following lines if you do not want to check your keystore files in.
 #*.jks
-#*.keystore
+*.keystore
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
-# google-services.json
+google-services.json
+api_keys.xml
+release/
+debug/
 
 # Freeline
 freeline.py
